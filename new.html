@@ -200,11 +200,12 @@ input[type=range].risk-slider::-moz-range-thumb {
 </head>
 <body class="has-bar">
 
-<div class="db-overlay" id="overlay">
+<a href="#main-content" class="skip-link">Skip to main content</a>
+<div class="db-overlay" id="overlay" role="status" aria-live="polite" aria-label="Loading">
   <div class="spinner"></div>
   <p>Loading…</p>
 </div>
-<div class="toast" id="toast"><span id="toast-txt"></span></div>
+<div class="toast" id="toast" role="status" aria-live="polite" aria-atomic="true"><span id="toast-txt"></span></div>
 
 <header class="topbar">
   <a href="products.html" class="back-btn">
@@ -214,10 +215,10 @@ input[type=range].risk-slider::-moz-range-thumb {
   <div class="topbar-title" id="page-heading">New product</div>
 </header>
 
-<main class="page-wrap" style="padding-top:1.25rem;max-width:720px">
+<main class="page-wrap" id="main-content" style="padding-top:1.25rem;max-width:720px">
 
   <!-- Validation banner -->
-  <div class="val-banner" id="val-banner">
+  <div class="val-banner" id="val-banner" role="alert" aria-live="assertive">
     <div class="val-banner__title">Please fill in the following before saving:</div>
     <ul class="val-banner__list" id="val-list"></ul>
   </div>
@@ -225,18 +226,18 @@ input[type=range].risk-slider::-moz-range-thumb {
   <!-- PRODUCT NAME -->
   <div class="field page-in" style="margin-bottom:.75rem">
     <label class="field-label" for="product-name">Product name</label>
-    <input class="input" type="text" id="product-name" placeholder="e.g. Wooden Keychain" maxlength="60"
+    <input class="input" type="text" id="product-name" placeholder="e.g. Wooden Keychain" maxlength="60" aria-required="true" aria-label="Product name"
       oninput="document.getElementById('page-heading').textContent=this.value||'New product'">
   </div>
 
   <!-- PHOTO -->
   <div class="card page-in page-in-d1" id="card-photo" style="margin-bottom:.75rem">
-    <div class="card-header clickable" onclick="toggleCard('photo')">
+    <div class="card-header clickable" onclick="toggleCard('photo')" role="button" aria-expanded="true" aria-controls="card-body-photo" id="card-btn-photo" tabindex="0">
       <span class="card-title">Product photo</span>
       <span style="font-size:11px;color:var(--text-3);margin-left:auto;margin-right:6px">Optional</span>
       <svg class="card-chevron" viewBox="0 0 24 24"><polyline points="6 9 12 15 18 9"/></svg>
     </div>
-    <div class="card-body">
+    <div class="card-body" id="card-body-photo">
       <div class="img-upload" id="upload-area"
            ondragover="event.preventDefault();this.classList.add('drag')"
            ondragleave="this.classList.remove('drag')"
@@ -277,7 +278,7 @@ input[type=range].risk-slider::-moz-range-thumb {
       <!-- ── Material selector ── -->
       <div class="field">
         <label class="field-label" for="sel-mat">Material</label>
-        <select class="select" id="sel-mat" onchange="onMatChange()">
+        <select class="select" id="sel-mat" onchange="onMatChange()" aria-required="true" aria-describedby="mat-unit mat-no-mats">
           <option value="">— select from your materials library —</option>
         </select>
 
@@ -285,7 +286,7 @@ input[type=range].risk-slider::-moz-range-thumb {
         <div class="mat-quick-add" id="mat-quick-add">
           <div class="mat-quick-add__title">
             Add new material to library
-            <button onclick="cancelQuickAdd()" style="background:none;border:none;color:var(--accent-dark);cursor:pointer;font-size:18px;line-height:1;padding:0">×</button>
+            <button onclick="cancelQuickAdd()" type="button" aria-label="Cancel adding material" style="background:none;border:none;color:var(--accent-dark);cursor:pointer;font-size:18px;line-height:1;padding:0">×</button>
           </div>
           <div class="mat-quick-add__fields">
             <div>
@@ -303,7 +304,7 @@ input[type=range].risk-slider::-moz-range-thumb {
         <!-- Pieces per sheet override (shown after material selected) -->
         <div class="pcs-override" id="pcs-override">
           <div class="pcs-override__row">
-            <div class="pcs-override__label">Pieces from one sheet <em>for this product</em></div>
+            <label class="pcs-override__label" for="pcs-product">Pieces from one sheet <em>for this product</em></label>
             <div class="input-group compact" style="flex-shrink:0">
               <input type="number" id="pcs-product" min="1" step="1" value="1" oninput="calc()" style="width:60px">
               <span class="input-group__affix suf">pcs</span>
@@ -319,9 +320,9 @@ input[type=range].risk-slider::-moz-range-thumb {
 
       <!-- ── Machine time (€/h) ── -->
       <div class="form-row">
-        <div class="form-row__label">Machine time</div>
+        <div class="form-row__label" id="lbl-mach">Machine time</div>
         <div class="form-row__controls">
-          <div class="input-group compact" id="ig-mach">
+          <div class="input-group compact" id="ig-mach" role="group" aria-labelledby="lbl-mach">
             <input type="number" id="mach-min" value="8" min="0" step="1" oninput="clearIg('ig-mach');calc()">
             <span class="input-group__affix suf">min</span>
           </div>
@@ -337,9 +338,9 @@ input[type=range].risk-slider::-moz-range-thumb {
 
       <!-- ── Labor ── -->
       <div class="form-row">
-        <div class="form-row__label">Your labor</div>
+        <div class="form-row__label" id="lbl-lab">Your labor</div>
         <div class="form-row__controls">
-          <div class="input-group compact" id="ig-lab">
+          <div class="input-group compact" id="ig-lab" role="group" aria-labelledby="lbl-lab">
             <input type="number" id="lab-min" value="10" min="0" step="1" oninput="clearIg('ig-lab');calc()">
             <span class="input-group__affix suf">min</span>
           </div>
@@ -405,7 +406,10 @@ input[type=range].risk-slider::-moz-range-thumb {
       <div class="slider-wrap-mobile">
         <div class="risk-track"></div>
         <input type="range" class="risk-slider" id="margin-slider"
-               min="20" max="75" step="5" value="50" oninput="onSlider()">
+               min="20" max="75" step="5" value="50" oninput="onSlider()"
+               aria-label="Target margin percentage"
+               aria-valuemin="20" aria-valuemax="75" aria-valuenow="50"
+               aria-describedby="risk-desc">
       </div>
 
       <div class="slider-ticks-mobile">
@@ -453,13 +457,13 @@ input[type=range].risk-slider::-moz-range-thumb {
 
   <!-- NOTES -->
   <div class="card page-in" style="margin-bottom:.75rem">
-    <div class="card-header clickable" onclick="toggleCard('notes')">
+    <div class="card-header clickable" onclick="toggleCard('notes')" role="button" aria-expanded="true" aria-controls="card-body-notes" id="card-btn-notes" tabindex="0">
       <span class="card-title">Notes</span>
       <span style="font-size:11px;color:var(--text-3);margin-left:auto;margin-right:6px">Optional</span>
       <svg class="card-chevron" viewBox="0 0 24 24"><polyline points="6 9 12 15 18 9"/></svg>
     </div>
-    <div class="card-body" id="card-notes">
-      <textarea id="product-notes"
+    <div class="card-body" id="card-body-notes">
+      <textarea id="product-notes" aria-label="Product notes"
         placeholder="e.g. Works best with 3mm birch. Sand edges lightly before assembly. Popular at Christmas markets."
         style="width:100%;min-height:100px;border:1.5px solid var(--border);border-radius:var(--r-md);padding:12px;font-size:14px;font-family:var(--font-sans);color:var(--text);background:var(--bg);outline:none;resize:vertical;line-height:1.6;transition:border-color .15s"
         oninput="this.style.borderColor=''"
@@ -480,7 +484,7 @@ input[type=range].risk-slider::-moz-range-thumb {
       <span class="price-bar__pct" id="bar-pct">50%</span>
       <span class="price-bar__risk risk-pill good" id="bar-risk">Good</span>
     </div>
-    <button class="price-bar__save" id="save-btn" onclick="saveProduct()">
+    <button class="price-bar__save" id="save-btn" onclick="saveProduct()" type="button">
       <svg viewBox="0 0 24 24"><path d="M19 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11l5 5v11a2 2 0 0 1-2 2z"/><polyline points="17 21 17 13 7 13 7 21"/><polyline points="7 3 7 8 15 8"/></svg>
       Save
     </button>
@@ -492,8 +496,8 @@ input[type=range].risk-slider::-moz-range-thumb {
         <span class="price-bar__ch-price" id="bp-fair">—</span>
         <span class="price-bar__ch-vat" id="bv-fair"></span>
         <div class="price-bar__ch-info info-wrap">
-          <div class="info-btn" id="btn-fair" onclick="togglePop('fair')">i</div>
-          <div class="popover" id="pop-fair"></div>
+          <button class="info-btn" id="btn-fair" onclick="togglePop('fair')" type="button" aria-expanded="false" aria-haspopup="true" aria-label="Craft fair price breakdown">i</button>
+          <div class="popover" id="pop-fair" role="dialog" aria-label="Price breakdown" aria-modal="false"></div>
         </div>
       </div>
       <div class="price-bar__ch-input">
@@ -507,8 +511,8 @@ input[type=range].risk-slider::-moz-range-thumb {
         <span class="price-bar__ch-price" id="bp-etsy">—</span>
         <span class="price-bar__ch-vat" id="bv-etsy"></span>
         <div class="price-bar__ch-info info-wrap">
-          <div class="info-btn" id="btn-etsy" onclick="togglePop('etsy')">i</div>
-          <div class="popover" id="pop-etsy"></div>
+          <button class="info-btn" id="btn-etsy" onclick="togglePop('etsy')" type="button" aria-expanded="false" aria-haspopup="true" aria-label="Etsy price breakdown">i</button>
+          <div class="popover" id="pop-etsy" role="dialog" aria-label="Price breakdown" aria-modal="false"></div>
         </div>
       </div>
       <div class="price-bar__ch-input">
@@ -522,8 +526,8 @@ input[type=range].risk-slider::-moz-range-thumb {
         <span class="price-bar__ch-price" id="bp-web">—</span>
         <span class="price-bar__ch-vat" id="bv-web"></span>
         <div class="price-bar__ch-info info-wrap">
-          <div class="info-btn" id="btn-web" onclick="togglePop('web')">i</div>
-          <div class="popover" id="pop-web"></div>
+          <button class="info-btn" id="btn-web" onclick="togglePop('web')" type="button" aria-expanded="false" aria-haspopup="true" aria-label="Webshop price breakdown">i</button>
+          <div class="popover" id="pop-web" role="dialog" aria-label="Price breakdown" aria-modal="false"></div>
         </div>
       </div>
       <div class="price-bar__ch-input">
@@ -535,19 +539,19 @@ input[type=range].risk-slider::-moz-range-thumb {
 </div>
 
 <!-- Bottom nav -->
-<nav class="bottom-nav">
-  <a href="products.html" class="nav-item">
-    <svg viewBox="0 0 24 24"><rect x="3" y="3" width="7" height="7" rx="1"/><rect x="14" y="3" width="7" height="7" rx="1"/><rect x="3" y="14" width="7" height="7" rx="1"/><rect x="14" y="14" width="7" height="7" rx="1"/></svg>
+<nav class="bottom-nav" aria-label="Main navigation">
+  <a href="products.html" class="nav-item" aria-label="Products">
+    <svg viewBox="0 0 24 24" aria-hidden="true"><rect x="3" y="3" width="7" height="7" rx="1"/><rect x="14" y="3" width="7" height="7" rx="1"/><rect x="3" y="14" width="7" height="7" rx="1"/><rect x="14" y="14" width="7" height="7" rx="1"/></svg>
     Products
   </a>
-  <a href="new.html" class="nav-item fab active">
+  <a href="new.html" class="nav-item fab active" aria-current="page" aria-label="New product">
     <div class="fab-circle">
       <svg viewBox="0 0 24 24"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
     </div>
     <span>New</span>
   </a>
-  <a href="settings.html" class="nav-item">
-    <svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83-2.83l.06-.06A1.65 1.65 0 0 0 4.68 15a1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 2.83-2.83l.06.06A1.65 1.65 0 0 0 9 4.68a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 2.83l-.06.06A1.65 1.65 0 0 0 19.4 9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z"/></svg>
+  <a href="settings.html" class="nav-item" aria-label="Settings">
+    <svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83-2.83l.06-.06A1.65 1.65 0 0 0 4.68 15a1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 2.83-2.83l.06.06A1.65 1.65 0 0 0 9 4.68a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 2.83l-.06.06A1.65 1.65 0 0 0 19.4 9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z"/></svg>
     Settings
   </a>
 </nav>
@@ -595,7 +599,10 @@ function showToast(state,text){
 function toggleCard(id){
   const c=document.getElementById('card-'+id);if(!c)return;
   c.classList.toggle('collapsed');
-  try{const s=JSON.parse(localStorage.getItem('lps_cards')||'{}');s[id]=c.classList.contains('collapsed');localStorage.setItem('lps_cards',JSON.stringify(s));}catch(e){}
+  const collapsed=c.classList.contains('collapsed');
+  const btn=document.getElementById('card-btn-'+id);
+  if(btn)btn.setAttribute('aria-expanded', collapsed?'false':'true');
+  try{const s=JSON.parse(localStorage.getItem('lps_cards')||'{}');s[id]=collapsed;localStorage.setItem('lps_cards',JSON.stringify(s));}catch(e){}
 }
 function restoreCards(){
   try{const s=JSON.parse(localStorage.getItem('lps_cards')||'{}');Object.keys(s).forEach(id=>{const c=document.getElementById('card-'+id);if(c)c.classList.toggle('collapsed',!!s[id]);});}catch(e){}
@@ -728,7 +735,9 @@ function loadFees(){
 
 // ─── Slider ───────────────────────────────────────────────────────────────────
 function onSlider(){
-  marginPct=parseInt(document.getElementById('margin-slider').value);
+  const sl=document.getElementById('margin-slider');
+  marginPct=parseInt(sl.value);
+  sl.setAttribute('aria-valuenow',marginPct);
   updateMarginDisplay();
   calc();
 }
@@ -880,13 +889,20 @@ function togglePop(name){
   const p=document.getElementById('pop-'+name),b=document.getElementById('btn-'+name);
   const open=p.classList.contains('open');
   document.querySelectorAll('.popover').forEach(x=>x.classList.remove('open'));
-  document.querySelectorAll('.info-btn').forEach(x=>x.classList.remove('open'));
-  if(!open){p.classList.add('open');b.classList.add('open');}
+  document.querySelectorAll('.info-btn').forEach(x=>{x.classList.remove('open');x.setAttribute('aria-expanded','false');});
+  if(!open){p.classList.add('open');b.classList.add('open');b.setAttribute('aria-expanded','true');}
 }
 document.addEventListener('click',e=>{
   if(!e.target.closest('.info-wrap')){
     document.querySelectorAll('.popover').forEach(x=>x.classList.remove('open'));
-    document.querySelectorAll('.info-btn').forEach(x=>x.classList.remove('open'));
+    document.querySelectorAll('.info-btn').forEach(x=>{x.classList.remove('open');x.setAttribute('aria-expanded','false');});
+  }
+});
+// Keyboard: close popovers on Escape
+document.addEventListener('keydown',e=>{
+  if(e.key==='Escape'){
+    document.querySelectorAll('.popover').forEach(x=>x.classList.remove('open'));
+    document.querySelectorAll('.info-btn').forEach(x=>{x.classList.remove('open');x.setAttribute('aria-expanded','false');});
   }
 });
 

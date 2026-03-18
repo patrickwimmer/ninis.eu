@@ -166,11 +166,12 @@
 </head>
 <body>
 
-<div class="db-overlay" id="overlay">
+<a href="#main-content" class="skip-link">Skip to main content</a>
+<div class="db-overlay" id="overlay" role="status" aria-live="polite" aria-label="Loading">
   <div class="spinner"></div>
   <p>Loading…</p>
 </div>
-<div class="toast" id="toast"><span id="toast-txt"></span></div>
+<div class="toast" id="toast" role="status" aria-live="polite" aria-atomic="true"><span id="toast-txt"></span></div>
 
 <header class="topbar">
   <div class="topbar-brand">
@@ -185,7 +186,7 @@
   </div>
 </header>
 
-<main class="page-wrap" style="padding-top:1.25rem;max-width:720px">
+<main class="page-wrap" id="main-content" style="padding-top:1.25rem;max-width:720px">
 
   <!-- ══════════════════════════════════════
        MATERIALS LIBRARY
@@ -209,11 +210,11 @@
         <div class="add-mat-form__row">
           <div>
             <div class="add-mat-form__label">Material name *</div>
-            <input type="text" id="n-name" placeholder="e.g. Birch plywood 3mm" maxlength="60">
+            <input type="text" id="n-name" placeholder="e.g. Birch plywood 3mm" maxlength="60" aria-required="true" aria-label="Material name (required)">
           </div>
           <div>
             <div class="add-mat-form__label">Sheet price * (€)</div>
-            <input type="number" id="n-sheet" placeholder="12.50" min="0.01" step="0.01" style="width:100px">
+            <input type="number" id="n-sheet" placeholder="12.50" min="0.01" step="0.01" style="width:100px" aria-required="true" aria-label="Sheet price in euros (required)">
           </div>
         </div>
 
@@ -243,7 +244,7 @@
           </div>
         </div>
 
-        <button class="btn btn--primary btn--sm" onclick="addMat()" style="width:100%;justify-content:center;height:42px">
+        <button class="btn btn--primary btn--sm" onclick="addMat()" style="width:100%;justify-content:center;height:42px" type="button">
           <svg style="width:14px;height:14px;stroke:white;fill:none;stroke-width:2;stroke-linecap:round" viewBox="0 0 24 24"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
           Add material to library
         </button>
@@ -263,7 +264,7 @@
 
       <!-- VAT toggle -->
       <div class="toggle-row" style="margin-bottom:16px;padding:10px 12px;background:var(--surface2);border-radius:var(--r-md);border:1px solid var(--border)">
-        <div class="toggle-switch on" id="vat-toggle" onclick="toggleVAT()"></div>
+        <button class="toggle-switch on" id="vat-toggle" onclick="toggleVAT()" role="switch" aria-checked="true" aria-label="Include 20% Austrian VAT in all prices" type="button"></button>
         <div class="toggle-label">
           Include 20% Austrian VAT in all prices
           <small>Prices shown to customers include VAT. Your profit is always calculated on the net amount.</small>
@@ -293,7 +294,7 @@
             <div class="fee-row">
               <span class="fee-row__label">Card processing</span>
               <div class="fee-row__input-wrap">
-                <input type="number" class="fee-row__input" id="fair-card" value="0" min="0" max="20" step="0.1" oninput="saveFees();updateFeeSummaries()">
+                <input type="number" class="fee-row__input" id="fair-card" aria-label="Craft fair card processing fee percentage" value="0" min="0" max="20" step="0.1" oninput="saveFees();updateFeeSummaries()">
                 <span class="fee-row__unit">%</span>
               </div>
             </div>
@@ -318,21 +319,21 @@
               <span class="fee-row__label">Listing fee (per item)</span>
               <div class="fee-row__input-wrap">
                 <span style="font-size:12px;color:var(--text-3)">€</span>
-                <input type="number" class="fee-row__input" id="e-list" value="0.20" min="0" step="0.01" oninput="saveFees();updateFeeSummaries()">
+                <input type="number" class="fee-row__input" id="e-list" aria-label="Etsy listing fee in euros per item" value="0.20" min="0" step="0.01" oninput="saveFees();updateFeeSummaries()">
                 <span class="fee-row__unit" style="width:auto;font-size:11px;color:var(--text-3)">/item</span>
               </div>
             </div>
             <div class="fee-row">
               <span class="fee-row__label">Transaction fee</span>
               <div class="fee-row__input-wrap">
-                <input type="number" class="fee-row__input" id="e-tx" value="6.5" min="0" step="0.1" oninput="saveFees();updateFeeSummaries()">
+                <input type="number" class="fee-row__input" id="e-tx" aria-label="Etsy transaction fee percentage" value="6.5" min="0" step="0.1" oninput="saveFees();updateFeeSummaries()">
                 <span class="fee-row__unit">%</span>
               </div>
             </div>
             <div class="fee-row">
               <span class="fee-row__label">Payment processing</span>
               <div class="fee-row__input-wrap">
-                <input type="number" class="fee-row__input" id="e-pay" value="3.0" min="0" step="0.1" oninput="saveFees();updateFeeSummaries()">
+                <input type="number" class="fee-row__input" id="e-pay" aria-label="Etsy payment processing fee percentage" value="3.0" min="0" step="0.1" oninput="saveFees();updateFeeSummaries()">
                 <span class="fee-row__unit">%</span>
               </div>
             </div>
@@ -360,7 +361,7 @@
             <div class="fee-row">
               <span class="fee-row__label">Payment processing</span>
               <div class="fee-row__input-wrap">
-                <input type="number" class="fee-row__input" id="w-pay" value="2.5" min="0" step="0.1" oninput="saveFees();updateFeeSummaries()">
+                <input type="number" class="fee-row__input" id="w-pay" aria-label="Webshop payment processing fee percentage" value="2.5" min="0" step="0.1" oninput="saveFees();updateFeeSummaries()">
                 <span class="fee-row__unit">%</span>
               </div>
             </div>
@@ -387,18 +388,18 @@
 </main>
 
 <!-- Bottom nav -->
-<nav class="bottom-nav">
-  <a href="products.html" class="nav-item">
+<nav class="bottom-nav" aria-label="Main navigation">
+  <a href="products.html" class="nav-item" aria-label="Products">
     <svg viewBox="0 0 24 24"><rect x="3" y="3" width="7" height="7" rx="1"/><rect x="14" y="3" width="7" height="7" rx="1"/><rect x="3" y="14" width="7" height="7" rx="1"/><rect x="14" y="14" width="7" height="7" rx="1"/></svg>
     Products
   </a>
-  <a href="new.html" class="nav-item fab" onclick="goNew(event)">
+  <a href="new.html" class="nav-item fab" onclick="goNew(event)" aria-label="Add new product">
     <div class="fab-circle">
       <svg viewBox="0 0 24 24"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
     </div>
     <span>New</span>
   </a>
-  <a href="settings.html" class="nav-item active">
+  <a href="settings.html" class="nav-item active" aria-current="page">
     <svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83-2.83l.06-.06A1.65 1.65 0 0 0 4.68 15a1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 2.83-2.83l.06.06A1.65 1.65 0 0 0 9 4.68a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 2.83l-.06.06A1.65 1.65 0 0 0 19.4 9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z"/></svg>
     Settings
   </a>
@@ -462,7 +463,7 @@ function renderMats(){
     if(meta.supplier) chips+=`<span style="font-size:10px;background:var(--surface);border:1px solid var(--border);padding:1px 7px;border-radius:10px;color:var(--text-2)">${esc(meta.supplier)}</span>`;
 
     card.innerHTML=`
-      <div class="mat-card-header" onclick="toggleMatCard(${m.id})">
+      <div class="mat-card-header" onclick="toggleMatCard(${m.id})" role="button" tabindex="0" aria-expanded="false" aria-controls="mat-detail-${m.id}" id="mat-header-${m.id}">
         <div>
           <div class="mat-card-name">${esc(m.name)}</div>
           ${chips?`<div style="display:flex;gap:4px;flex-wrap:wrap;margin-top:4px">${chips}</div>`:''}
@@ -470,7 +471,7 @@ function renderMats(){
         <div class="mat-card-price">€${m.sheet.toFixed(2)} / sheet</div>
         <svg class="mat-card-chevron" viewBox="0 0 24 24"><polyline points="6 9 12 15 18 9"/></svg>
       </div>
-      <div class="mat-card-detail">
+      <div class="mat-card-detail" id="mat-detail-${m.id}">
         <div class="mat-detail-grid">
           <div class="mat-detail-field">
             <label>Sheet price (€)</label>
@@ -496,7 +497,7 @@ function renderMats(){
         </div>
         <div class="mat-detail-actions">
           <button class="btn btn--sm btn--primary" onclick="saveMat(${m.id})">Save changes</button>
-          <button class="btn btn--sm" onclick="removeMat(${m.id})" style="color:var(--danger);border-color:var(--danger-border)">Delete</button>
+          <button class="btn btn--sm" onclick="removeMat(${m.id})" type="button" aria-label="Delete ${esc(m.name)}" style="color:var(--danger);border-color:var(--danger-border)">Delete</button>
         </div>
       </div>`;
     container.appendChild(card);
@@ -513,7 +514,8 @@ function renderMats(){
   });
 }
 
-function toggleMatCard(id){
+function toggleMatCard(id){ // Toggle expandable material card
+
   const card=document.getElementById('mat-card-'+id);
   if(!card)return;
   // Close all others
@@ -623,16 +625,24 @@ function loadFees(){
     const f=JSON.parse(localStorage.getItem('lps_fees3')||'null');
     if(!f)return;
     [['fc','fair-card'],['el','e-list'],['et','e-tx'],['ep','e-pay'],['wp','w-pay']].forEach(([k,id])=>{if(f[k]!=null)document.getElementById(id).value=f[k];});
-    if(f.vat!=null){vatOn=f.vat;document.getElementById('vat-toggle').classList.toggle('on',vatOn);}
+    if(f.vat!=null){vatOn=f.vat;const t=document.getElementById('vat-toggle');t.classList.toggle('on',vatOn);t.setAttribute('aria-checked',vatOn?'true':'false');}
   }catch(e){}
 }
-function toggleVAT(){vatOn=!vatOn;document.getElementById('vat-toggle').classList.toggle('on',vatOn);saveFees();}
+function toggleVAT(){vatOn=!vatOn;const t=document.getElementById('vat-toggle');t.classList.toggle('on',vatOn);t.setAttribute('aria-checked',vatOn?'true':'false');saveFees();}
 function fv(id){return parseFloat(document.getElementById(id).value)||0;}
 
 function goNew(e){e.preventDefault();try{localStorage.setItem('lps_edit_id','new');}catch(e){}window.location.href='new.html';}
 function logout(){sessionStorage.removeItem('ninis_studio_auth');window.location.replace('login.html');}
 
 document.getElementById('n-name') .addEventListener('keydown',e=>{if(e.key==='Enter')addMat();});
+// Keyboard support for mat-card-headers
+document.getElementById('mat-cards').addEventListener('keydown',e=>{
+  if((e.key==='Enter'||e.key===' ')&&e.target.getAttribute('role')==='button'){
+    e.preventDefault();
+    const idStr=e.target.id.replace('mat-header-','');
+    if(idStr)toggleMatCard(parseInt(idStr));
+  }
+});
 
 async function init(){
   const overlay=document.getElementById('overlay');
