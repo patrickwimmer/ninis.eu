@@ -19,35 +19,24 @@
   --good-bg:#E8F4ED;--good-border:#74C69A;--good-text:#1E6641;
   --great-bg:#E6F1FB;--great-border:#85B7EB;--great-text:#185FA5;
   --r:10px;--r-sm:6px;--thumb-col:#9B2335;
+  --bar-h:148px;
 }
-body{font-family:'DM Sans',sans-serif;background:var(--bg);color:var(--text);font-size:14px;line-height:1.65;padding-bottom:5rem}
+body{font-family:'DM Sans',sans-serif;background:var(--bg);color:var(--text);font-size:14px;line-height:1.65;padding-bottom:calc(var(--bar-h) + 1.5rem)}
 
-/* ── Loading overlay ── */
-.db-loading{
-  position:fixed;inset:0;z-index:200;
-  background:var(--bg);
-  display:flex;flex-direction:column;align-items:center;justify-content:center;
-  gap:1rem;transition:opacity .3s;
-}
+/* ── Loading ── */
+.db-loading{position:fixed;inset:0;z-index:300;background:var(--bg);display:flex;flex-direction:column;align-items:center;justify-content:center;gap:1rem;transition:opacity .3s}
 .db-loading.hidden{opacity:0;pointer-events:none}
-.db-loading .spinner{width:32px;height:32px;border:3px solid var(--border);border-top-color:var(--accent);border-radius:50%;animation:spin .7s linear infinite}
+.db-loading .spin{width:32px;height:32px;border:3px solid var(--border);border-top-color:var(--accent);border-radius:50%;animation:spin .7s linear infinite}
 .db-loading p{font-size:13px;color:var(--muted)}
 @keyframes spin{to{transform:rotate(360deg)}}
+@keyframes fadeIn{from{opacity:0;transform:translateY(4px)}to{opacity:1;transform:none}}
 
-/* ── DB status bar ── */
-.db-status{
-  position:fixed;bottom:1rem;right:1rem;z-index:100;
-  display:flex;align-items:center;gap:7px;
-  padding:6px 12px;border-radius:20px;
-  font-size:11px;font-weight:500;
-  border:1px solid;
-  transition:opacity .4s;opacity:0;pointer-events:none;
-}
-.db-status.show{opacity:1}
-.db-status.saving{background:var(--ok-bg);border-color:var(--ok-border);color:var(--ok-text)}
-.db-status.saved{background:var(--good-bg);border-color:var(--good-border);color:var(--good-text)}
-.db-status.err{background:var(--danger-light);border-color:var(--danger-border);color:var(--danger)}
-.db-dot{width:7px;height:7px;border-radius:50%;background:currentColor}
+/* ── DB toast ── */
+.db-toast{position:fixed;top:4.5rem;right:1rem;z-index:200;display:flex;align-items:center;gap:7px;padding:6px 12px;border-radius:20px;font-size:11px;font-weight:500;border:1px solid;transition:opacity .3s,transform .3s;opacity:0;transform:translateY(-4px);pointer-events:none}
+.db-toast.show{opacity:1;transform:none}
+.db-toast.saving{background:var(--ok-bg);border-color:var(--ok-border);color:var(--ok-text)}
+.db-toast.saved{background:var(--good-bg);border-color:var(--good-border);color:var(--good-text)}
+.db-toast.err{background:var(--danger-light);border-color:var(--danger-border);color:var(--danger)}
 
 /* ── Topbar ── */
 .topbar{background:var(--surface);border-bottom:1px solid var(--border);padding:.85rem 1.5rem;display:flex;align-items:center;justify-content:space-between;gap:1rem;position:sticky;top:0;z-index:60}
@@ -60,10 +49,6 @@ body{font-family:'DM Sans',sans-serif;background:var(--bg);color:var(--text);fon
 .product-name-input:focus{border-color:var(--accent-mid);background:white}
 .product-name-input.err{border-color:var(--danger);background:#fff8f8}
 .product-name-input::placeholder{color:var(--faint)}
-.save-btn{display:inline-flex;align-items:center;gap:7px;height:38px;padding:0 16px;border-radius:var(--r-sm);font-size:13px;font-family:inherit;font-weight:500;cursor:pointer;background:var(--accent);border:1px solid var(--accent);color:white;transition:background .15s;white-space:nowrap;flex-shrink:0}
-.save-btn:hover{background:var(--accent-mid)}
-.save-btn.loading{opacity:.7;pointer-events:none}
-.save-btn svg{width:15px;height:15px;stroke:white;fill:none;stroke-width:2;stroke-linecap:round}
 
 /* ── Validation banner ── */
 .val-banner{display:none;margin-bottom:1.25rem;background:var(--danger-light);border:1px solid var(--danger-border);border-radius:var(--r-sm);padding:.85rem 1rem}
@@ -73,36 +58,41 @@ body{font-family:'DM Sans',sans-serif;background:var(--bg);color:var(--text);fon
 .val-list li{font-size:12px;color:var(--danger);display:flex;align-items:center;gap:6px}
 .val-list li::before{content:'';width:5px;height:5px;border-radius:50%;background:var(--danger);flex-shrink:0}
 
-/* ── Main ── */
+/* ── Layout ── */
 .container{max-width:960px;margin:0 auto;padding:2rem 1.25rem}
 .page-title{font-family:'Playfair Display',serif;font-size:1.6rem;font-weight:700;letter-spacing:-.02em;margin-bottom:.2rem}
 .page-sub{font-size:13px;color:var(--muted);margin-bottom:1.75rem}
 
-/* ── Card ── */
-.card{background:var(--surface);border:1px solid var(--border);border-radius:var(--r);padding:1.5rem;margin-bottom:1.25rem;animation:fadeIn .3s ease both}
-.card:nth-child(1){animation-delay:0s}.card:nth-child(2){animation-delay:.05s}.card:nth-child(3){animation-delay:.1s}.card:nth-child(4){animation-delay:.15s}.card:nth-child(5){animation-delay:.2s}.card:nth-child(6){animation-delay:.25s}
-@keyframes fadeIn{from{opacity:0;transform:translateY(5px)}to{opacity:1;transform:none}}
-.card-header{display:flex;align-items:center;gap:10px;margin-bottom:1.25rem}
+/* ── Cards ── */
+.card{background:var(--surface);border:1px solid var(--border);border-radius:var(--r);margin-bottom:1rem;overflow:hidden;animation:fadeIn .3s ease both}
+.card:nth-child(1){animation-delay:.0s}.card:nth-child(2){animation-delay:.05s}.card:nth-child(3){animation-delay:.1s}.card:nth-child(4){animation-delay:.15s}
+.card-header{display:flex;align-items:center;padding:1rem 1.5rem;gap:10px;cursor:pointer;user-select:none}
+.card-header.static{cursor:default}
 .card-title{font-size:11px;font-weight:500;text-transform:uppercase;letter-spacing:.1em;color:var(--muted)}
-.count-badge{margin-left:auto;background:var(--accent-light);color:var(--accent);font-size:11px;font-weight:500;padding:2px 10px;border-radius:20px}
+.card-badge{background:var(--accent-light);color:var(--accent);font-size:11px;font-weight:500;padding:2px 10px;border-radius:20px;margin-left:auto}
+.card-chevron{margin-left:auto;width:18px;height:18px;stroke:var(--faint);fill:none;stroke-width:2;stroke-linecap:round;transition:transform .2s;flex-shrink:0}
+.card-badge+.card-chevron{margin-left:.5rem}
+.card.collapsed .card-chevron{transform:rotate(-90deg)}
+.card-body{padding:0 1.5rem 1.5rem}
+.card.collapsed .card-body{display:none}
 
 /* ── Image upload ── */
-.img-upload-area{border:2px dashed var(--border2);border-radius:var(--r);padding:1.5rem;display:flex;align-items:center;gap:1.25rem;transition:border-color .15s,background .15s;cursor:pointer;position:relative}
+.img-upload-area{border:2px dashed var(--border2);border-radius:var(--r-sm);padding:1.25rem;display:flex;align-items:center;gap:1.25rem;transition:border-color .15s,background .15s;cursor:pointer;position:relative}
 .img-upload-area:hover,.img-upload-area.drag{border-color:var(--accent-mid);background:var(--accent-light)}
 .img-upload-area input[type=file]{position:absolute;inset:0;opacity:0;cursor:pointer;width:100%;height:100%}
-.img-placeholder{width:80px;height:80px;flex-shrink:0;border-radius:var(--r-sm);background:var(--surface2);border:1px solid var(--border);display:flex;flex-direction:column;align-items:center;justify-content:center;gap:6px;color:var(--faint);font-size:10px;text-align:center;overflow:hidden}
-.img-placeholder svg{width:24px;height:24px;stroke:var(--faint);fill:none;stroke-width:1.5;stroke-linecap:round}
-.img-preview{width:80px;height:80px;flex-shrink:0;border-radius:var(--r-sm);border:1px solid var(--border);object-fit:cover;display:none}
-.img-preview.show{display:block}
+.img-ph{width:72px;height:72px;flex-shrink:0;border-radius:var(--r-sm);background:var(--surface2);border:1px solid var(--border);display:flex;flex-direction:column;align-items:center;justify-content:center;gap:5px;color:var(--faint);font-size:10px;text-align:center;overflow:hidden}
+.img-ph svg{width:22px;height:22px;stroke:var(--faint);fill:none;stroke-width:1.5;stroke-linecap:round}
+.img-prev{width:72px;height:72px;flex-shrink:0;border-radius:var(--r-sm);border:1px solid var(--border);object-fit:cover;display:none}
+.img-prev.show{display:block}
 .img-info{flex:1}
-.img-info-title{font-size:13px;font-weight:500;color:var(--text);margin-bottom:3px}
-.img-info-sub{font-size:11px;color:var(--faint);margin-bottom:.75rem}
-.img-actions{display:flex;gap:8px;position:relative;z-index:1}
-.img-btn{height:30px;padding:0 12px;border-radius:var(--r-sm);font-size:12px;font-family:inherit;font-weight:500;cursor:pointer;border:1px solid var(--border);background:var(--surface);color:var(--muted);transition:background .12s,color .12s;display:inline-flex;align-items:center;gap:5px}
-.img-btn:hover{background:var(--surface2);color:var(--text)}
+.img-info-title{font-size:13px;font-weight:500;color:var(--text);margin-bottom:2px}
+.img-info-sub{font-size:11px;color:var(--faint);margin-bottom:.6rem}
+.img-acts{display:flex;gap:8px;position:relative;z-index:1}
+.img-btn{height:28px;padding:0 10px;border-radius:var(--r-sm);font-size:12px;font-family:inherit;font-weight:500;cursor:pointer;border:1px solid var(--border);background:var(--surface);color:var(--muted);transition:background .12s;display:inline-flex;align-items:center;gap:5px}
+.img-btn:hover{background:var(--surface2)}
 .img-btn.danger:hover{background:var(--danger-light);border-color:var(--danger-border);color:var(--danger)}
-.img-btn svg{width:13px;height:13px;stroke:currentColor;fill:none;stroke-width:2;stroke-linecap:round}
-.img-name{font-size:11px;color:var(--good-text);font-weight:500;margin-top:.5rem;display:none}
+.img-btn svg{width:12px;height:12px;stroke:currentColor;fill:none;stroke-width:2;stroke-linecap:round}
+.img-name{font-size:11px;color:var(--good-text);font-weight:500;margin-top:.4rem;display:none}
 .img-name.show{display:block}
 
 /* ── Materials ── */
@@ -110,15 +100,16 @@ body{font-family:'DM Sans',sans-serif;background:var(--bg);color:var(--text);fon
 .mat-row{display:grid;grid-template-columns:1fr 100px 90px 100px 34px;gap:8px;align-items:center;padding:7px 0;border-bottom:1px solid var(--border);font-size:13px}
 .mat-row.head{font-size:10px;text-transform:uppercase;letter-spacing:.07em;color:var(--faint);font-weight:500;padding-bottom:5px}
 .cpp{font-weight:500;color:var(--accent)}
-.mat-empty{text-align:center;padding:1.5rem;font-size:13px;color:var(--faint);font-style:italic}
+.mat-empty{text-align:center;padding:1rem;font-size:13px;color:var(--faint);font-style:italic}
 .add-row{display:grid;grid-template-columns:1fr 120px 110px auto;gap:8px;padding-top:1rem;border-top:1px dashed var(--border2)}
 .add-row input{border:1px solid var(--border);border-radius:var(--r-sm);padding:0 10px;height:36px;font-size:13px;font-family:inherit;color:var(--text);background:var(--bg);outline:none;width:100%;transition:border-color .15s}
 .add-row input:focus{border-color:var(--accent-mid);background:white}
 .add-row input::placeholder{color:var(--faint)}
 .add-row input.err{border-color:var(--danger)}
 
-/* ── Form ── */
+/* ── Form rows ── */
 .form-row{display:flex;align-items:center;gap:10px;margin-bottom:.7rem;flex-wrap:wrap}
+.form-row:last-child{margin-bottom:0}
 .form-label{font-size:13px;color:var(--muted);min-width:148px;flex-shrink:0}
 .hint{font-size:11px;color:var(--faint);margin-left:2px}
 .ig{display:flex;align-items:center;border:1px solid var(--border);border-radius:var(--r-sm);background:var(--bg);overflow:hidden;transition:border-color .15s}
@@ -135,18 +126,17 @@ select.sel.err{border-color:var(--danger)}
 .divider{border:none;border-top:1px solid var(--border);margin:.75rem 0}
 
 /* ── Slider ── */
-.slider-section{margin-top:.25rem}
-.range-wrap{position:relative;padding:.6rem 0 0}
+.range-wrap{position:relative;padding:.6rem 0 0;margin-bottom:.25rem}
 .zone-track{height:8px;border-radius:4px;background:linear-gradient(to right,#E8A0A8 0% 43.636%,#F5C96A 43.636% 54.545%,#74C69A 54.545% 85.454%,#85B7EB 85.454% 100%);pointer-events:none;position:absolute;left:0;right:0;top:calc(.6rem + 7px)}
 input[type=range].zoned{-webkit-appearance:none;appearance:none;width:100%;height:22px;background:transparent;cursor:pointer;outline:none;position:relative}
 input[type=range].zoned::-webkit-slider-runnable-track{height:8px;border-radius:4px;background:transparent}
 input[type=range].zoned::-webkit-slider-thumb{-webkit-appearance:none;width:22px;height:22px;border-radius:50%;background:white;border:3px solid var(--thumb-col);box-shadow:0 1px 6px rgba(0,0,0,.25);margin-top:-7px;cursor:pointer;transition:border-color .2s}
 input[type=range].zoned::-moz-range-track{height:8px;border-radius:4px;background:transparent}
 input[type=range].zoned::-moz-range-thumb{width:22px;height:22px;border-radius:50%;border:3px solid var(--thumb-col);background:white;box-shadow:0 1px 6px rgba(0,0,0,.25);cursor:pointer}
-.zone-ticks{display:flex;position:relative;height:16px;margin-top:4px}
+.zone-ticks{display:flex;position:relative;height:14px;margin-top:3px;margin-bottom:.6rem}
 .zone-tick{position:absolute;transform:translateX(-50%);font-size:10px;color:var(--faint);white-space:nowrap}
-.margin-display{display:flex;align-items:baseline;gap:10px;margin-bottom:.6rem}
-.margin-pct{font-family:'Playfair Display',serif;font-size:2.2rem;font-weight:700;line-height:1;transition:color .2s}
+.margin-display{display:flex;align-items:baseline;gap:10px;margin-bottom:.5rem}
+.margin-pct{font-family:'Playfair Display',serif;font-size:2rem;font-weight:700;line-height:1;transition:color .2s}
 .margin-mult{font-size:13px;font-weight:500;transition:color .2s}
 .risk-pill{display:inline-flex;align-items:center;gap:5px;padding:4px 12px;border-radius:20px;font-size:12px;font-weight:500}
 .rp-danger{background:var(--danger-light);color:var(--danger);border:1px solid var(--danger-border)}
@@ -161,7 +151,7 @@ input[type=range].zoned::-moz-range-thumb{width:22px;height:22px;border-radius:5
 .toggle::after{content:'';position:absolute;width:18px;height:18px;background:white;border-radius:50%;top:3px;left:3px;transition:left .2s;box-shadow:0 1px 4px rgba(0,0,0,.2)}
 .toggle.on::after{left:21px}
 
-/* ── Platform fees ── */
+/* ── Fees ── */
 .platform-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:12px}
 .pf-card{background:var(--surface2);border:1px solid var(--border);border-radius:var(--r-sm);padding:1rem}
 .pf-head{display:flex;align-items:center;justify-content:space-between;margin-bottom:.75rem}
@@ -181,79 +171,112 @@ input[type=range].zoned::-moz-range-thumb{width:22px;height:22px;border-radius:5
 .btn-accent:hover{background:var(--accent-mid)}
 .btn-ghost{border:none;background:none;color:var(--faint);padding:0 6px;height:30px}
 .btn-ghost:hover{background:var(--danger-light);color:var(--danger)}
-.btn-ghost:disabled{opacity:.4;pointer-events:none}
 
-/* ── Stats ── */
-.stat-row{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin-bottom:1.25rem}
-.stat{background:var(--surface2);border-radius:var(--r-sm);padding:.85rem 1rem}
-.stat-label{font-size:11px;color:var(--muted);margin-bottom:3px;text-transform:uppercase;letter-spacing:.06em}
-.stat-val{font-size:20px;font-weight:500}
+/* ════════════════════════════════════════════
+   STICKY PRICE BAR
+════════════════════════════════════════════ */
+.price-bar{
+  position:fixed;
+  bottom:0;left:0;right:0;
+  z-index:80;
+  background:var(--surface);
+  border-top:1px solid var(--border);
+  box-shadow:0 -4px 24px rgba(37,32,24,.08);
+}
 
-/* ── Recommended ── */
-.rec-label{font-size:11px;text-transform:uppercase;letter-spacing:.08em;color:var(--faint);font-weight:500;margin-bottom:.6rem}
-.rec-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin-bottom:1.25rem}
-.rec-card{border-radius:var(--r-sm);padding:.85rem 1rem;border:1px solid}
-.rec-ok{background:var(--ok-bg);border-color:var(--ok-border)}.rec-good{background:var(--good-bg);border-color:var(--good-border)}.rec-great{background:var(--great-bg);border-color:var(--great-border)}
-.rec-mult{font-size:10px;font-weight:500;text-transform:uppercase;letter-spacing:.08em;margin-bottom:3px}
-.rc-ok{color:var(--ok-text)}.rc-good{color:var(--good-text)}.rc-great{color:var(--great-text)}
-.rec-price{font-family:'Playfair Display',serif;font-size:22px;font-weight:700;line-height:1.2;margin-bottom:2px}
-.rec-desc{font-size:11px}
+/* Top strip: cost + margin + save */
+.bar-top{
+  display:flex;align-items:center;
+  gap:1rem;
+  padding:.6rem 1.5rem;
+  border-bottom:1px solid var(--border);
+  background:var(--surface2);
+}
+.bar-cost{font-size:12px;color:var(--muted)}
+.bar-cost strong{color:var(--text);font-weight:500}
+.bar-margin{display:flex;align-items:center;gap:6px;margin-left:auto}
+.bar-margin-pct{font-family:'Playfair Display',serif;font-size:1.1rem;font-weight:700;transition:color .2s;line-height:1}
+.bar-risk-pill{font-size:11px;font-weight:500;padding:2px 9px;border-radius:20px;transition:background .2s,color .2s}
+.save-bar-btn{
+  display:inline-flex;align-items:center;gap:7px;
+  height:36px;padding:0 16px;
+  border-radius:var(--r-sm);font-size:13px;font-family:inherit;font-weight:500;cursor:pointer;
+  background:var(--accent);border:1px solid var(--accent);color:white;
+  transition:background .15s;white-space:nowrap;flex-shrink:0;
+}
+.save-bar-btn:hover{background:var(--accent-mid)}
+.save-bar-btn.loading{opacity:.7;pointer-events:none}
+.save-bar-btn svg{width:14px;height:14px;stroke:white;fill:none;stroke-width:2;stroke-linecap:round}
 
-/* ── Result cards ── */
-.results-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:12px}
-.r-card{background:var(--surface);border:1px solid var(--border);border-radius:var(--r);padding:1.25rem;display:flex;flex-direction:column}
-.r-card.featured{border-color:var(--accent-mid);border-width:1.5px}
-.r-top{display:flex;align-items:flex-start;justify-content:space-between;margin-bottom:.85rem}
-.r-channel{font-size:12px;font-weight:500;color:var(--muted);text-transform:uppercase;letter-spacing:.07em}
-.r-suggested-label{font-size:10px;text-transform:uppercase;letter-spacing:.07em;color:var(--faint);margin-bottom:2px}
-.r-price{font-family:'Playfair Display',serif;font-size:32px;font-weight:700;color:var(--text);line-height:1;margin-bottom:.25rem}
-.r-vat{font-size:11px;color:var(--faint);margin-bottom:.75rem}
-.r-line{display:flex;justify-content:space-between;font-size:12px;color:var(--muted);padding:3px 0;border-bottom:1px solid var(--border)}
-.r-line:last-of-type{border-bottom:none;padding-top:6px;font-weight:500;color:var(--text)}
-.neg{color:var(--danger)}.pos{color:var(--good-text)}
-.final-price-wrap{margin-top:.85rem;padding-top:.85rem;border-top:1px dashed var(--border2)}
-.final-label{font-size:10px;text-transform:uppercase;letter-spacing:.07em;color:var(--faint);margin-bottom:.4rem;font-weight:500}
-.final-ig{display:flex;align-items:center;border:1px solid var(--border);border-radius:var(--r-sm);background:var(--bg);overflow:hidden;transition:border-color .15s}
-.final-ig:focus-within{border-color:var(--accent-mid);background:white}
-.final-ig .pre{padding:0 8px;font-size:12px;color:var(--faint);background:var(--surface2);height:32px;display:flex;align-items:center;border-right:1px solid var(--border);flex-shrink:0}
-.final-ig input{border:none;outline:none;padding:0 9px;height:32px;font-size:13px;font-family:inherit;background:transparent;color:var(--text);width:100%}
-.final-hint{margin-top:.4rem;font-size:11px;min-height:15px}
-.final-hint.ok{color:var(--good-text)}.final-hint.bad{color:var(--danger)}
+/* Bottom strip: 3 channel columns */
+.bar-channels{
+  display:grid;
+  grid-template-columns:repeat(3,1fr);
+  gap:0;
+}
+.bar-ch{
+  padding:.65rem 1.25rem;
+  border-right:1px solid var(--border);
+  display:flex;flex-direction:column;gap:4px;
+}
+.bar-ch:last-child{border-right:none}
+.bar-ch-name{font-size:10px;text-transform:uppercase;letter-spacing:.08em;color:var(--faint);font-weight:500}
+.bar-ch-suggested{display:flex;align-items:baseline;gap:6px}
+.bar-ch-price{font-family:'Playfair Display',serif;font-size:1.5rem;font-weight:700;color:var(--text);line-height:1;transition:color .25s}
+.bar-ch-price.stale{color:var(--faint)}
+.bar-ch-vat{font-size:10px;color:var(--faint)}
+.bar-ch-row{display:flex;align-items:center;gap:6px}
+.bar-final-ig{display:flex;align-items:center;border:1px solid var(--border);border-radius:var(--r-sm);background:var(--bg);overflow:hidden;flex:1;transition:border-color .15s}
+.bar-final-ig:focus-within{border-color:var(--accent-mid);background:white}
+.bar-final-ig .pre{padding:0 6px;font-size:11px;color:var(--faint);background:var(--surface2);height:28px;display:flex;align-items:center;border-right:1px solid var(--border);flex-shrink:0}
+.bar-final-ig input{border:none;outline:none;padding:0 7px;height:28px;font-size:12px;font-family:inherit;background:transparent;color:var(--text);width:100%;min-width:0}
+.bar-final-ig input::placeholder{font-size:11px;color:var(--faint)}
+.bar-hint{font-size:10px;min-height:13px;transition:color .2s;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.bar-hint.ok{color:var(--good-text)}.bar-hint.bad{color:var(--danger)}.bar-hint.warn{color:var(--ok-text)}
 
-/* ── Popover ── */
+/* Info popover from bar */
 .info-wrap{position:relative}
-.info-btn{width:22px;height:22px;border-radius:50%;border:1px solid var(--border);background:var(--surface2);color:var(--muted);font-size:11px;cursor:pointer;display:flex;align-items:center;justify-content:center;font-family:Georgia,serif;font-style:italic;user-select:none;transition:background .15s}
+.info-btn{width:20px;height:20px;border-radius:50%;border:1px solid var(--border);background:var(--surface2);color:var(--muted);font-size:10px;cursor:pointer;display:flex;align-items:center;justify-content:center;font-family:Georgia,serif;font-style:italic;user-select:none;transition:background .15s;flex-shrink:0}
 .info-btn:hover,.info-btn.open{background:var(--accent-light);border-color:var(--accent-mid);color:var(--accent)}
-.popover{display:none;position:absolute;right:0;top:calc(100% + 8px);width:260px;background:#1E1A14;border-radius:var(--r-sm);padding:1rem;font-size:12px;line-height:1.5;z-index:100;box-shadow:0 8px 32px rgba(0,0,0,.3)}
+.popover{display:none;position:absolute;bottom:calc(100% + 8px);right:0;width:260px;background:#1E1A14;border-radius:var(--r-sm);padding:1rem;font-size:12px;line-height:1.5;z-index:200;box-shadow:0 -4px 32px rgba(0,0,0,.3)}
 .popover.open{display:block}
-.popover::before{content:'';position:absolute;top:-5px;right:8px;width:10px;height:10px;background:#1E1A14;transform:rotate(45deg);border-radius:2px}
+.popover::after{content:'';position:absolute;bottom:-5px;right:7px;width:10px;height:10px;background:#1E1A14;transform:rotate(45deg);border-radius:2px}
 .pop-section{font-size:9px;text-transform:uppercase;letter-spacing:.1em;color:rgba(255,255,255,.35);margin-bottom:5px;margin-top:2px}
 .pop-row{display:flex;justify-content:space-between;padding:2.5px 0;border-bottom:1px solid rgba(255,255,255,.06);color:rgba(255,255,255,.65);font-size:11.5px}
 .pop-row.bold{color:rgba(255,255,255,.9);font-weight:500;border-bottom-color:rgba(255,255,255,.12)}
 .pop-divider{height:1px;background:rgba(255,255,255,.12);margin:7px 0}
-.pop-space{height:6px}
+.pop-space{height:5px}
 .pop-row.grand{border-top:1px solid rgba(255,255,255,.2);border-bottom:none;margin-top:4px;padding-top:6px;font-weight:500;color:white;font-size:12px}
-.warn-bar{margin-top:1rem;padding:.75rem 1rem;border-radius:var(--r-sm);font-size:12px;display:none;background:var(--danger-light);border:1px solid var(--danger-border);color:var(--danger)}
 
-@media(max-width:640px){
-  .results-grid,.platform-grid,.stat-row,.rec-grid{grid-template-columns:1fr}
-  .add-row{grid-template-columns:1fr 1fr}
+/* ── Rec strip ── */
+.rec-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin-bottom:.25rem}
+.rec-card{border-radius:var(--r-sm);padding:.75rem 1rem;border:1px solid}
+.rec-ok{background:var(--ok-bg);border-color:var(--ok-border)}.rec-good{background:var(--good-bg);border-color:var(--good-border)}.rec-great{background:var(--great-bg);border-color:var(--great-border)}
+.rec-mult{font-size:10px;font-weight:500;text-transform:uppercase;letter-spacing:.08em;margin-bottom:2px}
+.rc-ok{color:var(--ok-text)}.rc-good{color:var(--good-text)}.rc-great{color:var(--great-text)}
+.rec-price{font-family:'Playfair Display',serif;font-size:20px;font-weight:700;line-height:1.2;margin-bottom:1px}
+.rec-desc{font-size:11px}
+.rec-label{font-size:11px;text-transform:uppercase;letter-spacing:.08em;color:var(--faint);font-weight:500;margin-bottom:.6rem}
+
+.warn-bar{margin-top:.75rem;padding:.65rem .9rem;border-radius:var(--r-sm);font-size:12px;display:none;background:var(--danger-light);border:1px solid var(--danger-border);color:var(--danger)}
+
+@media(max-width:700px){
+  :root{--bar-h:200px}
+  .bar-channels{grid-template-columns:1fr}
+  .bar-ch{border-right:none;border-bottom:1px solid var(--border);padding:.5rem 1rem}
+  .bar-ch:last-child{border-bottom:none}
+  .platform-grid,.add-row{grid-template-columns:1fr 1fr}
+  .mat-row{grid-template-columns:1fr 80px 80px 34px}
+  .mat-row span:nth-child(3){display:none}
   .topbar{flex-wrap:wrap}
   .product-name-wrap{width:100%;max-width:100%;order:3}
-  .img-upload-area{flex-direction:column;text-align:center}
 }
 </style>
 </head>
 <body>
 
-<!-- Loading overlay -->
-<div class="db-loading" id="db-loading">
-  <div class="spinner"></div>
-  <p>Connecting to database…</p>
-</div>
-
-<!-- DB status toast -->
-<div class="db-status" id="db-status"><div class="db-dot"></div><span id="db-status-text"></span></div>
+<div class="db-loading" id="db-loading"><div class="spin"></div><p>Connecting…</p></div>
+<div class="db-toast" id="db-toast"><span id="db-toast-txt"></span></div>
 
 <div class="topbar">
   <a href="products.html" class="back-link">
@@ -263,102 +286,109 @@ input[type=range].zoned::-moz-range-thumb{width:22px;height:22px;border-radius:5
   <div class="product-name-wrap">
     <input class="product-name-input" id="product-name" type="text" placeholder="Product name (e.g. Wooden Keychain)" maxlength="60">
   </div>
-  <button class="save-btn" id="save-btn" onclick="saveProduct()">
-    <svg viewBox="0 0 24 24"><path d="M19 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11l5 5v11a2 2 0 0 1-2 2z"/><polyline points="17 21 17 13 7 13 7 21"/><polyline points="7 3 7 8 15 8"/></svg>
-    Save product
-  </button>
 </div>
 
 <div class="container">
-  <div class="page-title">Pricing Studio</div>
-  <div class="page-sub">Materials · Costs · Fees · Austrian VAT · Risk zones</div>
-
   <div class="val-banner" id="val-banner">
     <div class="val-title">Please fill in the following before saving:</div>
     <ul class="val-list" id="val-list"></ul>
   </div>
 
-  <!-- IMAGE -->
-  <div class="card">
-    <div class="card-header"><span class="card-title">Product photo</span><span style="font-size:11px;color:var(--faint);margin-left:auto">Optional — shown on product cards</span></div>
-    <div class="img-upload-area" id="upload-area"
-         ondragover="event.preventDefault();this.classList.add('drag')"
-         ondragleave="this.classList.remove('drag')"
-         ondrop="onDrop(event)">
-      <input type="file" accept="image/*" id="img-file-input" onchange="onFileSelect(event)" onclick="event.stopPropagation()">
-      <img class="img-preview" id="img-preview" src="" alt="Product photo">
-      <div class="img-placeholder" id="img-placeholder">
-        <svg viewBox="0 0 24 24"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8.5" cy="8.5" r="1.5"/><polyline points="21 15 16 10 5 21"/></svg>
-        <span>No photo</span>
-      </div>
-      <div class="img-info">
-        <div class="img-info-title">Drag &amp; drop or click to upload</div>
-        <div class="img-info-sub">JPG, PNG, WEBP — max 5 MB. Stored in the cloud with your product.</div>
-        <div class="img-actions">
-          <label class="img-btn" onclick="event.stopPropagation()">
-            <svg viewBox="0 0 24 24"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="17 8 12 3 7 8"/><line x1="12" y1="3" x2="12" y2="15"/></svg>
-            Choose file
-            <input type="file" accept="image/*" style="display:none" onchange="onFileSelect(event)">
-          </label>
-          <button class="img-btn danger" id="img-remove-btn" onclick="removeImage(event)" style="display:none">
-            <svg viewBox="0 0 24 24"><polyline points="3 6 5 6 21 6"/><path d="M19 6l-1 14H6L5 6"/></svg>
-            Remove
-          </button>
+  <!-- PHOTO -->
+  <div class="card" id="card-photo">
+    <div class="card-header" onclick="toggleCard('photo')">
+      <span class="card-title">Product photo</span>
+      <span style="font-size:11px;color:var(--faint);margin-left:auto;margin-right:.5rem">Optional</span>
+      <svg class="card-chevron" viewBox="0 0 24 24"><polyline points="6 9 12 15 18 9"/></svg>
+    </div>
+    <div class="card-body">
+      <div class="img-upload-area" id="upload-area"
+           ondragover="event.preventDefault();this.classList.add('drag')"
+           ondragleave="this.classList.remove('drag')"
+           ondrop="onDrop(event)">
+        <input type="file" accept="image/*" id="img-file-input" onchange="onFileSelect(event)" onclick="event.stopPropagation()">
+        <img class="img-prev" id="img-preview" src="" alt="">
+        <div class="img-ph" id="img-placeholder">
+          <svg viewBox="0 0 24 24"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8.5" cy="8.5" r="1.5"/><polyline points="21 15 16 10 5 21"/></svg>
+          <span>No photo</span>
         </div>
-        <div class="img-name" id="img-name"></div>
+        <div class="img-info">
+          <div class="img-info-title">Drag &amp; drop or click to upload</div>
+          <div class="img-info-sub">JPG, PNG, WEBP — max 5 MB</div>
+          <div class="img-acts">
+            <label class="img-btn" onclick="event.stopPropagation()">
+              <svg viewBox="0 0 24 24"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="17 8 12 3 7 8"/><line x1="12" y1="3" x2="12" y2="15"/></svg>
+              Choose file
+              <input type="file" accept="image/*" style="display:none" onchange="onFileSelect(event)">
+            </label>
+            <button class="img-btn danger" id="img-remove-btn" onclick="removeImage(event)" style="display:none">
+              <svg viewBox="0 0 24 24"><polyline points="3 6 5 6 21 6"/><path d="M19 6l-1 14H6L5 6"/></svg>
+              Remove
+            </button>
+          </div>
+          <div class="img-name" id="img-name"></div>
+        </div>
       </div>
     </div>
   </div>
 
   <!-- MATERIALS -->
-  <div class="card">
-    <div class="card-header">
+  <div class="card" id="card-mats">
+    <div class="card-header" onclick="toggleCard('mats')">
       <span class="card-title">Materials library</span>
-      <span class="count-badge" id="mat-badge">0 materials</span>
+      <span class="card-badge" id="mat-badge">0 materials</span>
+      <svg class="card-chevron" viewBox="0 0 24 24"><polyline points="6 9 12 15 18 9"/></svg>
     </div>
-    <div class="mat-table" id="mat-table"></div>
-    <div class="add-row" id="add-row">
-      <input type="text" id="n-name" placeholder="e.g. Acrylic 3mm clear" maxlength="50">
-      <input type="number" id="n-sheet" placeholder="Sheet price €" min="0.01" step="0.01">
-      <input type="number" id="n-pcs" placeholder="Pieces / sheet" min="1" step="1">
-      <button class="btn btn-accent" onclick="addMat()">+ Add</button>
+    <div class="card-body">
+      <div class="mat-table" id="mat-table"></div>
+      <div class="add-row" id="add-row">
+        <input type="text" id="n-name" placeholder="e.g. Acrylic 3mm clear" maxlength="50">
+        <input type="number" id="n-sheet" placeholder="Sheet price €" min="0.01" step="0.01">
+        <input type="number" id="n-pcs" placeholder="Pieces / sheet" min="1" step="1">
+        <button class="btn btn-accent" onclick="addMat()">+ Add</button>
+      </div>
     </div>
   </div>
 
-  <!-- COSTS -->
-  <div class="card">
-    <div class="card-header"><span class="card-title">Product cost calculator</span></div>
-    <div class="form-row">
-      <span class="form-label">Material</span>
-      <select class="sel" id="sel-mat" onchange="clearErr('sel-mat');calc()"><option value="">— select a material —</option></select>
-      <span class="mat-unit" id="mat-unit"></span>
+  <!-- COSTS + MARGIN -->
+  <div class="card" id="card-costs">
+    <div class="card-header static">
+      <span class="card-title">Product costs &amp; margin</span>
     </div>
-    <div class="form-row">
-      <span class="form-label">Machine time</span>
-      <div class="ig" id="ig-mach-min"><input type="number" id="mach-min" value="8" min="0" step="1" oninput="clearIgErr('ig-mach-min');calc()"><span class="suf">min</span></div>
-      <span style="font-size:12px;color:var(--faint)">@</span>
-      <div class="ig"><span class="pre">€</span><input class="w55" type="number" id="mach-rate" value="0.30" min="0" step="0.05" oninput="calc()"><span class="suf">/min</span></div>
-      <span class="hint">electricity + wear</span>
-    </div>
-    <div class="form-row">
-      <span class="form-label">Your labor</span>
-      <div class="ig" id="ig-lab-min"><input type="number" id="lab-min" value="10" min="0" step="1" oninput="clearIgErr('ig-lab-min');calc()"><span class="suf">min</span></div>
-      <span style="font-size:12px;color:var(--faint)">@</span>
-      <div class="ig"><span class="pre">€</span><input class="w55" type="number" id="lab-rate" value="15" min="0" step="0.50" oninput="calc()"><span class="suf">/hr</span></div>
-      <span class="hint">design, prep, packing</span>
-    </div>
-    <div class="form-row">
-      <span class="form-label">Packaging</span>
-      <div class="ig"><span class="pre">€</span><input type="number" id="pack" value="0.50" min="0" step="0.10" oninput="calc()"></div>
-      <span class="hint">bags, boxes, tissue, ribbon</span>
-    </div>
-    <div class="form-row">
-      <span class="form-label">Overhead / other</span>
-      <div class="ig"><span class="pre">€</span><input type="number" id="other" value="0.20" min="0" step="0.10" oninput="calc()"></div>
-      <span class="hint">glue, hardware, fixings</span>
-    </div>
-    <hr class="divider">
-    <div class="slider-section">
+    <div class="card-body">
+      <div class="form-row">
+        <span class="form-label">Material</span>
+        <select class="sel" id="sel-mat" onchange="clearErr('sel-mat');calc()"><option value="">— select a material —</option></select>
+        <span class="mat-unit" id="mat-unit"></span>
+      </div>
+      <div class="form-row">
+        <span class="form-label">Machine time</span>
+        <div class="ig" id="ig-mach-min"><input type="number" id="mach-min" value="8" min="0" step="1" oninput="clearIgErr('ig-mach-min');calc()"><span class="suf">min</span></div>
+        <span style="font-size:12px;color:var(--faint)">@</span>
+        <div class="ig"><span class="pre">€</span><input class="w55" type="number" id="mach-rate" value="0.30" min="0" step="0.05" oninput="calc()"><span class="suf">/min</span></div>
+        <span class="hint">electricity + wear</span>
+      </div>
+      <div class="form-row">
+        <span class="form-label">Your labor</span>
+        <div class="ig" id="ig-lab-min"><input type="number" id="lab-min" value="10" min="0" step="1" oninput="clearIgErr('ig-lab-min');calc()"><span class="suf">min</span></div>
+        <span style="font-size:12px;color:var(--faint)">@</span>
+        <div class="ig"><span class="pre">€</span><input class="w55" type="number" id="lab-rate" value="15" min="0" step="0.50" oninput="calc()"><span class="suf">/hr</span></div>
+        <span class="hint">design, prep, packing</span>
+      </div>
+      <div class="form-row">
+        <span class="form-label">Packaging</span>
+        <div class="ig"><span class="pre">€</span><input type="number" id="pack" value="0.50" min="0" step="0.10" oninput="calc()"></div>
+        <span class="hint">bags, boxes, ribbon</span>
+      </div>
+      <div class="form-row">
+        <span class="form-label">Overhead / other</span>
+        <div class="ig"><span class="pre">€</span><input type="number" id="other" value="0.20" min="0" step="0.10" oninput="calc()"></div>
+        <span class="hint">glue, hardware, fixings</span>
+      </div>
+
+      <hr style="border:none;border-top:1px solid var(--border);margin:1rem 0">
+
+      <!-- MARGIN -->
       <div class="margin-display">
         <span class="margin-pct" id="margin-pct">50%</span>
         <span class="margin-mult" id="margin-mult">= 2.0× cost</span>
@@ -374,181 +404,202 @@ input[type=range].zoned::-moz-range-thumb{width:22px;height:22px;border-radius:5
         <span class="zone-tick" style="left:85.5%">67%</span>
         <span class="zone-tick" style="left:100%">75%</span>
       </div>
-      <div id="risk-pill-wrap" style="margin-top:.65rem"></div>
+      <div id="risk-pill-wrap" style="margin-top:.5rem"></div>
+
+      <!-- Rec prices inline -->
+      <hr style="border:none;border-top:1px solid var(--border);margin:1rem 0">
+      <div class="rec-label">Recommended range — industry multipliers</div>
+      <div class="rec-grid">
+        <div class="rec-card rec-ok"><div class="rec-mult rc-ok">2× — Wholesale floor</div><div class="rec-price rc-ok" id="rec-2x">—</div><div class="rec-desc rc-ok">Min. for shops stocking you</div></div>
+        <div class="rec-card rec-good"><div class="rec-mult rc-good">3× — Retail standard</div><div class="rec-price rc-good" id="rec-3x">—</div><div class="rec-desc rc-good">Markets &amp; webshop</div></div>
+        <div class="rec-card rec-great"><div class="rec-mult rc-great">4× — Retail premium</div><div class="rec-price rc-great" id="rec-4x">—</div><div class="rec-desc rc-great">Strong positioning</div></div>
+      </div>
+      <div class="warn-bar" id="warn"></div>
     </div>
   </div>
 
   <!-- FEES -->
-  <div class="card">
-    <div class="card-header"><span class="card-title">Taxes &amp; platform fees</span></div>
-    <div class="toggle-wrap">
-      <div class="toggle on" id="vat-toggle" onclick="toggleVAT()"></div>
-      <div>
-        <div>Include <strong style="font-weight:500">20% Austrian VAT</strong> in customer prices</div>
-        <div style="font-size:11px;color:var(--faint)">Prices include VAT. Your profit is always calculated on the net amount.</div>
-      </div>
+  <div class="card collapsed" id="card-fees">
+    <div class="card-header" onclick="toggleCard('fees')">
+      <span class="card-title">Taxes &amp; platform fees</span>
+      <span style="font-size:11px;color:var(--faint);margin-left:auto;margin-right:.5rem" id="fees-summary">VAT on · Etsy 9.5% · Web 2.5%</span>
+      <svg class="card-chevron" viewBox="0 0 24 24"><polyline points="6 9 12 15 18 9"/></svg>
     </div>
-    <div class="platform-grid">
-      <div class="pf-card">
-        <div class="pf-head"><span class="pf-name">Craft fair / market</span></div>
-        <div class="pf-row" style="color:var(--faint);font-size:12px">No listing fee</div>
-        <div class="pf-row">Card processing <input type="number" id="fair-card" value="0" min="0" step="0.1" oninput="saveFees();calc()"> %</div>
-        <div class="pf-note">Set to 0 for cash. Try SumUp ~1.69%</div>
+    <div class="card-body">
+      <div class="toggle-wrap">
+        <div class="toggle on" id="vat-toggle" onclick="toggleVAT()"></div>
+        <div>
+          <div>Include <strong style="font-weight:500">20% Austrian VAT</strong> in customer prices</div>
+          <div style="font-size:11px;color:var(--faint)">Prices shown include VAT. Profit is always on the net amount.</div>
+        </div>
       </div>
-      <div class="pf-card">
-        <div class="pf-head"><span class="pf-name">Etsy</span><span class="saved-dot" id="dot-etsy"></span></div>
-        <div class="pf-row">Listing fee &nbsp;€ <input type="number" id="e-list" value="0.20" min="0" step="0.01" oninput="saveFees();calc()"> per item</div>
-        <div class="pf-row">Transaction <input type="number" id="e-tx" value="6.5" min="0" step="0.1" oninput="saveFees();calc()"> %</div>
-        <div class="pf-row">Payment proc. <input type="number" id="e-pay" value="3.0" min="0" step="0.1" oninput="saveFees();calc()"> %</div>
-      </div>
-      <div class="pf-card">
-        <div class="pf-head"><span class="pf-name">Own webshop</span><span class="saved-dot" id="dot-web"></span></div>
-        <div class="pf-row" style="color:var(--faint)">No listing fee</div>
-        <div class="pf-row">Payment proc. <input type="number" id="w-pay" value="2.5" min="0" step="0.1" oninput="saveFees();calc()"> %</div>
-        <div class="pf-note">e.g. Stripe, PayPal, Klarna</div>
+      <div class="platform-grid">
+        <div class="pf-card">
+          <div class="pf-head"><span class="pf-name">Craft fair / market</span></div>
+          <div class="pf-row" style="color:var(--faint);font-size:12px">No listing fee</div>
+          <div class="pf-row">Card processing <input type="number" id="fair-card" value="0" min="0" step="0.1" oninput="saveFees();calc();updateFeesSummary()"> %</div>
+          <div class="pf-note">0 for cash · SumUp ~1.69%</div>
+        </div>
+        <div class="pf-card">
+          <div class="pf-head"><span class="pf-name">Etsy</span><span class="saved-dot" id="dot-etsy"></span></div>
+          <div class="pf-row">Listing €<input type="number" id="e-list" value="0.20" min="0" step="0.01" oninput="saveFees();calc()"> / item</div>
+          <div class="pf-row">Transaction <input type="number" id="e-tx" value="6.5" min="0" step="0.1" oninput="saveFees();calc();updateFeesSummary()"> %</div>
+          <div class="pf-row">Payment <input type="number" id="e-pay" value="3.0" min="0" step="0.1" oninput="saveFees();calc();updateFeesSummary()"> %</div>
+        </div>
+        <div class="pf-card">
+          <div class="pf-head"><span class="pf-name">Own webshop</span><span class="saved-dot" id="dot-web"></span></div>
+          <div class="pf-row" style="color:var(--faint)">No listing fee</div>
+          <div class="pf-row">Payment <input type="number" id="w-pay" value="2.5" min="0" step="0.1" oninput="saveFees();calc();updateFeesSummary()"> %</div>
+          <div class="pf-note">Stripe, PayPal, Klarna</div>
+        </div>
       </div>
     </div>
   </div>
 
-  <!-- RESULTS -->
-  <div class="card">
-    <div class="card-header"><span class="card-title">Suggested selling prices</span></div>
-    <div class="stat-row">
-      <div class="stat"><div class="stat-label">Total cost / piece</div><div class="stat-val" id="s-cost">€ —</div></div>
-      <div class="stat"><div class="stat-label">Net profit (fair, suggested)</div><div class="stat-val" id="s-profit">€ —</div></div>
-      <div class="stat"><div class="stat-label">Break-even (incl. VAT)</div><div class="stat-val" id="s-be">€ —</div></div>
+</div><!-- /container -->
+
+<!-- ════ STICKY PRICE BAR ════ -->
+<div class="price-bar">
+  <div class="bar-top">
+    <div class="bar-cost">Cost per piece: <strong id="bar-cost">€ —</strong></div>
+    <div class="bar-margin">
+      <span class="bar-margin-pct" id="bar-margin-pct">50%</span>
+      <span class="bar-risk-pill rp-good" id="bar-risk-pill">Good</span>
     </div>
-    <div class="rec-label">Recommended range — industry multipliers</div>
-    <div class="rec-grid">
-      <div class="rec-card rec-ok"><div class="rec-mult rc-ok">2× cost — Wholesale floor</div><div class="rec-price rc-ok" id="rec-2x">—</div><div class="rec-desc rc-ok">Min. if a shop stocks your items</div></div>
-      <div class="rec-card rec-good"><div class="rec-mult rc-good">3× cost — Retail standard</div><div class="rec-price rc-good" id="rec-3x">—</div><div class="rec-desc rc-good">Recommended for markets &amp; webshop</div></div>
-      <div class="rec-card rec-great"><div class="rec-mult rc-great">4× cost — Retail premium</div><div class="rec-price rc-great" id="rec-4x">—</div><div class="rec-desc rc-great">Strong positioning, premium products</div></div>
-    </div>
-    <hr class="divider">
-    <div class="results-grid">
-      <div class="r-card">
-        <div class="r-top"><span class="r-channel">Craft fair</span>
-          <div class="info-wrap"><div class="info-btn" id="btn-fair" onclick="togglePop('fair')">i</div><div class="popover" id="pop-fair"></div></div>
-        </div>
-        <div class="r-suggested-label">Suggested price</div>
-        <div class="r-price" id="rp-fair">—</div><div class="r-vat" id="rv-fair"></div>
-        <div class="r-line"><span>Your costs</span><span id="rl-fair-cost">—</span></div>
-        <div class="r-line"><span id="rl-fair-fee-lbl">No card fee</span><span id="rl-fair-fee">—</span></div>
-        <div class="r-line"><span>Your profit</span><span class="pos" id="rl-fair-profit">—</span></div>
-        <div class="final-price-wrap">
-          <div class="final-label">Your final price</div>
-          <div class="final-ig"><span class="pre">€</span><input type="number" id="fp-fair" min="0" step="0.10" placeholder="Leave blank to use suggested" oninput="onFinalPrice('fair')"></div>
-          <div class="final-hint" id="fh-fair"></div>
+    <button class="save-bar-btn" id="save-btn" onclick="saveProduct()">
+      <svg viewBox="0 0 24 24"><path d="M19 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11l5 5v11a2 2 0 0 1-2 2z"/><polyline points="17 21 17 13 7 13 7 21"/><polyline points="7 3 7 8 15 8"/></svg>
+      Save product
+    </button>
+  </div>
+  <div class="bar-channels">
+    <!-- CRAFT FAIR -->
+    <div class="bar-ch">
+      <div class="bar-ch-name">Craft fair</div>
+      <div class="bar-ch-suggested">
+        <span class="bar-ch-price" id="bp-fair">—</span>
+        <span class="bar-ch-vat" id="bv-fair"></span>
+        <div class="info-wrap" style="margin-left:auto">
+          <div class="info-btn" id="btn-fair" onclick="togglePop('fair')">i</div>
+          <div class="popover" id="pop-fair"></div>
         </div>
       </div>
-      <div class="r-card featured">
-        <div class="r-top"><span class="r-channel">Etsy</span>
-          <div class="info-wrap"><div class="info-btn" id="btn-etsy" onclick="togglePop('etsy')">i</div><div class="popover" id="pop-etsy"></div></div>
-        </div>
-        <div class="r-suggested-label">Suggested price</div>
-        <div class="r-price" id="rp-etsy">—</div><div class="r-vat" id="rv-etsy"></div>
-        <div class="r-line"><span>Your costs</span><span id="rl-etsy-cost">—</span></div>
-        <div class="r-line"><span>Total Etsy fees</span><span class="neg" id="rl-etsy-fees">—</span></div>
-        <div class="r-line"><span>Your profit</span><span class="pos" id="rl-etsy-profit">—</span></div>
-        <div class="final-price-wrap">
-          <div class="final-label">Your final price</div>
-          <div class="final-ig"><span class="pre">€</span><input type="number" id="fp-etsy" min="0" step="0.10" placeholder="Leave blank to use suggested" oninput="onFinalPrice('etsy')"></div>
-          <div class="final-hint" id="fh-etsy"></div>
-        </div>
+      <div class="bar-ch-row">
+        <div class="bar-final-ig"><span class="pre">€</span><input type="number" id="fp-fair" min="0" step="0.10" placeholder="Override price…" oninput="onFinalPrice('fair')"></div>
       </div>
-      <div class="r-card">
-        <div class="r-top"><span class="r-channel">Own webshop</span>
-          <div class="info-wrap"><div class="info-btn" id="btn-web" onclick="togglePop('web')">i</div><div class="popover" id="pop-web"></div></div>
-        </div>
-        <div class="r-suggested-label">Suggested price</div>
-        <div class="r-price" id="rp-web">—</div><div class="r-vat" id="rv-web"></div>
-        <div class="r-line"><span>Your costs</span><span id="rl-web-cost">—</span></div>
-        <div class="r-line"><span>Payment fees</span><span class="neg" id="rl-web-fees">—</span></div>
-        <div class="r-line"><span>Your profit</span><span class="pos" id="rl-web-profit">—</span></div>
-        <div class="final-price-wrap">
-          <div class="final-label">Your final price</div>
-          <div class="final-ig"><span class="pre">€</span><input type="number" id="fp-web" min="0" step="0.10" placeholder="Leave blank to use suggested" oninput="onFinalPrice('web')"></div>
-          <div class="final-hint" id="fh-web"></div>
-        </div>
-      </div>
+      <div class="bar-hint" id="fh-fair"></div>
     </div>
-    <div class="warn-bar" id="warn"></div>
+    <!-- ETSY -->
+    <div class="bar-ch">
+      <div class="bar-ch-name">Etsy</div>
+      <div class="bar-ch-suggested">
+        <span class="bar-ch-price" id="bp-etsy">—</span>
+        <span class="bar-ch-vat" id="bv-etsy"></span>
+        <div class="info-wrap" style="margin-left:auto">
+          <div class="info-btn" id="btn-etsy" onclick="togglePop('etsy')">i</div>
+          <div class="popover" id="pop-etsy"></div>
+        </div>
+      </div>
+      <div class="bar-ch-row">
+        <div class="bar-final-ig"><span class="pre">€</span><input type="number" id="fp-etsy" min="0" step="0.10" placeholder="Override price…" oninput="onFinalPrice('etsy')"></div>
+      </div>
+      <div class="bar-hint" id="fh-etsy"></div>
+    </div>
+    <!-- WEBSHOP -->
+    <div class="bar-ch">
+      <div class="bar-ch-name">Webshop</div>
+      <div class="bar-ch-suggested">
+        <span class="bar-ch-price" id="bp-web">—</span>
+        <span class="bar-ch-vat" id="bv-web"></span>
+        <div class="info-wrap" style="margin-left:auto">
+          <div class="info-btn" id="btn-web" onclick="togglePop('web')">i</div>
+          <div class="popover" id="pop-web"></div>
+        </div>
+      </div>
+      <div class="bar-ch-row">
+        <div class="bar-final-ig"><span class="pre">€</span><input type="number" id="fp-web" min="0" step="0.10" placeholder="Override price…" oninput="onFinalPrice('web')"></div>
+      </div>
+      <div class="bar-hint" id="fh-web"></div>
+    </div>
   </div>
 </div>
 
 <script>
-// ─── Auth guard ───────────────────────────────────────────────────────────────
-(function(){
-  const SK='ninis_studio_auth', HP='7cf65358';
-  if(sessionStorage.getItem(SK)!=='granted_'+HP) window.location.replace('login.html');
-})();
+// ─── Auth ─────────────────────────────────────────────────────────────────────
+(function(){const SK='ninis_studio_auth',HP='7cf65358';if(sessionStorage.getItem(SK)!=='granted_'+HP)window.location.replace('login.html');})();
 
 // ─── Supabase ─────────────────────────────────────────────────────────────────
-const SUPA_URL = 'https://dxvzjgzqxltphakyrzmn.supabase.co';
-const SUPA_KEY = 'sb_publishable_MqkXWynuaIialGbCFD7_hw_cEgsenMz';
-const db = supabase.createClient(SUPA_URL, SUPA_KEY);
+const SUPA_URL='https://dxvzjgzqxltphakyrzmn.supabase.co';
+const SUPA_KEY='sb_publishable_MqkXWynuaIialGbCFD7_hw_cEgsenMz';
+const db=supabase.createClient(SUPA_URL,SUPA_KEY);
 
-// ─── DB status toast ──────────────────────────────────────────────────────────
-let statusTimer;
-function dbStatus(state, text){
-  const el=document.getElementById('db-status');
-  const tx=document.getElementById('db-status-text');
-  clearTimeout(statusTimer);
-  el.className='db-status show '+state;
-  tx.textContent=text;
-  if(state==='saved') statusTimer=setTimeout(()=>el.classList.remove('show'),2500);
+// ─── Toast ────────────────────────────────────────────────────────────────────
+let toastT;
+function toast(state,text){
+  const el=document.getElementById('db-toast'),tx=document.getElementById('db-toast-txt');
+  clearTimeout(toastT);el.className='db-toast show '+state;tx.textContent=text;
+  if(state==='saved')toastT=setTimeout(()=>el.classList.remove('show'),2500);
 }
 
 // ─── State ───────────────────────────────────────────────────────────────────
-let mats=[],vatOn=true,marginPct=50,nextId=Date.now(),editingProductId=null;
-let currentImageB64=null;
+let mats=[],vatOn=true,marginPct=50,nextId=Date.now(),editingProductId=null,currentImageB64=null;
 
 // ─── Zones ───────────────────────────────────────────────────────────────────
 const M_MIN=20,M_MAX=75;
 const ZONES=[
   {from:20,to:44,cls:'rp-danger',label:'High risk',desc:'Below the wholesale floor (2× cost). A few unsold pieces or returns will put you in the red.'},
-  {from:44,to:50,cls:'rp-caution',label:'Caution — near wholesale',desc:'Close to 2× cost. Fine for wholesale to shops, but tight for direct retail.'},
-  {from:50,to:67,cls:'rp-good',label:'Good — retail range',desc:'Between 2× and 3× cost. Healthy margin for markets and your webshop.'},
-  {from:67,to:76,cls:'rp-great',label:'Strong — premium retail',desc:'3× cost or above. Room for discounts, returns, and growth.'},
+  {from:44,to:50,cls:'rp-caution',label:'Caution',desc:'Close to 2× cost. Fine for wholesale to shops, tight for direct retail.'},
+  {from:50,to:67,cls:'rp-good',label:'Good',desc:'Between 2× and 3× cost. Healthy margin for markets and your webshop.'},
+  {from:67,to:76,cls:'rp-great',label:'Premium',desc:'3× cost or above. Room for discounts, returns, and growth.'},
 ];
 const ZCOLS={'rp-danger':'#9B2335','rp-caution':'#7A6610','rp-good':'#1E6641','rp-great':'#185FA5'};
 const THUMB={'rp-danger':'#9B2335','rp-caution':'#B8860B','rp-good':'#1E6641','rp-great':'#185FA5'};
-function getZone(pct){for(const z of ZONES)if(pct>=z.from&&pct<z.to)return z;return ZONES[ZONES.length-1];}
-function multOf(pct){return pct<100?(1/(1-pct/100)).toFixed(2):'∞';}
-function riskPillHTML(pct){const z=getZone(Math.max(M_MIN,Math.min(M_MAX,pct)));return `<span class="risk-pill ${z.cls}"><strong style="font-weight:500">${z.label}</strong> — ${z.desc}</span>`;}
+function getZone(p){for(const z of ZONES)if(p>=z.from&&p<z.to)return z;return ZONES[ZONES.length-1];}
+function multOf(p){return p<100?(1/(1-p/100)).toFixed(2):'∞';}
+function riskPillHTML(p){const z=getZone(Math.max(M_MIN,Math.min(M_MAX,p)));return `<span class="risk-pill ${z.cls}"><strong style="font-weight:500">${z.label}</strong> — ${z.desc}</span>`;}
+
+// ─── Collapsible cards ────────────────────────────────────────────────────────
+function toggleCard(id){
+  const card=document.getElementById('card-'+id);
+  card.classList.toggle('collapsed');
+  try{const state=JSON.parse(localStorage.getItem('lps_cards')||'{}');state[id]=card.classList.contains('collapsed');localStorage.setItem('lps_cards',JSON.stringify(state));}catch(e){}
+}
+function restoreCardStates(){
+  try{
+    const state=JSON.parse(localStorage.getItem('lps_cards')||'{}');
+    Object.keys(state).forEach(id=>{
+      const card=document.getElementById('card-'+id);
+      if(card&&state[id])card.classList.add('collapsed');
+      else if(card)card.classList.remove('collapsed');
+    });
+  }catch(e){}
+}
 
 // ─── Image ────────────────────────────────────────────────────────────────────
 function onFileSelect(e){const f=e.target.files[0];if(f)loadImageFile(f);}
 function onDrop(e){e.preventDefault();document.getElementById('upload-area').classList.remove('drag');const f=e.dataTransfer.files[0];if(f&&f.type.startsWith('image/'))loadImageFile(f);}
 function loadImageFile(file){
   if(file.size>5*1024*1024){alert('Image too large — please use under 5 MB.');return;}
-  const reader=new FileReader();
-  reader.onload=ev=>{currentImageB64=ev.target.result;showImagePreview(currentImageB64,file.name);};
-  reader.readAsDataURL(file);
+  const r=new FileReader();r.onload=ev=>{currentImageB64=ev.target.result;showImgPreview(currentImageB64,file.name);};r.readAsDataURL(file);
 }
-function showImagePreview(src,name){
-  document.getElementById('img-preview').src=src;
-  document.getElementById('img-preview').classList.add('show');
+function showImgPreview(src,name){
+  document.getElementById('img-preview').src=src;document.getElementById('img-preview').classList.add('show');
   document.getElementById('img-placeholder').style.display='none';
   document.getElementById('img-remove-btn').style.display='inline-flex';
-  const n=document.getElementById('img-name');
-  n.textContent='✓ '+(name||'Photo attached');n.classList.add('show');
+  const n=document.getElementById('img-name');n.textContent='✓ '+(name||'Photo attached');n.classList.add('show');
 }
 function removeImage(e){
-  e.preventDefault();e.stopPropagation();
-  currentImageB64=null;
+  e.preventDefault();e.stopPropagation();currentImageB64=null;
   document.getElementById('img-preview').src='';document.getElementById('img-preview').classList.remove('show');
   document.getElementById('img-placeholder').style.display='';
   document.getElementById('img-remove-btn').style.display='none';
-  const n=document.getElementById('img-name');n.classList.remove('show');
+  document.getElementById('img-name').classList.remove('show');
   document.querySelectorAll('input[type=file]').forEach(i=>i.value='');
 }
 
 // ─── Slider ───────────────────────────────────────────────────────────────────
 function onSlider(){
   marginPct=parseInt(document.getElementById('margin-slider').value);
-  const z=getZone(marginPct);
-  const col=ZCOLS[z.cls];
+  const z=getZone(marginPct),col=ZCOLS[z.cls];
   const pe=document.getElementById('margin-pct'),me=document.getElementById('margin-mult');
   pe.textContent=marginPct+'%';pe.style.color=col;
   me.textContent='= '+multOf(marginPct)+'× cost';me.style.color=col;
@@ -557,39 +608,32 @@ function onSlider(){
   calc();
 }
 
-// ─── Materials — Supabase ─────────────────────────────────────────────────────
+// ─── Materials ────────────────────────────────────────────────────────────────
 async function loadMats(){
-  const {data,error}=await db.from('materials').select('*').order('created_at');
-  if(error){dbStatus('err','Could not load materials');return;}
+  const{data,error}=await db.from('materials').select('*').order('created_at');
+  if(error){toast('err','Could not load materials');return;}
   mats=data.map(r=>({id:r.id,name:r.name,sheet:parseFloat(r.sheet_price),pcs:r.pieces_per_sheet}));
-  if(mats.length) nextId=Math.max(nextId,...mats.map(m=>Number(m.id)))+1;
+  if(mats.length)nextId=Math.max(nextId,...mats.map(m=>Number(m.id)))+1;
   renderMats();
 }
-
 async function addMat(){
   const name=document.getElementById('n-name').value.trim();
   const sheet=parseFloat(document.getElementById('n-sheet').value);
   const pcs=parseInt(document.getElementById('n-pcs').value);
   if(!name){fl('n-name');return;}if(!sheet||sheet<=0){fl('n-sheet');return;}if(!pcs||pcs<1){fl('n-pcs');return;}
-  const id=nextId++;
-  dbStatus('saving','Saving material…');
-  const {error}=await db.from('materials').insert({id,name,sheet_price:sheet,pieces_per_sheet:pcs});
-  if(error){dbStatus('err','Could not save material');return;}
-  dbStatus('saved','Saved ✓');
-  mats.push({id,name,sheet,pcs});
+  const id=nextId++;toast('saving','Saving material…');
+  const{error}=await db.from('materials').insert({id,name,sheet_price:sheet,pieces_per_sheet:pcs});
+  if(error){toast('err','Could not save material');return;}
+  toast('saved','Saved ✓');mats.push({id,name,sheet,pcs});
   ['n-name','n-sheet','n-pcs'].forEach(i=>document.getElementById(i).value='');
   renderMats();
 }
-
 async function removeMat(id){
-  dbStatus('saving','Removing…');
-  const {error}=await db.from('materials').delete().eq('id',id);
-  if(error){dbStatus('err','Could not delete material');return;}
-  dbStatus('saved','Removed ✓');
-  mats=mats.filter(m=>m.id!==id);
-  renderMats();
+  toast('saving','Removing…');
+  const{error}=await db.from('materials').delete().eq('id',id);
+  if(error){toast('err','Could not delete');return;}
+  toast('saved','Removed ✓');mats=mats.filter(m=>m.id!==id);renderMats();
 }
-
 function renderMats(){
   const tbl=document.getElementById('mat-table');
   tbl.innerHTML='<div class="mat-row head"><span>Name</span><span>Sheet price</span><span>Pieces / sheet</span><span>Cost / piece</span><span></span></div>';
@@ -602,7 +646,7 @@ function renderMats(){
   calc();
 }
 
-// ─── Fees — localStorage (browser preference) ─────────────────────────────────
+// ─── Fees ─────────────────────────────────────────────────────────────────────
 let saveT;
 function saveFees(){
   clearTimeout(saveT);
@@ -612,21 +656,27 @@ function saveFees(){
   },600);
 }
 function loadFees(){
-  try{const f=JSON.parse(localStorage.getItem('lps_fees3')||'null');if(!f)return;['fc→fair-card','el→e-list','et→e-tx','ep→e-pay','wp→w-pay'].forEach(s=>{const[k,id]=s.split('→');if(f[k]!=null)document.getElementById(id).value=f[k];});}catch(e){}
+  try{const f=JSON.parse(localStorage.getItem('lps_fees3')||'null');if(!f)return;
+    [['fc','fair-card'],['el','e-list'],['et','e-tx'],['ep','e-pay'],['wp','w-pay']].forEach(([k,id])=>{if(f[k]!=null)document.getElementById(id).value=f[k];});}catch(e){}
 }
-function toggleVAT(){vatOn=!vatOn;document.getElementById('vat-toggle').classList.toggle('on',vatOn);calc();}
+function toggleVAT(){vatOn=!vatOn;document.getElementById('vat-toggle').classList.toggle('on',vatOn);updateFeesSummary();calc();}
+function updateFeesSummary(){
+  const etot=(fv('e-tx')+fv('e-pay')).toFixed(1);
+  const wp=fv('w-pay').toFixed(1);
+  document.getElementById('fees-summary').textContent=(vatOn?'VAT on':'VAT off')+' · Etsy '+etot+'% · Web '+wp+'%';
+}
 
 // ─── Final price hints ────────────────────────────────────────────────────────
 function onFinalPrice(ch){calc();}
 function updateFinalHint(ch,sugGross,total,vat){
   const inp=document.getElementById('fp-'+ch),hEl=document.getElementById('fh-'+ch);
   const val=parseFloat(inp.value);
-  if(!inp.value||isNaN(val)||val<=0){hEl.textContent='';hEl.className='final-hint';return;}
+  if(!inp.value||isNaN(val)||val<=0){hEl.textContent='';hEl.className='bar-hint';return;}
   const net=val/(1+vat),profit=net-total;
   const im=net>0?Math.round((profit/net)*100):0;
   const diff=val-sugGross,ds=(diff>=0?'+':'')+diff.toFixed(2);
-  if(profit<0){hEl.className='final-hint bad';hEl.textContent='⚠ Below cost — you lose money at this price.';}
-  else{const z=getZone(Math.max(M_MIN,Math.min(M_MAX,im)));hEl.className='final-hint ok';hEl.innerHTML=`<span style="color:${ZCOLS[z.cls]};font-weight:500">${im}% margin</span> · ${multOf(im)}× cost · <span style="color:var(--muted)">${ds} vs suggested</span>`;}
+  if(profit<0){hEl.className='bar-hint bad';hEl.textContent='⚠ Below cost';}
+  else{const z=getZone(Math.max(M_MIN,Math.min(M_MAX,im)));hEl.className='bar-hint ok';hEl.innerHTML=`<span style="color:${ZCOLS[z.cls]};font-weight:500">${im}%</span> · ${multOf(im)}× · <span style="color:var(--muted)">${ds}</span>`;}
 }
 
 // ─── Calculation ──────────────────────────────────────────────────────────────
@@ -642,34 +692,51 @@ function calc(){
   const machC=fv('mach-min')*fv('mach-rate'),labC=(fv('lab-min')/60)*fv('lab-rate');
   const packC=fv('pack'),othC=fv('other'),total=matC+machC+labC+packC+othC;
   const m=marginPct/100,net=m<1?total/(1-m):total*5,profit=net-total;
+
+  // Recommendations
   set('rec-2x',fmt(total*2*(1+vat)));set('rec-3x',fmt(total*3*(1+vat)));set('rec-4x',fmt(total*4*(1+vat)));
+
+  // Fair
   const fcPct=fv('fair-card')/100,fcDiv=(1/(1+vat))-fcPct;
   const fG=fcDiv>0.01?net/fcDiv:net*(1+vat);
   const fVAT=fG-fG/(1+vat),fFee=fG*fcPct,fProfit=fG/(1+vat)-total-fFee,hasFairFee=fcPct>0;
+
+  // Etsy
   const eL=fv('e-list'),eTx=fv('e-tx')/100,ePay=fv('e-pay')/100,eTot=eTx+ePay;
   const eDiv=(1/(1+vat))-eTot,eG=eDiv>0.01?(net+eL)/eDiv:0;
   const eVAT=eG-eG/(1+vat),eF=eL+eG*eTot,eProfit=eG/(1+vat)-total-eF;
+
+  // Webshop
   const wP=fv('w-pay')/100,wDiv=(1/(1+vat))-wP,wG=wDiv>0.01?net/wDiv:0;
   const wVAT=wG-wG/(1+vat),wF=wG*wP,wProfit=wG/(1+vat)-total-wF;
-  set('s-cost',fmt(total));set('s-profit',fmt(profit));set('s-be',fmt(total*(1+vat)));
-  set('rp-fair',fmt(fG));set('rv-fair',vatOn?'incl. '+fmt(fVAT)+' VAT (20%)':'no VAT charged');
-  set('rl-fair-cost',fmt(total));
-  document.getElementById('rl-fair-fee-lbl').textContent=hasFairFee?'Card '+fv('fair-card')+'%':'No card fee';
-  document.getElementById('rl-fair-fee').textContent=hasFairFee?'− '+fmt(fFee):'—';
-  document.getElementById('rl-fair-fee').className=hasFairFee?'neg':'';
-  set('rl-fair-profit',fmt(fProfit));
-  set('rp-etsy',fmt(eG));set('rv-etsy',vatOn?'incl. '+fmt(eVAT)+' VAT (20%)':'no VAT charged');
-  set('rl-etsy-cost',fmt(total));set('rl-etsy-fees','− '+fmt(eF));set('rl-etsy-profit',fmt(eProfit));
-  set('rp-web',fmt(wG));set('rv-web',vatOn?'incl. '+fmt(wVAT)+' VAT (20%)':'no VAT charged');
-  set('rl-web-cost',fmt(total));set('rl-web-fees','− '+fmt(wF));set('rl-web-profit',fmt(wProfit));
-  updateFinalHint('fair',fG,total,vat);updateFinalHint('etsy',eG,total,vat);updateFinalHint('web',wG,total,vat);
+
+  // ── Sticky bar updates ──
+  const z=getZone(marginPct),col=ZCOLS[z.cls];
+  set('bar-cost',fmt(total));
+  const bmpEl=document.getElementById('bar-margin-pct');
+  bmpEl.textContent=marginPct+'%';bmpEl.style.color=col;
+  const brkEl=document.getElementById('bar-risk-pill');
+  brkEl.textContent=z.label;brkEl.className='bar-risk-pill '+z.cls;
+
+  set('bp-fair',fmt(fG));document.getElementById('bv-fair').textContent=vatOn?'VAT incl.':'';
+  set('bp-etsy',fmt(eG));document.getElementById('bv-etsy').textContent=vatOn?'VAT incl.':'';
+  set('bp-web',fmt(wG));document.getElementById('bv-web').textContent=vatOn?'VAT incl.':'';
+
+  updateFinalHint('fair',fG,total,vat);
+  updateFinalHint('etsy',eG,total,vat);
+  updateFinalHint('web',wG,total,vat);
+
+  // Popovers
   const bd=[['Material',fmt(matC)],['Machine time',fmt(machC)],['Your labor',fmt(labC)],['Packaging',fmt(packC)],['Overhead',fmt(othC)]];
   buildPop('pop-fair',bd,fmt(total),'CRAFT FAIR PRICE',[vatOn?['VAT 20%',fmt(fVAT)]:null,hasFairFee?['Card '+fv('fair-card')+'%','− '+fmt(fFee)]:null,null,['Your profit',fmt(fProfit)],['Customer pays',fmt(fG)]]);
   buildPop('pop-etsy',bd,fmt(total),'ETSY LISTING PRICE',[vatOn?['VAT 20%',fmt(eVAT)]:null,['Listing fee','− '+fmt(eL)],['Transaction '+fv('e-tx')+'%','− '+fmt(eG*eTx)],['Payment '+fv('e-pay')+'%','− '+fmt(eG*ePay)],null,['Your profit',fmt(eProfit)],['List price',fmt(eG)]]);
   buildPop('pop-web',bd,fmt(total),'WEBSHOP PRICE',[vatOn?['VAT 20%',fmt(wVAT)]:null,['Payment '+fv('w-pay')+'%','− '+fmt(wF)],null,['Your profit',fmt(wProfit)],['List price',fmt(wG)]]);
+
+  // Warning
   const warn=document.getElementById('warn');
   if(marginPct<44&&total>0){warn.style.display='';warn.textContent='⚠ Below the 2× wholesale floor. Aim for at least 50% margin.';}
   else warn.style.display='none';
+
   window._lastCalc={total,net,profit,fairSugg:fG,etsySugg:eG,webSugg:wG,marginPct,vatOn,mat,fVAT,eVAT,wVAT,eF,wF,fFee,fProfit,eProfit,wProfit};
 }
 
@@ -697,33 +764,27 @@ function fl(id){const e=document.getElementById(id);e.classList.add('err');e.foc
 function clearErr(id){document.getElementById(id).classList.remove('err');}
 function clearIgErr(id){document.getElementById(id).classList.remove('err');}
 
-// ─── Save product — Supabase ──────────────────────────────────────────────────
+// ─── Save ─────────────────────────────────────────────────────────────────────
 function validateAndCollectErrors(){
-  const errors=[];
-  const name=document.getElementById('product-name').value.trim();
-  if(!name){errors.push({msg:'Product name is required'});document.getElementById('product-name').classList.add('err');}
-  if(!document.getElementById('sel-mat').value){errors.push({msg:'Select a material'});document.getElementById('sel-mat').classList.add('err');}
-  if(fv('mach-min')<=0){errors.push({msg:'Machine time must be > 0'});document.getElementById('ig-mach-min').classList.add('err');}
-  if(fv('lab-min')<=0){errors.push({msg:'Labor time must be > 0'});document.getElementById('ig-lab-min').classList.add('err');}
-  if(fv('lab-rate')<=0)errors.push({msg:'Labor hourly rate must be > 0'});
-  return errors;
+  const errs=[];
+  if(!document.getElementById('product-name').value.trim()){errs.push({msg:'Product name is required'});document.getElementById('product-name').classList.add('err');}
+  if(!document.getElementById('sel-mat').value){errs.push({msg:'Select a material'});document.getElementById('sel-mat').classList.add('err');}
+  if(fv('mach-min')<=0){errs.push({msg:'Machine time must be > 0'});document.getElementById('ig-mach-min').classList.add('err');}
+  if(fv('lab-min')<=0){errs.push({msg:'Labor time must be > 0'});document.getElementById('ig-lab-min').classList.add('err');}
+  if(fv('lab-rate')<=0)errs.push({msg:'Labor hourly rate must be > 0'});
+  return errs;
 }
-
 async function saveProduct(){
   document.getElementById('product-name').classList.remove('err');
   document.getElementById('sel-mat').classList.remove('err');
   ['ig-mach-min','ig-lab-min'].forEach(id=>document.getElementById(id).classList.remove('err'));
-  const errors=validateAndCollectErrors();
+  const errs=validateAndCollectErrors();
   const banner=document.getElementById('val-banner');
-  if(errors.length){
-    document.getElementById('val-list').innerHTML=errors.map(e=>`<li>${e.msg}</li>`).join('');
-    banner.classList.add('show');banner.scrollIntoView({behavior:'smooth',block:'start'});return;
-  }
+  if(errs.length){document.getElementById('val-list').innerHTML=errs.map(e=>`<li>${e.msg}</li>`).join('');banner.classList.add('show');banner.scrollIntoView({behavior:'smooth',block:'start'});return;}
   banner.classList.remove('show');
-  const c=window._lastCalc||{};
-  const vat=vatOn?0.20:0;
-  function fp(ch,sugg){const v=parseFloat(document.getElementById('fp-'+ch).value);return(v&&v>0)?v:sugg;}
-  function im(gross,total,vat){const n=gross/(1+vat);return n>total?Math.round(((n-total)/n)*100):0;}
+  const c=window._lastCalc||{},vat=vatOn?0.20:0;
+  function fp(ch,s){const v=parseFloat(document.getElementById('fp-'+ch).value);return(v&&v>0)?v:s;}
+  function im(g,t,v){const n=g/(1+v);return n>t?Math.round(((n-t)/n)*100):0;}
   const fairFinal=fp('fair',c.fairSugg||0),etsyFinal=fp('etsy',c.etsySugg||0),webFinal=fp('web',c.webSugg||0);
   const productId=editingProductId||Date.now();
   const data={
@@ -743,63 +804,43 @@ async function saveProduct(){
   };
   const btn=document.getElementById('save-btn');
   btn.classList.add('loading');btn.textContent='Saving…';
-  dbStatus('saving','Saving product…');
-  const {error}=await db.from('products').upsert({id:productId,name:data.name,data,updated_at:new Date().toISOString()});
+  toast('saving','Saving product…');
+  const{error}=await db.from('products').upsert({id:productId,name:data.name,data,updated_at:new Date().toISOString()});
   btn.classList.remove('loading');
-  btn.innerHTML='<svg viewBox="0 0 24 24" style="width:15px;height:15px;stroke:white;fill:none;stroke-width:2;stroke-linecap:round"><path d="M19 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11l5 5v11a2 2 0 0 1-2 2z"/><polyline points="17 21 17 13 7 13 7 21"/><polyline points="7 3 7 8 15 8"/></svg> Save product';
-  if(error){dbStatus('err','Save failed — '+error.message);return;}
-  dbStatus('saved','Saved ✓');
+  btn.innerHTML='<svg viewBox="0 0 24 24" style="width:14px;height:14px;stroke:white;fill:none;stroke-width:2;stroke-linecap:round"><path d="M19 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11l5 5v11a2 2 0 0 1-2 2z"/><polyline points="17 21 17 13 7 13 7 21"/><polyline points="7 3 7 8 15 8"/></svg> Save product';
+  if(error){toast('err','Save failed — '+error.message);return;}
+  toast('saved','Saved ✓');
   try{localStorage.removeItem('lps_edit_id');}catch(e){}
   window.location.href='products.html';
 }
 
-// ─── Load for edit — Supabase ─────────────────────────────────────────────────
+// ─── Load for edit ────────────────────────────────────────────────────────────
 async function loadForEdit(){
-  let editId;
-  try{editId=localStorage.getItem('lps_edit_id');}catch(e){}
+  let editId;try{editId=localStorage.getItem('lps_edit_id');}catch(e){}
   if(!editId||editId==='new')return;
-  const {data,error}=await db.from('products').select('*').eq('id',editId).single();
+  const{data,error}=await db.from('products').select('*').eq('id',editId).single();
   if(error||!data)return;
   editingProductId=data.id;
   const p=data.data;
   document.getElementById('product-name').value=p.name||'';
-  if(p.machMin!=null)document.getElementById('mach-min').value=p.machMin;
-  if(p.machRate!=null)document.getElementById('mach-rate').value=p.machRate;
-  if(p.labMin!=null)document.getElementById('lab-min').value=p.labMin;
-  if(p.labRate!=null)document.getElementById('lab-rate').value=p.labRate;
-  if(p.packCost!=null)document.getElementById('pack').value=p.packCost;
-  if(p.otherCost!=null)document.getElementById('other').value=p.otherCost;
-  if(p.fairCard!=null)document.getElementById('fair-card').value=p.fairCard;
-  if(p.eListing!=null)document.getElementById('e-list').value=p.eListing;
-  if(p.eTx!=null)document.getElementById('e-tx').value=p.eTx;
-  if(p.ePay!=null)document.getElementById('e-pay').value=p.ePay;
-  if(p.wPay!=null)document.getElementById('w-pay').value=p.wPay;
+  [['mach-min',p.machMin],['mach-rate',p.machRate],['lab-min',p.labMin],['lab-rate',p.labRate],['pack',p.packCost],['other',p.otherCost],
+   ['fair-card',p.fairCard],['e-list',p.eListing],['e-tx',p.eTx],['e-pay',p.ePay],['w-pay',p.wPay]].forEach(([id,val])=>{if(val!=null)document.getElementById(id).value=val;});
   vatOn=p.vatOn!==false;document.getElementById('vat-toggle').classList.toggle('on',vatOn);
   if(p.marginPct){marginPct=p.marginPct;document.getElementById('margin-slider').value=marginPct;}
-  if(p.fairFinalOverride)document.getElementById('fp-fair').value=p.fairFinalOverride;
-  if(p.etsyFinalOverride)document.getElementById('fp-etsy').value=p.etsyFinalOverride;
-  if(p.webFinalOverride)document.getElementById('fp-web').value=p.webFinalOverride;
-  if(p.image){currentImageB64=p.image;showImagePreview(p.image,'Saved photo');}
-  if(p.selMatId){
-    setTimeout(()=>{document.getElementById('sel-mat').value=p.selMatId;calc();},60);
-  }
+  [['fp-fair',p.fairFinalOverride],['fp-etsy',p.etsyFinalOverride],['fp-web',p.webFinalOverride]].forEach(([id,val])=>{if(val)document.getElementById(id).value=val;});
+  if(p.image){currentImageB64=p.image;showImgPreview(p.image,'Saved photo');}
+  if(p.selMatId)setTimeout(()=>{document.getElementById('sel-mat').value=p.selMatId;calc();},60);
 }
 
 // ─── Init ─────────────────────────────────────────────────────────────────────
 async function init(){
   const overlay=document.getElementById('db-loading');
   try{
-    await loadMats();
-    loadFees();
-    await loadForEdit();
-    onSlider();
-    calc();
-  } catch(e){
-    dbStatus('err','Database error — '+e.message);
-  } finally {
-    overlay.classList.add('hidden');
-    setTimeout(()=>overlay.style.display='none',400);
-  }
+    restoreCardStates();
+    await loadMats();loadFees();await loadForEdit();
+    onSlider();calc();updateFeesSummary();
+  }catch(e){toast('err','Database error');}
+  finally{overlay.classList.add('hidden');setTimeout(()=>overlay.style.display='none',400);}
 }
 init();
 </script>
