@@ -218,7 +218,7 @@ const SESSION_VALUE = 'granted_' + PASSWORD_HASH.slice(0, 8);
 
 // If already authenticated this session, go straight in
 if(sessionStorage.getItem(SESSION_KEY) === SESSION_VALUE){
-  window.location.replace('ninis-products.html');
+  window.location.replace('products.html');
 }
 
 async function sha256(message){
@@ -247,7 +247,7 @@ async function doLogin(){
 
   if(hash === PASSWORD_HASH){
     sessionStorage.setItem(SESSION_KEY, SESSION_VALUE);
-    window.location.replace('ninis-products.html');
+    window.location.replace('products.html');
   } else {
     btn.classList.remove('loading');
     wrap.classList.add('err');
