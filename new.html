@@ -5,7 +5,7 @@
 <meta name="viewport" content="width=device-width,initial-scale=1">
 <title>New Product — nini's Studio</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
-<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700&family=DM+Sans:wght@400;500&family=Caveat:wght@600&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Lora:wght@500;600;700&family=DM+Sans:wght@400;500&family=Caveat:wght@600&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="style.css">
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.js"></script>
 <style>
@@ -18,50 +18,6 @@
   gap: 12px;
 }
 .db-overlay p { font-size: 14px; font-weight: 500; color: var(--text); }
-
-/* ── Quick-add material panel ── */
-.mat-quick-add {
-  display: none;
-  background: var(--accent-light);
-  border: 1.5px solid var(--accent-mid);
-  border-radius: var(--r-md);
-  padding: 14px;
-  margin-top: 8px;
-  animation: slideDown .2s ease;
-}
-.mat-quick-add.show { display: block; }
-@keyframes slideDown { from { opacity:0; transform:translateY(-6px); } to { opacity:1; transform:none; } }
-.mat-quick-add__title {
-  font-size: 12px; font-weight: 500; color: var(--accent-dark);
-  margin-bottom: 10px;
-  display: flex; align-items: center; justify-content: space-between;
-}
-.mat-quick-add__fields {
-  display: grid;
-  grid-template-columns: 1fr auto auto;
-  gap: 8px;
-  align-items: end;
-  margin-bottom: 8px;
-}
-@media (max-width: 480px) {
-  .mat-quick-add__fields { grid-template-columns: 1fr 1fr; }
-  .mat-quick-add__fields .btn--primary { grid-column: 1/-1; }
-}
-.mat-quick-add input {
-  width: 100%;
-  height: 40px;
-  border: 1.5px solid var(--border);
-  border-radius: var(--r-sm);
-  padding: 0 10px;
-  font-size: 13px; font-family: var(--font-sans);
-  color: var(--text); background: white;
-  outline: none;
-  transition: border-color .15s;
-}
-.mat-quick-add input:focus { border-color: var(--accent-mid); }
-.mat-quick-add input::placeholder { color: var(--text-3); }
-.mat-quick-add input.err { border-color: var(--danger); }
-.mat-quick-add__label { font-size: 11px; color: var(--accent-dark); margin-bottom: 3px; font-weight: 500; }
 
 /* ── Pieces per sheet override ── */
 .pcs-override {
@@ -282,23 +238,53 @@ input[type=range].risk-slider::-moz-range-thumb {
           <option value="">— select from your materials library —</option>
         </select>
 
-        <!-- Quick-add new material panel -->
-        <div class="mat-quick-add" id="mat-quick-add">
-          <div class="mat-quick-add__title">
+        <!-- Add new material panel — same component as Settings page -->
+        <div class="add-mat-form" id="mat-quick-add" style="display:none;margin-top:8px" aria-live="polite">
+          <div class="add-mat-form__title">
             Add new material to library
-            <button onclick="cancelQuickAdd()" type="button" aria-label="Cancel adding material" style="background:none;border:none;color:var(--accent-dark);cursor:pointer;font-size:18px;line-height:1;padding:0">×</button>
+            <button onclick="cancelQuickAdd()" type="button" aria-label="Cancel adding material" style="background:none;border:none;color:var(--accent-dark);cursor:pointer;font-size:18px;line-height:1;padding:0;float:right">×</button>
           </div>
-          <div class="mat-quick-add__fields">
+
+          <div class="add-mat-form__row">
             <div>
-              <div class="mat-quick-add__label">Name</div>
-              <input type="text" id="qa-name" placeholder="e.g. Birch plywood 4mm" maxlength="50">
+              <div class="add-mat-form__label">Material name *</div>
+              <input type="text" id="qa-name" placeholder="e.g. Birch plywood 3mm" maxlength="60" aria-required="true" aria-label="Material name (required)">
             </div>
             <div>
-              <div class="mat-quick-add__label">Sheet price €</div>
-              <input type="number" id="qa-sheet" placeholder="12.50" min="0.01" step="0.01" style="width:90px">
+              <div class="add-mat-form__label">Sheet price * (€)</div>
+              <input type="number" id="qa-sheet" placeholder="12.50" min="0.01" step="0.01" style="width:100px" aria-required="true" aria-label="Sheet price in euros (required)">
             </div>
-            <button class="btn btn--primary btn--sm" onclick="saveQuickMat()" style="align-self:flex-end;height:40px">Save &amp; select</button>
           </div>
+
+          <div class="optional-toggle" onclick="toggleOptionalQA()" id="opt-toggle-qa">
+            <svg id="opt-arrow-qa" style="width:12px;height:12px;stroke:currentColor;fill:none;stroke-width:2.5;stroke-linecap:round;transition:transform .2s" viewBox="0 0 10 10"><polyline points="2,3 5,7 8,3"/></svg>
+            Optional details
+          </div>
+          <div class="optional-fields" id="optional-fields-qa">
+            <div class="add-mat-form__optional">
+              <div class="add-mat-form__field">
+                <span class="add-mat-form__label">Size / dimensions</span>
+                <input type="text" id="qa-size" placeholder="e.g. 600×300 mm">
+              </div>
+              <div class="add-mat-form__field">
+                <span class="add-mat-form__label">Thickness</span>
+                <input type="text" id="qa-thick" placeholder="e.g. 3 mm">
+              </div>
+              <div class="add-mat-form__field">
+                <span class="add-mat-form__label">Supplier / store</span>
+                <input type="text" id="qa-supplier" placeholder="e.g. Modulor, Amazon">
+              </div>
+              <div class="add-mat-form__field">
+                <span class="add-mat-form__label">Link to product</span>
+                <input type="url" id="qa-link" placeholder="https://…">
+              </div>
+            </div>
+          </div>
+
+          <button class="btn btn--primary btn--sm" onclick="saveQuickMat()" type="button" style="width:100%;justify-content:center;height:42px;margin-top:4px">
+            <svg style="width:14px;height:14px;stroke:white;fill:none;stroke-width:2;stroke-linecap:round" viewBox="0 0 24 24"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+            Save &amp; select material
+          </button>
         </div>
 
         <!-- Pieces per sheet override (shown after material selected) -->
@@ -567,7 +553,7 @@ const db=supabase.createClient(SUPA_URL,SUPA_KEY);
 
 // ─── State ───────────────────────────────────────────────────────────────────
 let mats=[],vatOn=true,marginPct=50,editingProductId=null,currentImageB64=null,nextMatId=Date.now();
-let fees={fc:0,el:0.20,et:6.5,ep:3.0,wp:2.5};
+let fees={fc:0,el:0.20,et:6.5,ep:4.0,epf:0.30,wp:2.5};
 
 // ─── Zones ───────────────────────────────────────────────────────────────────
 const M_MIN=20,M_MAX=75;
@@ -639,14 +625,14 @@ function onMatChange(){
 
   if(sel.value==='__new__'){
     // Show quick-add panel, reset select visually
-    document.getElementById('mat-quick-add').classList.add('show');
+    document.getElementById('mat-quick-add').style.display='block';
     document.getElementById('pcs-override').classList.remove('show');
     sel.value=''; // reset so it shows placeholder
     document.getElementById('qa-name').focus();
     return;
   }
 
-  document.getElementById('mat-quick-add').classList.remove('show');
+  document.getElementById('mat-quick-add').style.display='none';
 
   const mat=mats.find(m=>String(m.id)===sel.value);
   if(mat){
@@ -669,17 +655,32 @@ async function saveQuickMat(){
   const sheet=parseFloat(document.getElementById('qa-sheet').value);
   if(!name){flQa('qa-name');return;}
   if(!sheet||sheet<=0){flQa('qa-sheet');return;}
+  // Collect optional meta fields (same as settings page)
+  const meta={};
+  const size=(document.getElementById('qa-size')||{}).value||'';
+  const thick=(document.getElementById('qa-thick')||{}).value||'';
+  const supplier=(document.getElementById('qa-supplier')||{}).value||'';
+  const link=(document.getElementById('qa-link')||{}).value||'';
+  if(size.trim())meta.size=size.trim();
+  if(thick.trim())meta.thickness=thick.trim();
+  if(supplier.trim())meta.supplier=supplier.trim();
+  if(link.trim())meta.link=link.trim();
   const id=nextMatId++;
   showToast('saving','Saving material…');
-  const{error}=await db.from('materials').insert({id,name,sheet_price:sheet,pieces_per_sheet:1,meta:{}});
+  const{error}=await db.from('materials').insert({id,name,sheet_price:sheet,pieces_per_sheet:1,meta});
   if(error){showToast('err','Could not save');return;}
   showToast('saved','Saved ✓');
-  mats.push({id,name,sheet,pcs:1});
-  // Clear quick-add fields
-  ['qa-name','qa-sheet'].forEach(i=>document.getElementById(i).value='');
+  mats.push({id,name,sheet,pcs:1,meta});
+  // Clear all fields (same as settings addMat cleanup)
+  ['qa-name','qa-sheet','qa-size','qa-thick','qa-supplier','qa-link'].forEach(i=>{
+    const el=document.getElementById(i); if(el)el.value='';
+  });
+  // Collapse optional fields
+  document.getElementById('optional-fields-qa').classList.remove('show');
+  document.getElementById('opt-arrow-qa').style.transform='rotate(0deg)';
   // Rebuild select and select the new material
   rebuildMatSelect(String(id));
-  document.getElementById('mat-quick-add').classList.remove('show');
+  document.getElementById('mat-quick-add').style.display='none';
   // Show pieces override
   const po=document.getElementById('pcs-override');po.classList.add('show');
   document.getElementById('pcs-product').value=pcs;
@@ -687,8 +688,15 @@ async function saveQuickMat(){
   calc();
 }
 
+function toggleOptionalQA(){
+  const f=document.getElementById('optional-fields-qa');
+  const a=document.getElementById('opt-arrow-qa');
+  const show=!f.classList.contains('show');
+  f.classList.toggle('show',show);
+  a.style.transform=show?'rotate(180deg)':'rotate(0deg)';
+}
 function cancelQuickAdd(){
-  document.getElementById('mat-quick-add').classList.remove('show');
+  document.getElementById('mat-quick-add').style.display='none';
   document.getElementById('sel-mat').value='';
   document.getElementById('pcs-override').classList.remove('show');
 }
@@ -728,7 +736,7 @@ function loadFees(){
   try{
     const f=JSON.parse(localStorage.getItem('lps_fees3')||'null');
     if(!f)return;
-    fees={fc:f.fc??0,el:f.el??0.20,et:f.et??6.5,ep:f.ep??3.0,wp:f.wp??2.5};
+    fees={fc:f.fc??0,el:f.el??0.20,et:f.et??6.5,ep:f.ep??4.0,epf:f.epf??0.30,wp:f.wp??2.5};
     if(f.vat!=null)vatOn=f.vat;
   }catch(e){}
 }
@@ -813,9 +821,13 @@ function calc(){
   const fNet=fG/(1+vat),fVAT=fG-fNet,fFee=fG*fcPct,fProfit=fNet-total-fFee,hasFair=fcPct>0;
 
   // Etsy
-  const eTot=(fees.et+fees.ep)/100,eDiv=(1/(1+vat))-eTot;
-  const eG=eDiv>0.01?(net+fees.el)/eDiv:0;
-  const eNet=eG/(1+vat),eVAT=eG-eNet,eF=fees.el+eG*eTot,eProfit=eNet-total-eF;
+  const eTotPct=(fees.et+fees.ep)/100;
+  const eDiv=(1/(1+vat))-eTotPct;
+  // Include fixed per-transaction fee in the solve: (net + listing + fixedFee) / divisor
+  const eG=eDiv>0.01?(net+fees.el+fees.epf)/eDiv:0;
+  const eNet=eG/(1+vat),eVAT=eG-eNet;
+  const eF=fees.el+fees.epf+eG*eTotPct;   // total Etsy fees = listing + fixed + % fees
+  const eProfit=eNet-total-eF;
 
   // Web
   const wPct=fees.wp/100,wDiv=(1/(1+vat))-wPct;
@@ -866,11 +878,13 @@ function calc(){
   buildNewPop('pop-fair','CRAFT FAIR',fG,fNet,fVAT,
     hasFair?[['Card processing '+fees.fc+'%','− '+fmt(fFee)]]:[]
     ,fProfit);
-  buildNewPop('pop-etsy','ETSY',eG,eNet,eVAT,[
-    ['Listing fee','− '+fmt(fees.el)],
+  const etsyFeeRows=[
+    ['Listing fee (per item)','− '+fmt(fees.el)],
     ['Transaction '+fees.et+'%','− '+fmt(eG*(fees.et/100))],
-    ['Payment '+fees.ep+'%','− '+fmt(eG*(fees.ep/100))],
-  ],eProfit);
+    ['Payment processing '+fees.ep+'%','− '+fmt(eG*(fees.ep/100))],
+  ];
+  if(fees.epf>0) etsyFeeRows.push(['Payment processing (fixed)','− '+fmt(fees.epf)]);
+  buildNewPop('pop-etsy','ETSY',eG,eNet,eVAT,etsyFeeRows,eProfit);
   buildNewPop('pop-web','WEBSHOP',wG,wNet,wVAT,[
     ['Payment '+fees.wp+'%','− '+fmt(wF)],
   ],wProfit);

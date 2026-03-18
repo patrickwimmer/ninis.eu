@@ -5,7 +5,7 @@
 <meta name="viewport" content="width=device-width,initial-scale=1">
 <title>Settings — nini's Studio</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
-<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700&family=DM+Sans:wght@400;500&family=Caveat:wght@600&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Lora:wght@500;600;700&family=DM+Sans:wght@400;500&family=Caveat:wght@600&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="style.css">
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.js"></script>
 <style>
@@ -264,7 +264,7 @@
 
       <!-- VAT toggle -->
       <div class="toggle-row" style="margin-bottom:16px;padding:10px 12px;background:var(--surface2);border-radius:var(--r-md);border:1px solid var(--border)">
-        <button class="toggle-switch on" id="vat-toggle" onclick="toggleVAT()" role="switch" aria-checked="true" aria-label="Include 20% Austrian VAT in all prices" type="button"></button>
+        <div class="toggle-switch on" id="vat-toggle" onclick="toggleVAT()" role="switch" aria-checked="true" aria-label="Include 20% Austrian VAT in all prices" tabindex="0" onkeydown="if(event.key==='Enter'||event.key===' '){event.preventDefault();toggleVAT();}"></div>
         <div class="toggle-label">
           Include 20% Austrian VAT in all prices
           <small>Prices shown to customers include VAT. Your profit is always calculated on the net amount.</small>
@@ -333,8 +333,19 @@
             <div class="fee-row">
               <span class="fee-row__label">Payment processing</span>
               <div class="fee-row__input-wrap">
-                <input type="number" class="fee-row__input" id="e-pay" aria-label="Etsy payment processing fee percentage" value="3.0" min="0" step="0.1" oninput="saveFees();updateFeeSummaries()">
+                <input type="number" class="fee-row__input" id="e-pay" aria-label="Etsy payment processing fee percentage" value="4.0" min="0" step="0.1" oninput="saveFees();updateFeeSummaries()">
                 <span class="fee-row__unit">%</span>
+              </div>
+            </div>
+            <div class="fee-row">
+              <span class="fee-row__label">
+                Payment processing (fixed)
+                <span style="font-size:10px;color:var(--text-3);display:block;margin-top:1px">Zahlungsbearbeitungsgebühr — Austria</span>
+              </span>
+              <div class="fee-row__input-wrap">
+                <span style="font-size:12px;color:var(--text-3)">€</span>
+                <input type="number" class="fee-row__input" id="e-pay-fix" aria-label="Etsy fixed payment processing fee in euros per transaction" value="0.30" min="0" step="0.01" oninput="saveFees();updateFeeSummaries()">
+                <span class="fee-row__unit" style="width:auto;font-size:11px;color:var(--text-3)">/sale</span>
               </div>
             </div>
             <div class="fee-ch-hint" id="etsy-hint"></div>
@@ -599,8 +610,13 @@ function updateFeeSummaries(){
   const etsyEl=document.getElementById('etsy-total');
   etsyEl.textContent=etsyPct.toFixed(1)+'%';
   etsyEl.className='fee-ch-total '+feeClass(etsyPct);
-  document.getElementById('etsy-summary').textContent='Transaction '+et+'% + Payment '+ep+'%';
-  document.getElementById('etsy-hint').textContent=el>0?'Plus €'+el.toFixed(2)+' listing fee per item':'No listing fee';
+  const epfix=fv('e-pay-fix');
+  document.getElementById('etsy-summary').textContent='Transaction '+et+'% + Payment '+ep+'%'+(epfix>0?' + €'+epfix.toFixed(2)+' fixed':'');
+  const epf=fv('e-pay-fix');
+  const etsyHintParts=[];
+  if(el>0)etsyHintParts.push('€'+el.toFixed(2)+' listing fee/item');
+  if(epf>0)etsyHintParts.push('€'+epf.toFixed(2)+' fixed/sale');
+  document.getElementById('etsy-hint').textContent=etsyHintParts.length?etsyHintParts.join(' · '):'No listing or fixed fees';
 
   // Web
   const webEl=document.getElementById('web-total');
@@ -615,7 +631,7 @@ function saveFees(){
   clearTimeout(saveT);
   saveT=setTimeout(()=>{
     try{localStorage.setItem('lps_fees3',JSON.stringify({
-      fc:fv('fair-card'),el:fv('e-list'),et:fv('e-tx'),ep:fv('e-pay'),wp:fv('w-pay'),vat:vatOn
+      fc:fv('fair-card'),el:fv('e-list'),et:fv('e-tx'),ep:fv('e-pay'),epf:fv('e-pay-fix'),wp:fv('w-pay'),vat:vatOn
     }));}catch(e){}
     showToast('saved','Fees saved ✓');
   },800);
@@ -624,7 +640,7 @@ function loadFees(){
   try{
     const f=JSON.parse(localStorage.getItem('lps_fees3')||'null');
     if(!f)return;
-    [['fc','fair-card'],['el','e-list'],['et','e-tx'],['ep','e-pay'],['wp','w-pay']].forEach(([k,id])=>{if(f[k]!=null)document.getElementById(id).value=f[k];});
+    [['fc','fair-card'],['el','e-list'],['et','e-tx'],['ep','e-pay'],['epf','e-pay-fix'],['wp','w-pay']].forEach(([k,id])=>{if(f[k]!=null)document.getElementById(id).value=f[k];});
     if(f.vat!=null){vatOn=f.vat;const t=document.getElementById('vat-toggle');t.classList.toggle('on',vatOn);t.setAttribute('aria-checked',vatOn?'true':'false');}
   }catch(e){}
 }
