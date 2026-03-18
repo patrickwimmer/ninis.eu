@@ -17,46 +17,60 @@
   --ok-bg:#FFFBE8;--ok-border:#EDD97A;--ok-text:#7A6610;
   --good-bg:#E8F4ED;--good-border:#74C69A;--good-text:#1E6641;
   --great-bg:#E6F1FB;--great-border:#85B7EB;--great-text:#185FA5;
-  --r:10px;--r-sm:6px;
-  --thumb-col:#9B2335;
+  --r:10px;--r-sm:6px;--thumb-col:#9B2335;
 }
 body{font-family:'DM Sans',sans-serif;background:var(--bg);color:var(--text);font-size:14px;line-height:1.65;padding-bottom:5rem}
-
-/* ── Topbar ── */
 .topbar{background:var(--surface);border-bottom:1px solid var(--border);padding:.85rem 1.5rem;display:flex;align-items:center;justify-content:space-between;gap:1rem;position:sticky;top:0;z-index:60}
 .back-link{display:inline-flex;align-items:center;gap:6px;font-size:13px;color:var(--muted);text-decoration:none;padding:5px 10px;border-radius:var(--r-sm);border:1px solid var(--border);background:var(--surface2);transition:background .12s,color .12s;white-space:nowrap;flex-shrink:0}
 .back-link:hover{background:var(--accent-light);color:var(--accent);border-color:var(--accent-mid)}
 .back-link svg{width:14px;height:14px;stroke:currentColor;fill:none;stroke-width:2;stroke-linecap:round}
 .brand-small{font-family:'Caveat',cursive;font-size:1.1rem;color:var(--accent);font-weight:600}
-.product-name-wrap{flex:1;max-width:340px;position:relative}
+.product-name-wrap{flex:1;max-width:340px}
 .product-name-input{width:100%;border:1px solid var(--border);border-radius:var(--r-sm);padding:0 12px;height:38px;font-size:14px;font-family:inherit;color:var(--text);background:var(--bg);outline:none;transition:border-color .15s,background .15s}
 .product-name-input:focus{border-color:var(--accent-mid);background:white}
 .product-name-input.err{border-color:var(--danger);background:#fff8f8}
 .product-name-input::placeholder{color:var(--faint)}
 .save-btn{display:inline-flex;align-items:center;gap:7px;height:38px;padding:0 16px;border-radius:var(--r-sm);font-size:13px;font-family:inherit;font-weight:500;cursor:pointer;background:var(--accent);border:1px solid var(--accent);color:white;transition:background .15s;white-space:nowrap;flex-shrink:0}
-.save-btn:hover{background:var(--accent-mid);border-color:var(--accent-mid)}
+.save-btn:hover{background:var(--accent-mid)}
 .save-btn svg{width:15px;height:15px;stroke:white;fill:none;stroke-width:2;stroke-linecap:round}
-
-/* ── Validation banner ── */
 .val-banner{display:none;margin-bottom:1.25rem;background:var(--danger-light);border:1px solid var(--danger-border);border-radius:var(--r-sm);padding:.85rem 1rem}
 .val-banner.show{display:block}
 .val-title{font-size:12px;font-weight:500;color:var(--danger);margin-bottom:.4rem}
 .val-list{list-style:none;display:flex;flex-direction:column;gap:3px}
 .val-list li{font-size:12px;color:var(--danger);display:flex;align-items:center;gap:6px}
 .val-list li::before{content:'';width:5px;height:5px;border-radius:50%;background:var(--danger);flex-shrink:0}
-
-/* ── Main ── */
 .container{max-width:960px;margin:0 auto;padding:2rem 1.25rem}
 .page-title{font-family:'Playfair Display',serif;font-size:1.6rem;font-weight:700;letter-spacing:-.02em;margin-bottom:.2rem}
 .page-sub{font-size:13px;color:var(--muted);margin-bottom:1.75rem}
-
-/* ── Card ── */
 .card{background:var(--surface);border:1px solid var(--border);border-radius:var(--r);padding:1.5rem;margin-bottom:1.25rem;animation:fadeIn .3s ease both}
-.card:nth-child(1){animation-delay:0s}.card:nth-child(2){animation-delay:.05s}.card:nth-child(3){animation-delay:.1s}.card:nth-child(4){animation-delay:.15s}.card:nth-child(5){animation-delay:.2s}
+.card:nth-child(1){animation-delay:0s}.card:nth-child(2){animation-delay:.04s}.card:nth-child(3){animation-delay:.08s}.card:nth-child(4){animation-delay:.12s}.card:nth-child(5){animation-delay:.16s}.card:nth-child(6){animation-delay:.20s}
 @keyframes fadeIn{from{opacity:0;transform:translateY(5px)}to{opacity:1;transform:none}}
 .card-header{display:flex;align-items:center;gap:10px;margin-bottom:1.25rem}
 .card-title{font-size:11px;font-weight:500;text-transform:uppercase;letter-spacing:.1em;color:var(--muted)}
 .count-badge{margin-left:auto;background:var(--accent-light);color:var(--accent);font-size:11px;font-weight:500;padding:2px 10px;border-radius:20px}
+
+/* ── Image upload ── */
+.img-upload-area{display:flex;align-items:stretch;gap:1rem}
+.img-dropzone{
+  flex:1;min-height:130px;border:2px dashed var(--border2);border-radius:var(--r-sm);
+  background:var(--bg);display:flex;flex-direction:column;align-items:center;justify-content:center;
+  gap:.5rem;cursor:pointer;transition:border-color .15s,background .15s;position:relative;overflow:hidden;padding:1.25rem;
+}
+.img-dropzone:hover,.img-dropzone.drag-over{border-color:var(--accent-mid);background:var(--accent-light)}
+.img-dropzone input[type=file]{position:absolute;inset:0;opacity:0;cursor:pointer;width:100%;height:100%}
+.img-dropzone svg{width:28px;height:28px;stroke:var(--faint);fill:none;stroke-width:1.5;stroke-linecap:round;stroke-linejoin:round;pointer-events:none;transition:stroke .15s}
+.img-dropzone:hover svg,.img-dropzone.drag-over svg{stroke:var(--accent)}
+.img-drop-text{font-size:12px;color:var(--faint);text-align:center;pointer-events:none;transition:color .15s}
+.img-dropzone:hover .img-drop-text,.img-dropzone.drag-over .img-drop-text{color:var(--accent)}
+.img-drop-sub{font-size:10px;color:var(--faint);pointer-events:none}
+.img-preview-wrap{width:170px;flex-shrink:0;border-radius:var(--r-sm);overflow:hidden;border:1px solid var(--border);background:var(--surface2);display:none;position:relative;min-height:130px}
+.img-preview-wrap.has-img{display:block}
+.img-preview{width:100%;height:100%;object-fit:cover;display:block;min-height:130px}
+.img-remove{position:absolute;top:7px;right:7px;width:26px;height:26px;border-radius:50%;background:rgba(37,32,24,.65);border:none;cursor:pointer;display:flex;align-items:center;justify-content:center;transition:background .15s}
+.img-remove:hover{background:var(--danger)}
+.img-remove svg{width:12px;height:12px;stroke:white;fill:none;stroke-width:2.5;stroke-linecap:round}
+.img-warn{font-size:11px;color:var(--ok-text);margin-top:.5rem;display:none}
+.img-warn.show{display:block}
 
 /* ── Materials ── */
 .mat-table{margin-bottom:1rem}
@@ -126,8 +140,6 @@ input[type=range].zoned::-moz-range-thumb{width:22px;height:22px;border-radius:5
 .pf-row input{width:58px;height:28px;border:1px solid var(--border);border-radius:4px;padding:0 6px;font-size:12px;font-family:inherit;background:white;outline:none;text-align:right;color:var(--text)}
 .pf-row input:focus{border-color:var(--accent-mid)}
 .pf-note{font-size:11px;color:var(--faint);margin-top:.5rem}
-
-/* ── Buttons ── */
 .btn{display:inline-flex;align-items:center;gap:5px;height:36px;padding:0 14px;border-radius:var(--r-sm);font-size:13px;font-family:inherit;font-weight:500;cursor:pointer;border:1px solid var(--border);background:var(--surface);color:var(--text);transition:background .15s;white-space:nowrap}
 .btn:hover{background:var(--surface2)}
 .btn-accent{background:var(--accent);border-color:var(--accent);color:white}
@@ -140,8 +152,6 @@ input[type=range].zoned::-moz-range-thumb{width:22px;height:22px;border-radius:5
 .stat{background:var(--surface2);border-radius:var(--r-sm);padding:.85rem 1rem}
 .stat-label{font-size:11px;color:var(--muted);margin-bottom:3px;text-transform:uppercase;letter-spacing:.06em}
 .stat-val{font-size:20px;font-weight:500}
-
-/* ── Recommended strip ── */
 .rec-label{font-size:11px;text-transform:uppercase;letter-spacing:.08em;color:var(--faint);font-weight:500;margin-bottom:.6rem}
 .rec-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin-bottom:1.25rem}
 .rec-card{border-radius:var(--r-sm);padding:.85rem 1rem;border:1px solid}
@@ -151,29 +161,26 @@ input[type=range].zoned::-moz-range-thumb{width:22px;height:22px;border-radius:5
 .rec-price{font-family:'Playfair Display',serif;font-size:22px;font-weight:700;line-height:1.2;margin-bottom:2px}
 .rec-desc{font-size:11px}
 
-/* ── Result channel cards ── */
+/* ── Result cards ── */
 .results-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:12px}
 .r-card{background:var(--surface);border:1px solid var(--border);border-radius:var(--r);padding:1.25rem;display:flex;flex-direction:column}
 .r-card.featured{border-color:var(--accent-mid);border-width:1.5px}
 .r-top{display:flex;align-items:flex-start;justify-content:space-between;margin-bottom:.85rem}
 .r-channel{font-size:12px;font-weight:500;color:var(--muted);text-transform:uppercase;letter-spacing:.07em}
-.r-suggested-label{font-size:10px;text-transform:uppercase;letter-spacing:.07em;color:var(--faint);margin-bottom:2px;margin-top:.1rem}
+.r-suggested-label{font-size:10px;text-transform:uppercase;letter-spacing:.07em;color:var(--faint);margin-bottom:2px}
 .r-price{font-family:'Playfair Display',serif;font-size:32px;font-weight:700;color:var(--text);line-height:1;margin-bottom:.25rem}
 .r-vat{font-size:11px;color:var(--faint);margin-bottom:.75rem}
 .r-line{display:flex;justify-content:space-between;font-size:12px;color:var(--muted);padding:3px 0;border-bottom:1px solid var(--border)}
 .r-line:last-of-type{border-bottom:none;padding-top:6px;font-weight:500;color:var(--text)}
 .neg{color:var(--danger)}.pos{color:var(--good-text)}
-
-/* ── Final price override ── */
 .final-price-wrap{margin-top:.85rem;padding-top:.85rem;border-top:1px dashed var(--border2)}
 .final-label{font-size:10px;text-transform:uppercase;letter-spacing:.07em;color:var(--faint);margin-bottom:.4rem;font-weight:500}
 .final-ig{display:flex;align-items:center;border:1px solid var(--border);border-radius:var(--r-sm);background:var(--bg);overflow:hidden;transition:border-color .15s}
 .final-ig:focus-within{border-color:var(--accent-mid);background:white}
 .final-ig .pre{padding:0 8px;font-size:12px;color:var(--faint);background:var(--surface2);height:32px;display:flex;align-items:center;border-right:1px solid var(--border);flex-shrink:0}
 .final-ig input{border:none;outline:none;padding:0 9px;height:32px;font-size:13px;font-family:inherit;background:transparent;color:var(--text);width:100%}
-.final-hint{margin-top:.4rem;font-size:11px;min-height:15px;transition:color .2s}
-.final-hint.ok{color:var(--good-text)}.final-hint.warn{color:var(--ok-text)}.final-hint.bad{color:var(--danger)}
-.final-margin-pill{display:inline-block;font-size:10px;font-weight:500;padding:2px 8px;border-radius:10px;margin-top:.3rem}
+.final-hint{margin-top:.4rem;font-size:11px;min-height:15px}
+.final-hint.ok{color:var(--good-text)}.final-hint.bad{color:var(--danger)}
 
 /* ── Popover ── */
 .info-wrap{position:relative}
@@ -188,7 +195,6 @@ input[type=range].zoned::-moz-range-thumb{width:22px;height:22px;border-radius:5
 .pop-divider{height:1px;background:rgba(255,255,255,.12);margin:7px 0}
 .pop-space{height:6px}
 .pop-row.grand{border-top:1px solid rgba(255,255,255,.2);border-bottom:none;margin-top:4px;padding-top:6px;font-weight:500;color:white;font-size:12px}
-
 .warn-bar{margin-top:1rem;padding:.75rem 1rem;border-radius:var(--r-sm);font-size:12px;display:none;background:var(--danger-light);border:1px solid var(--danger-border);color:var(--danger)}
 
 @media(max-width:640px){
@@ -196,11 +202,12 @@ input[type=range].zoned::-moz-range-thumb{width:22px;height:22px;border-radius:5
   .add-row{grid-template-columns:1fr 1fr}
   .topbar{flex-wrap:wrap}
   .product-name-wrap{width:100%;max-width:100%;order:3}
+  .img-upload-area{flex-direction:column}
+  .img-preview-wrap{width:100%}
 }
 </style>
 </head>
 <body>
-
 <div class="topbar">
   <a href="ninis-products.html" class="back-link">
     <svg viewBox="0 0 24 24"><polyline points="15 18 9 12 15 6"/></svg>
@@ -219,10 +226,33 @@ input[type=range].zoned::-moz-range-thumb{width:22px;height:22px;border-radius:5
   <div class="page-title">Pricing Studio</div>
   <div class="page-sub">Materials · Costs · Fees · Austrian VAT · Risk zones</div>
 
-  <!-- Validation banner -->
   <div class="val-banner" id="val-banner">
     <div class="val-title">Please fill in the following before saving:</div>
     <ul class="val-list" id="val-list"></ul>
+  </div>
+
+  <!-- PRODUCT PHOTO -->
+  <div class="card">
+    <div class="card-header">
+      <span class="card-title">Product photo</span>
+      <span style="font-size:11px;color:var(--faint);margin-left:auto">Optional — shown on the product card</span>
+    </div>
+    <div class="img-upload-area">
+      <div class="img-dropzone" id="img-dropzone"
+           ondragover="onDragOver(event)" ondragleave="onDragLeave()" ondrop="onDrop(event)">
+        <input type="file" id="img-file-input" accept="image/*" onchange="onFileChange(event)">
+        <svg viewBox="0 0 24 24"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8.5" cy="8.5" r="1.5"/><polyline points="21 15 16 10 5 21"/></svg>
+        <div class="img-drop-text">Click or drag &amp; drop a photo</div>
+        <div class="img-drop-sub">JPG · PNG · WEBP — auto-compressed to max 800px</div>
+      </div>
+      <div class="img-preview-wrap" id="img-preview-wrap">
+        <img class="img-preview" id="img-preview" src="" alt="Product photo">
+        <button class="img-remove" onclick="removeImage()" title="Remove image">
+          <svg viewBox="0 0 14 14"><line x1="2" y1="2" x2="12" y2="12"/><line x1="12" y1="2" x2="2" y2="12"/></svg>
+        </button>
+      </div>
+    </div>
+    <div class="img-warn" id="img-warn"></div>
   </div>
 
   <!-- MATERIALS -->
@@ -273,8 +303,6 @@ input[type=range].zoned::-moz-range-thumb{width:22px;height:22px;border-radius:5
       <span class="hint">glue, hardware, fixings</span>
     </div>
     <hr class="divider">
-
-    <!-- MARGIN SLIDER -->
     <div class="slider-section">
       <div class="margin-display">
         <span class="margin-pct" id="margin-pct">50%</span>
@@ -335,7 +363,6 @@ input[type=range].zoned::-moz-range-thumb{width:22px;height:22px;border-radius:5
       <div class="stat"><div class="stat-label">Net profit (fair, suggested)</div><div class="stat-val" id="s-profit">€ —</div></div>
       <div class="stat"><div class="stat-label">Break-even (incl. VAT)</div><div class="stat-val" id="s-be">€ —</div></div>
     </div>
-
     <div class="rec-label">Recommended range — industry multipliers</div>
     <div class="rec-grid">
       <div class="rec-card rec-ok"><div class="rec-mult rc-ok">2× cost — Wholesale floor</div><div class="rec-price rc-ok" id="rec-2x">—</div><div class="rec-desc rc-ok">Min. if a shop stocks your items</div></div>
@@ -343,141 +370,149 @@ input[type=range].zoned::-moz-range-thumb{width:22px;height:22px;border-radius:5
       <div class="rec-card rec-great"><div class="rec-mult rc-great">4× cost — Retail premium</div><div class="rec-price rc-great" id="rec-4x">—</div><div class="rec-desc rc-great">Strong positioning, premium products</div></div>
     </div>
     <hr class="divider">
-
     <div class="results-grid">
-
-      <!-- CRAFT FAIR -->
       <div class="r-card">
-        <div class="r-top">
-          <span class="r-channel">Craft fair</span>
+        <div class="r-top"><span class="r-channel">Craft fair</span>
           <div class="info-wrap"><div class="info-btn" id="btn-fair" onclick="togglePop('fair')">i</div><div class="popover" id="pop-fair"></div></div>
         </div>
         <div class="r-suggested-label">Suggested price</div>
-        <div class="r-price" id="rp-fair">—</div>
-        <div class="r-vat" id="rv-fair"></div>
+        <div class="r-price" id="rp-fair">—</div><div class="r-vat" id="rv-fair"></div>
         <div class="r-line"><span>Your costs</span><span id="rl-fair-cost">—</span></div>
         <div class="r-line"><span id="rl-fair-fee-lbl">No card fee</span><span id="rl-fair-fee">—</span></div>
         <div class="r-line"><span>Your profit</span><span class="pos" id="rl-fair-profit">—</span></div>
         <div class="final-price-wrap">
           <div class="final-label">Your final price</div>
-          <div class="final-ig"><span class="pre">€</span><input type="number" id="fp-fair" min="0" step="0.10" placeholder="Leave blank to use suggested" oninput="onFinalPrice('fair')"></div>
+          <div class="final-ig"><span class="pre">€</span><input type="number" id="fp-fair" min="0" step="0.10" placeholder="Leave blank to use suggested" oninput="calc()"></div>
           <div class="final-hint" id="fh-fair"></div>
         </div>
       </div>
-
-      <!-- ETSY -->
       <div class="r-card featured">
-        <div class="r-top">
-          <span class="r-channel">Etsy</span>
+        <div class="r-top"><span class="r-channel">Etsy</span>
           <div class="info-wrap"><div class="info-btn" id="btn-etsy" onclick="togglePop('etsy')">i</div><div class="popover" id="pop-etsy"></div></div>
         </div>
         <div class="r-suggested-label">Suggested price</div>
-        <div class="r-price" id="rp-etsy">—</div>
-        <div class="r-vat" id="rv-etsy"></div>
+        <div class="r-price" id="rp-etsy">—</div><div class="r-vat" id="rv-etsy"></div>
         <div class="r-line"><span>Your costs</span><span id="rl-etsy-cost">—</span></div>
         <div class="r-line"><span>Total Etsy fees</span><span class="neg" id="rl-etsy-fees">—</span></div>
         <div class="r-line"><span>Your profit</span><span class="pos" id="rl-etsy-profit">—</span></div>
         <div class="final-price-wrap">
           <div class="final-label">Your final price</div>
-          <div class="final-ig"><span class="pre">€</span><input type="number" id="fp-etsy" min="0" step="0.10" placeholder="Leave blank to use suggested" oninput="onFinalPrice('etsy')"></div>
+          <div class="final-ig"><span class="pre">€</span><input type="number" id="fp-etsy" min="0" step="0.10" placeholder="Leave blank to use suggested" oninput="calc()"></div>
           <div class="final-hint" id="fh-etsy"></div>
         </div>
       </div>
-
-      <!-- WEBSHOP -->
       <div class="r-card">
-        <div class="r-top">
-          <span class="r-channel">Own webshop</span>
+        <div class="r-top"><span class="r-channel">Own webshop</span>
           <div class="info-wrap"><div class="info-btn" id="btn-web" onclick="togglePop('web')">i</div><div class="popover" id="pop-web"></div></div>
         </div>
         <div class="r-suggested-label">Suggested price</div>
-        <div class="r-price" id="rp-web">—</div>
-        <div class="r-vat" id="rv-web"></div>
+        <div class="r-price" id="rp-web">—</div><div class="r-vat" id="rv-web"></div>
         <div class="r-line"><span>Your costs</span><span id="rl-web-cost">—</span></div>
         <div class="r-line"><span>Payment fees</span><span class="neg" id="rl-web-fees">—</span></div>
         <div class="r-line"><span>Your profit</span><span class="pos" id="rl-web-profit">—</span></div>
         <div class="final-price-wrap">
           <div class="final-label">Your final price</div>
-          <div class="final-ig"><span class="pre">€</span><input type="number" id="fp-web" min="0" step="0.10" placeholder="Leave blank to use suggested" oninput="onFinalPrice('web')"></div>
+          <div class="final-ig"><span class="pre">€</span><input type="number" id="fp-web" min="0" step="0.10" placeholder="Leave blank to use suggested" oninput="calc()"></div>
           <div class="final-hint" id="fh-web"></div>
         </div>
       </div>
-
     </div>
     <div class="warn-bar" id="warn"></div>
   </div>
-
 </div>
 
 <script>
-// ─── Auth guard ───────────────────────────────────────────────────────────────
 (function(){
-  const SESSION_KEY='ninis_studio_auth';
-  const HASH_PREFIX='7cf65358';
-  if(sessionStorage.getItem(SESSION_KEY)!=='granted_'+HASH_PREFIX){
-    window.location.replace('login.html');
-  }
+  const KEY='ninis_studio_auth',PRE='7cf65358';
+  if(sessionStorage.getItem(KEY)!=='granted_'+PRE) window.location.replace('login.html');
 })();
 
-// ─── State ─────────────────────────────────────────────────────────────────────
-let mats=[], vatOn=true, marginPct=50, nextId=100, editingProductId=null;
+let mats=[],vatOn=true,marginPct=50,nextId=100,editingProductId=null;
+let currentImageDataUrl=null;
 
-// ─── Zones ─────────────────────────────────────────────────────────────────────
 const M_MIN=20,M_MAX=75;
 const ZONES=[
-  {from:20,to:44,cls:'rp-danger',label:'High risk',desc:'Below the wholesale floor (2× cost). A few unsold pieces or returns will put you in the red.'},
-  {from:44,to:50,cls:'rp-caution',label:'Caution — near wholesale',desc:'Close to 2× cost. Fine for wholesale to shops, but tight for direct retail.'},
+  {from:20,to:44,cls:'rp-danger',label:'High risk',desc:'Below the wholesale floor (2× cost). A few returns will put you in the red.'},
+  {from:44,to:50,cls:'rp-caution',label:'Caution — near wholesale',desc:'Close to 2× cost. Fine for wholesale to shops, tight for direct retail.'},
   {from:50,to:67,cls:'rp-good',label:'Good — retail range',desc:'Between 2× and 3× cost. Healthy margin for markets and your webshop.'},
   {from:67,to:76,cls:'rp-great',label:'Strong — premium retail',desc:'3× cost or above. Room for discounts, returns, and growth.'},
 ];
-const ZCOLS={rp_danger:'#9B2335','rp-danger':'#9B2335','rp-caution':'#7A6610','rp-good':'#1E6641','rp-great':'#185FA5'};
-const THUMB={
-  'rp-danger':'#9B2335','rp-caution':'#B8860B','rp-good':'#1E6641','rp-great':'#185FA5'
-};
+const ZCOLS={'rp-danger':'#9B2335','rp-caution':'#7A6610','rp-good':'#1E6641','rp-great':'#185FA5'};
+const THUMB={'rp-danger':'#9B2335','rp-caution':'#B8860B','rp-good':'#1E6641','rp-great':'#185FA5'};
 
-function getZone(pct){
-  for(const z of ZONES) if(pct>=z.from&&pct<z.to) return z;
-  return ZONES[ZONES.length-1];
-}
-function multOf(pct){ return pct<100?(1/(1-pct/100)).toFixed(2):'∞'; }
-function riskPillHTML(pct){
-  const z=getZone(Math.max(M_MIN,Math.min(M_MAX,pct)));
-  return `<span class="risk-pill ${z.cls}"><strong style="font-weight:500">${z.label}</strong> — ${z.desc}</span>`;
-}
+function getZone(p){for(const z of ZONES)if(p>=z.from&&p<z.to)return z;return ZONES[ZONES.length-1];}
+function multOf(p){return p<100?(1/(1-p/100)).toFixed(2):'∞';}
+function riskPillHTML(p){const z=getZone(Math.max(M_MIN,Math.min(M_MAX,p)));return`<span class="risk-pill ${z.cls}"><strong style="font-weight:500">${z.label}</strong> — ${z.desc}</span>`;}
 
-// ─── Slider ────────────────────────────────────────────────────────────────────
 function onSlider(){
   marginPct=parseInt(document.getElementById('margin-slider').value);
-  const z=getZone(marginPct);
-  const col=ZCOLS[z.cls]||'#252018';
-  const pctEl=document.getElementById('margin-pct');
-  const multEl=document.getElementById('margin-mult');
-  pctEl.textContent=marginPct+'%'; pctEl.style.color=col;
-  multEl.textContent='= '+multOf(marginPct)+'× cost'; multEl.style.color=col;
+  const z=getZone(marginPct),col=ZCOLS[z.cls]||'#252018';
+  const pe=document.getElementById('margin-pct'),me=document.getElementById('margin-mult');
+  pe.textContent=marginPct+'%';pe.style.color=col;
+  me.textContent='= '+multOf(marginPct)+'× cost';me.style.color=col;
   document.documentElement.style.setProperty('--thumb-col',THUMB[z.cls]||'#A0722A');
   document.getElementById('risk-pill-wrap').innerHTML=riskPillHTML(marginPct);
   calc();
 }
 
-// ─── Materials ─────────────────────────────────────────────────────────────────
+// ── Image ──────────────────────────────────────────────────────────────────────
+function onDragOver(e){e.preventDefault();document.getElementById('img-dropzone').classList.add('drag-over');}
+function onDragLeave(){document.getElementById('img-dropzone').classList.remove('drag-over');}
+function onDrop(e){e.preventDefault();document.getElementById('img-dropzone').classList.remove('drag-over');const f=e.dataTransfer.files[0];if(f&&f.type.startsWith('image/'))processImg(f);}
+function onFileChange(e){const f=e.target.files[0];if(f)processImg(f);}
+
+function processImg(file){
+  const reader=new FileReader();
+  reader.onload=ev=>{
+    const img=new Image();
+    img.onload=()=>{
+      const MAX=800,c=document.createElement('canvas');
+      let w=img.width,h=img.height;
+      if(w>MAX){h=Math.round(h*(MAX/w));w=MAX;}
+      c.width=w;c.height=h;
+      c.getContext('2d').drawImage(img,0,0,w,h);
+      const url=c.toDataURL('image/jpeg',0.82);
+      setImage(url);
+      const kb=Math.round(url.length*0.75/1024);
+      const warn=document.getElementById('img-warn');
+      if(kb>400){warn.className='img-warn show';warn.textContent=`⚠ Image is ~${kb}KB — usable but uses more browser storage.`;}
+      else{warn.className='img-warn';warn.textContent='';}
+    };
+    img.src=ev.target.result;
+  };
+  reader.readAsDataURL(file);
+}
+
+function setImage(url){
+  currentImageDataUrl=url;
+  document.getElementById('img-preview').src=url;
+  document.getElementById('img-preview-wrap').classList.add('has-img');
+  document.getElementById('img-file-input').value='';
+}
+function removeImage(){
+  currentImageDataUrl=null;
+  document.getElementById('img-preview').src='';
+  document.getElementById('img-preview-wrap').classList.remove('has-img');
+  document.getElementById('img-warn').className='img-warn';
+}
+
+// ── Materials ──────────────────────────────────────────────────────────────────
 function renderMats(){
-  const tbl=document.getElementById('mat-table');
-  tbl.innerHTML='<div class="mat-row head"><span>Name</span><span>Sheet price</span><span>Pieces / sheet</span><span>Cost / piece</span><span></span></div>';
-  if(!mats.length) tbl.innerHTML+='<div class="mat-empty">No materials yet — add one below.</div>';
-  else mats.forEach(m=>{
-    tbl.innerHTML+=`<div class="mat-row"><span>${esc(m.name)}</span><span>€${m.sheet.toFixed(2)}</span><span>${m.pcs}</span><span class="cpp">€${(m.sheet/m.pcs).toFixed(3)}</span><button class="btn btn-ghost" onclick="removeMat(${m.id})">✕</button></div>`;
-  });
+  const t=document.getElementById('mat-table');
+  t.innerHTML='<div class="mat-row head"><span>Name</span><span>Sheet price</span><span>Pieces / sheet</span><span>Cost / piece</span><span></span></div>';
+  if(!mats.length)t.innerHTML+='<div class="mat-empty">No materials yet — add one below.</div>';
+  else mats.forEach(m=>{t.innerHTML+=`<div class="mat-row"><span>${esc(m.name)}</span><span>€${m.sheet.toFixed(2)}</span><span>${m.pcs}</span><span class="cpp">€${(m.sheet/m.pcs).toFixed(3)}</span><button class="btn btn-ghost" onclick="removeMat(${m.id})">✕</button></div>`;});
   document.getElementById('mat-badge').textContent=mats.length+' material'+(mats.length!==1?'s':'');
   const sel=document.getElementById('sel-mat'),prev=sel.value;
   sel.innerHTML='<option value="">— select a material —</option>';
   mats.forEach(m=>{const o=document.createElement('option');o.value=m.id;o.textContent=m.name;if(String(m.id)===prev)o.selected=true;sel.appendChild(o);});
-  saveMats(); calc();
+  saveMats();calc();
 }
 function addMat(){
   const name=document.getElementById('n-name').value.trim();
   const sheet=parseFloat(document.getElementById('n-sheet').value);
   const pcs=parseInt(document.getElementById('n-pcs').value);
-  if(!name){fl('n-name');return;} if(!sheet||sheet<=0){fl('n-sheet');return;} if(!pcs||pcs<1){fl('n-pcs');return;}
+  if(!name){fl('n-name');return;}if(!sheet||sheet<=0){fl('n-sheet');return;}if(!pcs||pcs<1){fl('n-pcs');return;}
   mats.push({id:nextId++,name,sheet,pcs});
   ['n-name','n-sheet','n-pcs'].forEach(id=>document.getElementById(id).value='');
   renderMats();
@@ -487,15 +522,11 @@ function fl(id){const e=document.getElementById(id);e.classList.add('err');e.foc
 function esc(s){return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');}
 function clearErr(id){document.getElementById(id).classList.remove('err');}
 function clearIgErr(id){document.getElementById(id).classList.remove('err');}
-
-// ─── Persist materials ──────────────────────────────────────────────────────────
 function saveMats(){try{localStorage.setItem('lps_mats',JSON.stringify(mats));}catch(e){}}
 function loadMats(){
-  try{const raw=localStorage.getItem('lps_mats');if(raw){mats=JSON.parse(raw);if(mats.length)nextId=Math.max(nextId,...mats.map(m=>m.id))+1;return;}}catch(e){}
+  try{const r=localStorage.getItem('lps_mats');if(r){mats=JSON.parse(r);if(mats.length)nextId=Math.max(nextId,...mats.map(m=>m.id))+1;return;}}catch(e){}
   mats=[{id:1,name:'Wood / Plywood 3mm',sheet:8.00,pcs:20},{id:2,name:'Acrylic 3mm clear',sheet:12.50,pcs:15},{id:3,name:'Vegetable leather',sheet:18.00,pcs:12}];nextId=10;
 }
-
-// ─── Persist fees ───────────────────────────────────────────────────────────────
 let saveT=null;
 function saveFees(){
   clearTimeout(saveT);
@@ -505,269 +536,139 @@ function saveFees(){
   },600);
 }
 function loadFees(){
-  try{const f=JSON.parse(localStorage.getItem('lps_fees3')||'null');if(!f)return;if(f.fc!=null)document.getElementById('fair-card').value=f.fc;if(f.el!=null)document.getElementById('e-list').value=f.el;if(f.et!=null)document.getElementById('e-tx').value=f.et;if(f.ep!=null)document.getElementById('e-pay').value=f.ep;if(f.wp!=null)document.getElementById('w-pay').value=f.wp;}catch(e){}
+  try{const f=JSON.parse(localStorage.getItem('lps_fees3')||'null');if(!f)return;
+  if(f.fc!=null)document.getElementById('fair-card').value=f.fc;
+  if(f.el!=null)document.getElementById('e-list').value=f.el;
+  if(f.et!=null)document.getElementById('e-tx').value=f.et;
+  if(f.ep!=null)document.getElementById('e-pay').value=f.ep;
+  if(f.wp!=null)document.getElementById('w-pay').value=f.wp;}catch(e){}
 }
-
-// ─── VAT ────────────────────────────────────────────────────────────────────────
 function toggleVAT(){vatOn=!vatOn;document.getElementById('vat-toggle').classList.toggle('on',vatOn);calc();}
 
-// ─── Final price hints ─────────────────────────────────────────────────────────
-// Called after calc() has run and stored _lastCalc
-function onFinalPrice(ch){ calc(); }
-
-function updateFinalHint(ch,suggestedGross,total,vat){
-  const inp=document.getElementById('fp-'+ch);
-  const hintEl=document.getElementById('fh-'+ch);
+function updateFinalHint(ch,sugg,total,vat){
+  const inp=document.getElementById('fp-'+ch),hint=document.getElementById('fh-'+ch);
   const val=parseFloat(inp.value);
-  if(!inp.value||isNaN(val)||val<=0){hintEl.textContent='';hintEl.className='final-hint';return;}
-  const netVal=val/(1+vat);
-  const profit=netVal-total;
-  const impliedM=netVal>0?Math.round((profit/netVal)*100):0;
-  const diff=val-suggestedGross;
-  const diffStr=(diff>=0?'+':'')+diff.toFixed(2);
-  if(profit<0){
-    hintEl.className='final-hint bad';
-    hintEl.textContent='⚠ Below cost — you lose money at this price.';
-  } else {
-    const z=getZone(Math.max(M_MIN,Math.min(M_MAX,impliedM)));
-    const col=ZCOLS[z.cls];
-    hintEl.className='final-hint ok';
-    hintEl.innerHTML=`<span style="color:${col};font-weight:500">${impliedM}% margin</span> · ${multOf(impliedM)}× cost · <span style="color:var(--muted)">${diffStr} vs suggested</span>`;
-  }
+  if(!inp.value||isNaN(val)||val<=0){hint.textContent='';hint.className='final-hint';return;}
+  const net=val/(1+vat),profit=net-total;
+  const im=net>0?Math.round((profit/net)*100):0;
+  const diff=val-sugg,ds=(diff>=0?'+':'')+diff.toFixed(2);
+  if(profit<0){hint.className='final-hint bad';hint.textContent='⚠ Below cost — you lose money at this price.';}
+  else{const z=getZone(Math.max(M_MIN,Math.min(M_MAX,im)));hint.className='final-hint ok';hint.innerHTML=`<span style="color:${ZCOLS[z.cls]};font-weight:500">${im}% margin</span> · ${multOf(im)}× cost · <span style="color:var(--muted)">${ds} vs suggested</span>`;}
 }
 
-// ─── Calculation ───────────────────────────────────────────────────────────────
 function fv(id){return parseFloat(document.getElementById(id).value)||0;}
 function fmt(n){return '€\u202f'+Number(n).toFixed(2);}
-function set(id,val){document.getElementById(id).textContent=val;}
+function set(id,v){document.getElementById(id).textContent=v;}
 
 function calc(){
   const vat=vatOn?0.20:0;
   const mat=mats.find(m=>String(m.id)===document.getElementById('sel-mat').value);
   const matC=mat?mat.sheet/mat.pcs:0;
   document.getElementById('mat-unit').textContent=mat?'→ '+fmt(matC)+' / piece':'';
-
-  const machC=fv('mach-min')*fv('mach-rate');
-  const labC=(fv('lab-min')/60)*fv('lab-rate');
-  const packC=fv('pack'),othC=fv('other');
-  const total=matC+machC+labC+packC+othC;
-  const m=marginPct/100;
-  const net=m<1?total/(1-m):total*5;
-  const profit=net-total;
-
-  // Recommendations
-  set('rec-2x',fmt(total*2*(1+vat)));
-  set('rec-3x',fmt(total*3*(1+vat)));
-  set('rec-4x',fmt(total*4*(1+vat)));
-
-  // ── Craft fair ──
-  const fcPct=fv('fair-card')/100;
-  const fcDiv=(1/(1+vat))-fcPct;
-  const fG=fcDiv>0.01?net/fcDiv:net*(1+vat);
-  const fVAT=fG-fG/(1+vat), fFee=fG*fcPct;
-  const fProfit=fG/(1+vat)-total-fFee;
-  const hasFairFee=fcPct>0;
-
-  // ── Etsy ──
-  const eL=fv('e-list'),eTx=fv('e-tx')/100,ePay=fv('e-pay')/100,eTot=eTx+ePay;
-  const eDiv=(1/(1+vat))-eTot;
-  const eG=eDiv>0.01?(net+eL)/eDiv:0;
-  const eVAT=eG-eG/(1+vat),eF=eL+eG*eTot,eProfit=eG/(1+vat)-total-eF;
-
-  // ── Webshop ──
+  const machC=fv('mach-min')*fv('mach-rate'),labC=(fv('lab-min')/60)*fv('lab-rate');
+  const packC=fv('pack'),othC=fv('other'),total=matC+machC+labC+packC+othC;
+  const m=marginPct/100,net=m<1?total/(1-m):total*5,profit=net-total;
+  set('rec-2x',fmt(total*2*(1+vat)));set('rec-3x',fmt(total*3*(1+vat)));set('rec-4x',fmt(total*4*(1+vat)));
+  const fcPct=fv('fair-card')/100,fcDiv=(1/(1+vat))-fcPct;
+  const fG=fcDiv>0.01?net/fcDiv:net*(1+vat),fVAT=fG-fG/(1+vat),fFee=fG*fcPct;
+  const fProfit=fG/(1+vat)-total-fFee,hasFairFee=fcPct>0;
+  const eL=fv('e-list'),eTx=fv('e-tx')/100,ePay=fv('e-pay')/100,eTot=eTx+ePay,eDiv=(1/(1+vat))-eTot;
+  const eG=eDiv>0.01?(net+eL)/eDiv:0,eVAT=eG-eG/(1+vat),eF=eL+eG*eTot,eProfit=eG/(1+vat)-total-eF;
   const wP=fv('w-pay')/100,wDiv=(1/(1+vat))-wP;
-  const wG=wDiv>0.01?net/wDiv:0;
-  const wVAT=wG-wG/(1+vat),wF=wG*wP,wProfit=wG/(1+vat)-total-wF;
-
-  // Stats
-  set('s-cost',fmt(total)); set('s-profit',fmt(profit)); set('s-be',fmt(total*(1+vat)));
-
-  // Fair
-  set('rp-fair',fmt(fG)); set('rv-fair',vatOn?'incl. '+fmt(fVAT)+' VAT (20%)':'no VAT charged');
+  const wG=wDiv>0.01?net/wDiv:0,wVAT=wG-wG/(1+vat),wF=wG*wP,wProfit=wG/(1+vat)-total-wF;
+  set('s-cost',fmt(total));set('s-profit',fmt(profit));set('s-be',fmt(total*(1+vat)));
+  set('rp-fair',fmt(fG));set('rv-fair',vatOn?'incl. '+fmt(fVAT)+' VAT (20%)':'no VAT charged');
   set('rl-fair-cost',fmt(total));
   document.getElementById('rl-fair-fee-lbl').textContent=hasFairFee?'Card '+fv('fair-card')+'%':'No card fee';
   document.getElementById('rl-fair-fee').textContent=hasFairFee?'− '+fmt(fFee):'—';
   document.getElementById('rl-fair-fee').className=hasFairFee?'neg':'';
   set('rl-fair-profit',fmt(fProfit));
-
-  // Etsy
-  set('rp-etsy',fmt(eG)); set('rv-etsy',vatOn?'incl. '+fmt(eVAT)+' VAT (20%)':'no VAT charged');
-  set('rl-etsy-cost',fmt(total)); set('rl-etsy-fees','− '+fmt(eF)); set('rl-etsy-profit',fmt(eProfit));
-
-  // Webshop
-  set('rp-web',fmt(wG)); set('rv-web',vatOn?'incl. '+fmt(wVAT)+' VAT (20%)':'no VAT charged');
-  set('rl-web-cost',fmt(total)); set('rl-web-fees','− '+fmt(wF)); set('rl-web-profit',fmt(wProfit));
-
-  // Final price hints
-  updateFinalHint('fair',fG,total,vat);
-  updateFinalHint('etsy',eG,total,vat);
-  updateFinalHint('web',wG,total,vat);
-
-  // Popovers
+  set('rp-etsy',fmt(eG));set('rv-etsy',vatOn?'incl. '+fmt(eVAT)+' VAT (20%)':'no VAT charged');
+  set('rl-etsy-cost',fmt(total));set('rl-etsy-fees','− '+fmt(eF));set('rl-etsy-profit',fmt(eProfit));
+  set('rp-web',fmt(wG));set('rv-web',vatOn?'incl. '+fmt(wVAT)+' VAT (20%)':'no VAT charged');
+  set('rl-web-cost',fmt(total));set('rl-web-fees','− '+fmt(wF));set('rl-web-profit',fmt(wProfit));
+  updateFinalHint('fair',fG,total,vat);updateFinalHint('etsy',eG,total,vat);updateFinalHint('web',wG,total,vat);
   const bd=[['Material',fmt(matC)],['Machine time',fmt(machC)],['Your labor',fmt(labC)],['Packaging',fmt(packC)],['Overhead',fmt(othC)]];
-  buildPop('pop-fair',bd,fmt(total),'CRAFT FAIR PRICE',[
-    vatOn?['VAT 20%',fmt(fVAT)]:null,
-    hasFairFee?['Card '+fv('fair-card')+'%','− '+fmt(fFee)]:null,
-    null,['Your profit',fmt(fProfit)],['Customer pays',fmt(fG)],
-  ]);
-  buildPop('pop-etsy',bd,fmt(total),'ETSY LISTING PRICE',[
-    vatOn?['VAT 20%',fmt(eVAT)]:null,
-    ['Listing fee','− '+fmt(eL)],
-    ['Transaction '+fv('e-tx')+'%','− '+fmt(eG*eTx)],
-    ['Payment '+fv('e-pay')+'%','− '+fmt(eG*ePay)],
-    null,['Your profit',fmt(eProfit)],['List price',fmt(eG)],
-  ]);
-  buildPop('pop-web',bd,fmt(total),'WEBSHOP PRICE',[
-    vatOn?['VAT 20%',fmt(wVAT)]:null,
-    ['Payment '+fv('w-pay')+'%','− '+fmt(wF)],
-    null,['Your profit',fmt(wProfit)],['List price',fmt(wG)],
-  ]);
-
-  // Warning
+  buildPop('pop-fair',bd,fmt(total),'CRAFT FAIR PRICE',[vatOn?['VAT 20%',fmt(fVAT)]:null,hasFairFee?['Card '+fv('fair-card')+'%','− '+fmt(fFee)]:null,null,['Your profit',fmt(fProfit)],['Customer pays',fmt(fG)]]);
+  buildPop('pop-etsy',bd,fmt(total),'ETSY LISTING PRICE',[vatOn?['VAT 20%',fmt(eVAT)]:null,['Listing fee','− '+fmt(eL)],['Transaction '+fv('e-tx')+'%','− '+fmt(eG*eTx)],['Payment '+fv('e-pay')+'%','− '+fmt(eG*ePay)],null,['Your profit',fmt(eProfit)],['List price',fmt(eG)]]);
+  buildPop('pop-web',bd,fmt(total),'WEBSHOP PRICE',[vatOn?['VAT 20%',fmt(wVAT)]:null,['Payment '+fv('w-pay')+'%','− '+fmt(wF)],null,['Your profit',fmt(wProfit)],['List price',fmt(wG)]]);
   const warn=document.getElementById('warn');
   if(marginPct<44&&total>0){warn.style.display='';warn.textContent='⚠ Below the 2× wholesale floor. A few unsold pieces or returns will put you in the red. Aim for at least 50% margin.';}
   else warn.style.display='none';
-
-  // Cache
-  window._lastCalc={total,net,profit,fairSugg:fG,etsySugg:eG,webSugg:wG,marginPct,vatOn,mat,
-    fVAT,eVAT,wVAT,eF,wF,fFee,fProfit,eProfit,wProfit};
+  window._lastCalc={total,net,profit,fairSugg:fG,etsySugg:eG,webSugg:wG,marginPct,vatOn,mat,fVAT,eVAT,wVAT,eF,wF,fFee,fProfit,eProfit,wProfit};
 }
 
-function buildPop(id,costRows,totalFmt,sec2,priceRows){
-  const el=document.getElementById(id);
-  let h='<div class="pop-section">COSTS</div>';
-  costRows.forEach(r=>{h+=`<div class="pop-row"><span>${r[0]}</span><span>${r[1]}</span></div>`;});
-  h+='<div class="pop-divider"></div>';
-  h+=`<div class="pop-row bold"><span>Total cost</span><span>${totalFmt}</span></div>`;
-  h+='<div class="pop-space"></div>';
-  h+=`<div class="pop-section">${sec2}</div>`;
-  priceRows.forEach((r,i)=>{
-    if(!r){h+='<div class="pop-divider"></div>';return;}
-    const isLast=i===priceRows.length-1;
-    h+=`<div class="pop-row${isLast?' grand':''}"><span>${r[0]}</span><span>${r[1]}</span></div>`;
-  });
+function buildPop(id,cr,tf,s2,pr){
+  const el=document.getElementById(id);let h='<div class="pop-section">COSTS</div>';
+  cr.forEach(r=>{h+=`<div class="pop-row"><span>${r[0]}</span><span>${r[1]}</span></div>`;});
+  h+='<div class="pop-divider"></div>';h+=`<div class="pop-row bold"><span>Total cost</span><span>${tf}</span></div>`;
+  h+='<div class="pop-space"></div>';h+=`<div class="pop-section">${s2}</div>`;
+  pr.forEach((r,i)=>{if(!r){h+='<div class="pop-divider"></div>';return;}h+=`<div class="pop-row${i===pr.length-1?' grand':''}"><span>${r[0]}</span><span>${r[1]}</span></div>`;});
   el.innerHTML=h;
 }
-
-// ─── Popovers ──────────────────────────────────────────────────────────────────
 function togglePop(name){
-  const p=document.getElementById('pop-'+name),b=document.getElementById('btn-'+name);
-  const open=p.classList.contains('open');
+  const p=document.getElementById('pop-'+name),b=document.getElementById('btn-'+name),open=p.classList.contains('open');
   document.querySelectorAll('.popover').forEach(x=>x.classList.remove('open'));
   document.querySelectorAll('.info-btn').forEach(x=>x.classList.remove('open'));
   if(!open){p.classList.add('open');b.classList.add('open');}
 }
-document.addEventListener('click',e=>{
-  if(!e.target.closest('.info-wrap')){
-    document.querySelectorAll('.popover').forEach(x=>x.classList.remove('open'));
-    document.querySelectorAll('.info-btn').forEach(x=>x.classList.remove('open'));
-  }
-});
+document.addEventListener('click',e=>{if(!e.target.closest('.info-wrap')){document.querySelectorAll('.popover').forEach(x=>x.classList.remove('open'));document.querySelectorAll('.info-btn').forEach(x=>x.classList.remove('open'));}});
 document.getElementById('add-row').addEventListener('keydown',e=>{if(e.key==='Enter')addMat();});
 
-// ─── Validation ────────────────────────────────────────────────────────────────
 function validateAndCollectErrors(){
   const errors=[];
-  const name=document.getElementById('product-name').value.trim();
-  if(!name){
-    errors.push({msg:'Product name is required',focus:'product-name',type:'input'});
-    document.getElementById('product-name').classList.add('err');
-  }
-  const matSel=document.getElementById('sel-mat');
-  if(!matSel.value){
-    errors.push({msg:'Select a material from the dropdown',focus:'sel-mat',type:'sel'});
-    matSel.classList.add('err');
-  }
-  const machMin=fv('mach-min');
-  if(machMin<=0){
-    errors.push({msg:'Machine time must be greater than 0',focus:'ig-mach-min',type:'ig'});
-    document.getElementById('ig-mach-min').classList.add('err');
-  }
-  const labMin=fv('lab-min');
-  if(labMin<=0){
-    errors.push({msg:'Labor time must be greater than 0',focus:'ig-lab-min',type:'ig'});
-    document.getElementById('ig-lab-min').classList.add('err');
-  }
-  const labRate=fv('lab-rate');
-  if(labRate<=0){
-    errors.push({msg:'Labor hourly rate must be greater than 0',focus:null,type:null});
-  }
+  if(!document.getElementById('product-name').value.trim()){errors.push({msg:'Product name is required'});document.getElementById('product-name').classList.add('err');}
+  if(!document.getElementById('sel-mat').value){errors.push({msg:'Select a material from the dropdown'});document.getElementById('sel-mat').classList.add('err');}
+  if(fv('mach-min')<=0){errors.push({msg:'Machine time must be greater than 0'});document.getElementById('ig-mach-min').classList.add('err');}
+  if(fv('lab-min')<=0){errors.push({msg:'Labor time must be greater than 0'});document.getElementById('ig-lab-min').classList.add('err');}
+  if(fv('lab-rate')<=0)errors.push({msg:'Labor hourly rate must be greater than 0'});
   return errors;
 }
 
-// ─── Save product ──────────────────────────────────────────────────────────────
 function saveProduct(){
-  // Clear previous errors
   document.getElementById('product-name').classList.remove('err');
   document.getElementById('sel-mat').classList.remove('err');
   ['ig-mach-min','ig-lab-min'].forEach(id=>document.getElementById(id).classList.remove('err'));
-
   const errors=validateAndCollectErrors();
   const banner=document.getElementById('val-banner');
-  const list=document.getElementById('val-list');
-  if(errors.length){
-    list.innerHTML=errors.map(e=>`<li>${e.msg}</li>`).join('');
-    banner.classList.add('show');
-    // Scroll to first error
-    banner.scrollIntoView({behavior:'smooth',block:'start'});
-    return;
-  }
+  if(errors.length){document.getElementById('val-list').innerHTML=errors.map(e=>`<li>${e.msg}</li>`).join('');banner.classList.add('show');banner.scrollIntoView({behavior:'smooth',block:'start'});return;}
   banner.classList.remove('show');
-
-  const c=window._lastCalc||{};
-  const vat=vatOn?0.20:0;
-
-  // Final prices: use manual override if set, else use suggested
-  function finalPrice(ch,sugg){
-    const val=parseFloat(document.getElementById('fp-'+ch).value);
-    return (val&&val>0)?val:sugg;
-  }
-  function impliedMargin(gross,total,vat){
-    const net=gross/(1+vat);
-    return net>total?Math.round(((net-total)/net)*100):0;
-  }
-
-  const fairFinal=finalPrice('fair',c.fairSugg||0);
-  const etsyFinal=finalPrice('etsy',c.etsySugg||0);
-  const webFinal=finalPrice('web',c.webSugg||0);
-  const fairMargin=impliedMargin(fairFinal,c.total||0,vat);
-
+  const c=window._lastCalc||{};const vat=vatOn?0.20:0;
+  function fp(ch,s){const v=parseFloat(document.getElementById('fp-'+ch).value);return(v&&v>0)?v:s;}
+  function im(g,t,v){const n=g/(1+v);return n>t?Math.round(((n-t)/n)*100):0;}
+  const ff=fp('fair',c.fairSugg||0),ef=fp('etsy',c.etsySugg||0),wf=fp('web',c.webSugg||0);
   const products=getStoredProducts();
   const product={
     id:editingProductId||Date.now(),
     name:document.getElementById('product-name').value.trim(),
-    matName:c.mat?c.mat.name:'—',
-    totalCost:c.total||0,
-    fairPrice:fairFinal, etsyPrice:etsyFinal, webPrice:webFinal,
-    fairSugg:c.fairSugg||0, etsySugg:c.etsySugg||0, webSugg:c.webSugg||0,
+    matName:c.mat?c.mat.name:'—',totalCost:c.total||0,
+    fairPrice:ff,etsyPrice:ef,webPrice:wf,
+    fairSugg:c.fairSugg||0,etsySugg:c.etsySugg||0,webSugg:c.webSugg||0,
     fairFinalOverride:parseFloat(document.getElementById('fp-fair').value)||null,
     etsyFinalOverride:parseFloat(document.getElementById('fp-etsy').value)||null,
     webFinalOverride:parseFloat(document.getElementById('fp-web').value)||null,
-    displayMargin:fairMargin,
+    displayMargin:im(ff,c.total||0,vat),
+    image:currentImageDataUrl,
     vatOn,marginPct,
-    machMin:fv('mach-min'),machRate:fv('mach-rate'),
-    labMin:fv('lab-min'),labRate:fv('lab-rate'),
+    machMin:fv('mach-min'),machRate:fv('mach-rate'),labMin:fv('lab-min'),labRate:fv('lab-rate'),
     packCost:fv('pack'),otherCost:fv('other'),
     fairCard:fv('fair-card'),eListing:fv('e-list'),eTx:fv('e-tx'),ePay:fv('e-pay'),wPay:fv('w-pay'),
-    selMatId:document.getElementById('sel-mat').value,
-    savedAt:Date.now(),
+    selMatId:document.getElementById('sel-mat').value,savedAt:Date.now(),
   };
   const idx=products.findIndex(p=>p.id===editingProductId);
-  if(idx>=0)products[idx]=product; else products.push(product);
-  try{localStorage.setItem('lps_products',JSON.stringify(products));}catch(e){}
+  if(idx>=0)products[idx]=product;else products.push(product);
+  try{localStorage.setItem('lps_products',JSON.stringify(products));}catch(e){
+    alert('Could not save — browser storage may be full. Try using a smaller image or removing old products.');return;
+  }
   try{localStorage.removeItem('lps_edit_id');}catch(e){}
   window.location.href='ninis-products.html';
 }
-
 function getStoredProducts(){try{return JSON.parse(localStorage.getItem('lps_products')||'[]');}catch(e){return[];}}
 
-// ─── Load for edit ─────────────────────────────────────────────────────────────
 function loadForEdit(){
-  let editId;
-  try{editId=localStorage.getItem('lps_edit_id');}catch(e){}
-  if(!editId||editId==='new') return;
-  const p=getStoredProducts().find(x=>String(x.id)===editId);
-  if(!p) return;
+  let editId;try{editId=localStorage.getItem('lps_edit_id');}catch(e){}
+  if(!editId||editId==='new')return;
+  const p=getStoredProducts().find(x=>String(x.id)===editId);if(!p)return;
   editingProductId=p.id;
   document.getElementById('product-name').value=p.name||'';
   if(p.machMin!=null)document.getElementById('mach-min').value=p.machMin;
@@ -781,19 +682,16 @@ function loadForEdit(){
   if(p.eTx!=null)document.getElementById('e-tx').value=p.eTx;
   if(p.ePay!=null)document.getElementById('e-pay').value=p.ePay;
   if(p.wPay!=null)document.getElementById('w-pay').value=p.wPay;
-  vatOn=p.vatOn!==false;
-  document.getElementById('vat-toggle').classList.toggle('on',vatOn);
+  vatOn=p.vatOn!==false;document.getElementById('vat-toggle').classList.toggle('on',vatOn);
   if(p.marginPct){marginPct=p.marginPct;document.getElementById('margin-slider').value=marginPct;}
   if(p.fairFinalOverride)document.getElementById('fp-fair').value=p.fairFinalOverride;
   if(p.etsyFinalOverride)document.getElementById('fp-etsy').value=p.etsyFinalOverride;
   if(p.webFinalOverride)document.getElementById('fp-web').value=p.webFinalOverride;
-  if(p.selMatId){
-    setTimeout(()=>{document.getElementById('sel-mat').value=p.selMatId;calc();},60);
-  }
+  if(p.image)setImage(p.image);
+  if(p.selMatId){setTimeout(()=>{document.getElementById('sel-mat').value=p.selMatId;calc();},60);}
 }
 
-// ─── Init ──────────────────────────────────────────────────────────────────────
-loadMats(); renderMats(); loadFees(); loadForEdit(); onSlider(); calc();
+loadMats();renderMats();loadFees();loadForEdit();onSlider();calc();
 </script>
 </body>
 </html>
