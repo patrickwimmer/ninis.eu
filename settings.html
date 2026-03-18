@@ -9,23 +9,167 @@
 <link rel="stylesheet" href="style.css">
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.js"></script>
 <style>
-/* Logout button styling */
-.logout-btn {
-  display: inline-flex; align-items: center; gap: 6px;
-  height: 32px; padding: 0 12px;
-  border-radius: var(--r-sm);
-  font-size: 12px; font-weight: 500;
-  border: 1px solid var(--border);
-  background: none; color: var(--text-3);
-  transition: background .12s, color .12s;
+
+/* ── Logout ── */
+.logout-btn{display:inline-flex;align-items:center;gap:6px;height:32px;padding:0 12px;border-radius:var(--r-sm);font-size:12px;font-weight:500;border:1px solid var(--border);background:none;color:var(--text-3);transition:background .12s,color .12s}
+.logout-btn:hover{background:var(--danger-light);color:var(--danger);border-color:var(--danger-border)}
+.logout-btn svg{width:13px;height:13px;stroke:currentColor;fill:none;stroke-width:2;stroke-linecap:round}
+
+/* ── Material cards ── */
+.mat-cards{display:flex;flex-direction:column;gap:8px;margin-bottom:16px}
+.mat-card{
+  background:var(--surface2);
+  border:1px solid var(--border);
+  border-radius:var(--r-md);
+  overflow:hidden;
 }
-.logout-btn:hover { background: var(--danger-light); color: var(--danger); border-color: var(--danger-border); }
-.logout-btn svg { width: 13px; height: 13px; stroke: currentColor; fill: none; stroke-width: 2; stroke-linecap: round; }
+.mat-card-header{
+  display:flex;align-items:center;gap:10px;
+  padding:12px 14px;
+  cursor:pointer;
+  user-select:none;
+  -webkit-tap-highlight-color:transparent;
+}
+.mat-card-header:hover{background:rgba(0,0,0,.02)}
+.mat-card-name{font-size:14px;font-weight:500;color:var(--text);flex:1}
+.mat-card-price{font-size:12px;color:var(--text-2);flex-shrink:0}
+.mat-card-chevron{width:16px;height:16px;stroke:var(--text-3);fill:none;stroke-width:2;stroke-linecap:round;transition:transform .2s;flex-shrink:0}
+.mat-card.open .mat-card-chevron{transform:rotate(180deg)}
+.mat-card-detail{display:none;padding:0 14px 14px;border-top:1px solid var(--border)}
+.mat-card.open .mat-card-detail{display:block}
+
+.mat-detail-grid{
+  display:grid;
+  grid-template-columns:1fr 1fr;
+  gap:10px 16px;
+  margin-top:12px;
+}
+@media(max-width:400px){.mat-detail-grid{grid-template-columns:1fr}}
+.mat-detail-field label{font-size:11px;font-weight:500;color:var(--text-2);display:block;margin-bottom:4px}
+.mat-detail-field input,.mat-detail-field a.mat-link{
+  width:100%;height:36px;
+  border:1.5px solid var(--border);border-radius:var(--r-sm);
+  padding:0 10px;font-size:13px;font-family:var(--font-sans);
+  color:var(--text);background:white;outline:none;
+  transition:border-color .15s;
+  display:flex;align-items:center;
+}
+.mat-detail-field input:focus{border-color:var(--accent-mid)}
+.mat-detail-field input::placeholder{color:var(--text-3)}
+.mat-detail-field.full{grid-column:1/-1}
+.mat-detail-actions{display:flex;justify-content:space-between;align-items:center;margin-top:12px;padding-top:10px;border-top:1px dashed var(--border)}
+.mat-link-preview{
+  font-size:11px;color:var(--accent);
+  white-space:nowrap;overflow:hidden;text-overflow:ellipsis;
+  margin-top:3px;
+  display:none;
+}
+.mat-link-preview.show{display:block}
+
+/* ── Add material form ── */
+.add-mat-form{
+  background:var(--accent-light);
+  border:1.5px dashed var(--accent-mid);
+  border-radius:var(--r-md);
+  padding:14px;
+}
+.add-mat-form__title{font-size:12px;font-weight:500;color:var(--accent-dark);margin-bottom:12px}
+.add-mat-form__row{display:grid;grid-template-columns:1fr auto;gap:8px;margin-bottom:10px}
+.add-mat-form__optional{
+  display:grid;grid-template-columns:1fr 1fr;
+  gap:8px;margin-bottom:10px;
+}
+@media(max-width:400px){.add-mat-form__optional{grid-template-columns:1fr}}
+.add-mat-form__field{display:flex;flex-direction:column;gap:4px}
+.add-mat-form__label{font-size:11px;font-weight:500;color:var(--accent-dark)}
+.add-mat-form input,.add-mat-form input[type=url]{
+  width:100%;height:40px;
+  border:1.5px solid var(--border);border-radius:var(--r-sm);
+  padding:0 10px;font-size:13px;font-family:var(--font-sans);
+  color:var(--text);background:white;outline:none;
+  transition:border-color .15s;
+}
+.add-mat-form input:focus{border-color:var(--accent-mid)}
+.add-mat-form input::placeholder{color:var(--text-3)}
+.add-mat-form input.err{border-color:var(--danger)}
+.optional-toggle{
+  font-size:11px;color:var(--accent);cursor:pointer;
+  display:inline-flex;align-items:center;gap:4px;
+  margin-bottom:8px;user-select:none;
+}
+.optional-fields{display:none}
+.optional-fields.show{display:block}
+
+/* ── Fee channels (new design) ── */
+.fee-channels{display:flex;flex-direction:column;gap:10px}
+.fee-channel{
+  background:var(--surface);
+  border:1.5px solid var(--border);
+  border-radius:var(--r-md);
+  overflow:hidden;
+}
+.fee-channel.active-channel{border-color:var(--accent-mid)}
+
+.fee-ch-header{
+  display:flex;align-items:center;padding:12px 14px;
+  gap:10px;
+}
+.fee-ch-icon{
+  width:36px;height:36px;border-radius:var(--r-sm);
+  display:flex;align-items:center;justify-content:center;
+  flex-shrink:0;
+}
+.fee-ch-icon svg{width:18px;height:18px;stroke:currentColor;fill:none;stroke-width:1.8;stroke-linecap:round}
+.fee-ch-icon.fair{background:#E8F4ED;color:#1E6641}
+.fee-ch-icon.etsy{background:#FBECEE;color:#9B2335}
+.fee-ch-icon.web{background:#E6F1FB;color:#185FA5}
+
+.fee-ch-name{font-size:14px;font-weight:500;color:var(--text)}
+.fee-ch-summary{font-size:11px;color:var(--text-3);margin-top:1px}
+.fee-ch-total{
+  margin-left:auto;
+  font-size:14px;font-weight:700;
+  font-family:var(--font-serif);
+  flex-shrink:0;
+}
+.fee-ch-total.zero{color:var(--ok)}
+.fee-ch-total.low{color:var(--ok)}
+.fee-ch-total.mid{color:var(--warn)}
+.fee-ch-total.high{color:var(--danger)}
+
+.fee-ch-body{
+  border-top:1px solid var(--border);
+  padding:12px 14px;
+  background:var(--surface2);
+}
+.fee-row{
+  display:flex;align-items:center;justify-content:space-between;
+  padding:6px 0;
+  border-bottom:1px solid var(--border);
+  font-size:13px;color:var(--text-2);
+}
+.fee-row:last-child{border-bottom:none}
+.fee-row__label{flex:1}
+.fee-row__input-wrap{display:flex;align-items:center;gap:6px}
+.fee-row__input{
+  width:64px;height:34px;
+  border:1.5px solid var(--border);border-radius:var(--r-sm);
+  padding:0 8px;font-size:14px;font-weight:500;font-family:var(--font-sans);
+  color:var(--text);background:white;outline:none;text-align:right;
+  transition:border-color .15s,box-shadow .15s;
+}
+.fee-row__input:focus{border-color:var(--accent-mid);box-shadow:0 0 0 2px var(--accent-light)}
+.fee-row__unit{font-size:12px;color:var(--text-3);flex-shrink:0;width:18px}
+.fee-row__note{font-size:11px;color:var(--text-3);margin-left:auto}
+.fee-ch-hint{font-size:11px;color:var(--text-3);padding-top:8px}
 </style>
 </head>
 <body>
 
-<div class="db-overlay" id="overlay"><div class="spinner"></div><p>Loading…</p></div>
+<div class="db-overlay" id="overlay">
+  <div class="spinner"></div>
+  <p>Loading…</p>
+</div>
 <div class="toast" id="toast"><span id="toast-txt"></span></div>
 
 <header class="topbar">
@@ -43,31 +187,82 @@
 
 <main class="page-wrap" style="padding-top:1.25rem;max-width:720px">
 
-  <!-- MATERIALS LIBRARY -->
-  <div class="card page-in">
+  <!-- ══════════════════════════════════════
+       MATERIALS LIBRARY
+  ══════════════════════════════════════ -->
+  <div class="card page-in" style="margin-bottom:12px">
     <div class="card-header">
       <span class="card-title">Materials library</span>
       <span class="card-badge" id="mat-badge">0</span>
     </div>
     <div class="card-body">
-      <div class="mat-table" id="mat-table"></div>
-      <div class="add-mat-row" id="add-row">
-        <input type="text" id="n-name" placeholder="Material name" maxlength="50">
-        <input type="number" id="n-sheet" placeholder="Sheet € " min="0.01" step="0.01" style="width:90px">
-        <input type="number" id="n-pcs" placeholder="Pcs/sheet" min="1" step="1" style="width:80px">
-        <button class="btn btn--primary btn--sm" onclick="addMat()">+ Add</button>
+
+      <div class="mat-cards" id="mat-cards">
+        <div class="mat-empty" id="mat-empty" style="display:none">No materials yet — add your first one below.</div>
       </div>
+
+      <!-- Add new material -->
+      <div class="add-mat-form">
+        <div class="add-mat-form__title">Add new material</div>
+
+        <!-- Required: name + sheet price -->
+        <div class="add-mat-form__row">
+          <div>
+            <div class="add-mat-form__label">Material name *</div>
+            <input type="text" id="n-name" placeholder="e.g. Birch plywood 3mm" maxlength="60">
+          </div>
+          <div>
+            <div class="add-mat-form__label">Sheet price * (€)</div>
+            <input type="number" id="n-sheet" placeholder="12.50" min="0.01" step="0.01" style="width:100px">
+          </div>
+        </div>
+
+        <!-- Optional fields toggle -->
+        <div class="optional-toggle" onclick="toggleOptional()">
+          <svg id="opt-arrow" style="width:12px;height:12px;stroke:currentColor;fill:none;stroke-width:2.5;stroke-linecap:round;transition:transform .2s" viewBox="0 0 10 10"><polyline points="2,3 5,7 8,3"/></svg>
+          Optional details
+        </div>
+        <div class="optional-fields" id="optional-fields">
+          <div class="add-mat-form__optional">
+            <div class="add-mat-form__field">
+              <span class="add-mat-form__label">Size / dimensions</span>
+              <input type="text" id="n-size" placeholder="e.g. 600×300 mm">
+            </div>
+            <div class="add-mat-form__field">
+              <span class="add-mat-form__label">Thickness</span>
+              <input type="text" id="n-thick" placeholder="e.g. 3 mm">
+            </div>
+            <div class="add-mat-form__field">
+              <span class="add-mat-form__label">Supplier / store</span>
+              <input type="text" id="n-supplier" placeholder="e.g. Modulor, Amazon">
+            </div>
+            <div class="add-mat-form__field">
+              <span class="add-mat-form__label">Link to product</span>
+              <input type="url" id="n-link" placeholder="https://…">
+            </div>
+          </div>
+        </div>
+
+        <button class="btn btn--primary btn--sm" onclick="addMat()" style="width:100%;justify-content:center;height:42px">
+          <svg style="width:14px;height:14px;stroke:white;fill:none;stroke-width:2;stroke-linecap:round" viewBox="0 0 24 24"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+          Add material to library
+        </button>
+      </div>
+
     </div>
   </div>
 
-  <!-- TAXES & PLATFORM FEES -->
-  <div class="card page-in page-in-d1" style="margin-top:12px">
+  <!-- ══════════════════════════════════════
+       TAXES & PLATFORM FEES
+  ══════════════════════════════════════ -->
+  <div class="card page-in page-in-d1" style="margin-bottom:12px">
     <div class="card-header">
       <span class="card-title">Taxes &amp; platform fees</span>
     </div>
     <div class="card-body">
 
-      <div class="toggle-row" style="margin-bottom:1.25rem">
+      <!-- VAT toggle -->
+      <div class="toggle-row" style="margin-bottom:16px;padding:10px 12px;background:var(--surface2);border-radius:var(--r-md);border:1px solid var(--border)">
         <div class="toggle-switch on" id="vat-toggle" onclick="toggleVAT()"></div>
         <div class="toggle-label">
           Include 20% Austrian VAT in all prices
@@ -75,45 +270,116 @@
         </div>
       </div>
 
-      <div class="pf-grid">
-        <div class="pf-card">
-          <div class="pf-card-name">Craft fair / market</div>
-          <div class="pf-row" style="color:var(--text-3);font-size:12px">No listing fee</div>
-          <div class="pf-row">Card proc. <input type="number" class="fee-input" id="fair-card" value="0" min="0" step="0.1" oninput="saveFees()"> %</div>
-          <div class="pf-note">0 for cash · SumUp ~1.69%</div>
-        </div>
-        <div class="pf-card">
-          <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:.75rem">
-            <span class="pf-card-name" style="margin-bottom:0">Etsy</span>
-            <span class="saved-dot" id="dot-etsy"></span>
+      <!-- Channel cards -->
+      <div class="fee-channels">
+
+        <!-- Craft fair -->
+        <div class="fee-channel" id="fch-fair">
+          <div class="fee-ch-header">
+            <div class="fee-ch-icon fair">
+              <svg viewBox="0 0 24 24"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg>
+            </div>
+            <div>
+              <div class="fee-ch-name">Craft fair &amp; market</div>
+              <div class="fee-ch-summary" id="fair-summary">No platform fees</div>
+            </div>
+            <div class="fee-ch-total zero" id="fair-total">0%</div>
           </div>
-          <div class="pf-row">Listing €<input type="number" class="fee-input" id="e-list" value="0.20" min="0" step="0.01" oninput="saveFees()"> / item</div>
-          <div class="pf-row">Transaction <input type="number" class="fee-input" id="e-tx" value="6.5" min="0" step="0.1" oninput="saveFees()"> %</div>
-          <div class="pf-row">Payment <input type="number" class="fee-input" id="e-pay" value="3.0" min="0" step="0.1" oninput="saveFees()"> %</div>
-        </div>
-        <div class="pf-card">
-          <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:.75rem">
-            <span class="pf-card-name" style="margin-bottom:0">Own webshop</span>
-            <span class="saved-dot" id="dot-web"></span>
+          <div class="fee-ch-body">
+            <div class="fee-row">
+              <span class="fee-row__label">Listing fee</span>
+              <span style="font-size:13px;color:var(--text-3)">None</span>
+            </div>
+            <div class="fee-row">
+              <span class="fee-row__label">Card processing</span>
+              <div class="fee-row__input-wrap">
+                <input type="number" class="fee-row__input" id="fair-card" value="0" min="0" max="20" step="0.1" oninput="saveFees();updateFeeSummaries()">
+                <span class="fee-row__unit">%</span>
+              </div>
+            </div>
+            <div class="fee-ch-hint">Set to 0 for cash sales · SumUp ~1.69% · iZettle ~1.75%</div>
           </div>
-          <div class="pf-row" style="color:var(--text-3)">No listing fee</div>
-          <div class="pf-row">Payment <input type="number" class="fee-input" id="w-pay" value="2.5" min="0" step="0.1" oninput="saveFees()"> %</div>
-          <div class="pf-note">Stripe, PayPal, Klarna</div>
         </div>
-      </div>
+
+        <!-- Etsy -->
+        <div class="fee-channel" id="fch-etsy">
+          <div class="fee-ch-header">
+            <div class="fee-ch-icon etsy">
+              <svg viewBox="0 0 24 24"><circle cx="9" cy="21" r="1"/><circle cx="20" cy="21" r="1"/><path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6"/></svg>
+            </div>
+            <div>
+              <div class="fee-ch-name">Etsy</div>
+              <div class="fee-ch-summary" id="etsy-summary">Transaction + payment fees</div>
+            </div>
+            <div class="fee-ch-total" id="etsy-total">9.5%</div>
+          </div>
+          <div class="fee-ch-body">
+            <div class="fee-row">
+              <span class="fee-row__label">Listing fee (per item)</span>
+              <div class="fee-row__input-wrap">
+                <span style="font-size:12px;color:var(--text-3)">€</span>
+                <input type="number" class="fee-row__input" id="e-list" value="0.20" min="0" step="0.01" oninput="saveFees();updateFeeSummaries()">
+                <span class="fee-row__unit" style="width:auto;font-size:11px;color:var(--text-3)">/item</span>
+              </div>
+            </div>
+            <div class="fee-row">
+              <span class="fee-row__label">Transaction fee</span>
+              <div class="fee-row__input-wrap">
+                <input type="number" class="fee-row__input" id="e-tx" value="6.5" min="0" step="0.1" oninput="saveFees();updateFeeSummaries()">
+                <span class="fee-row__unit">%</span>
+              </div>
+            </div>
+            <div class="fee-row">
+              <span class="fee-row__label">Payment processing</span>
+              <div class="fee-row__input-wrap">
+                <input type="number" class="fee-row__input" id="e-pay" value="3.0" min="0" step="0.1" oninput="saveFees();updateFeeSummaries()">
+                <span class="fee-row__unit">%</span>
+              </div>
+            </div>
+            <div class="fee-ch-hint" id="etsy-hint"></div>
+          </div>
+        </div>
+
+        <!-- Webshop -->
+        <div class="fee-channel" id="fch-web">
+          <div class="fee-ch-header">
+            <div class="fee-ch-icon web">
+              <svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><line x1="2" y1="12" x2="22" y2="12"/><path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"/></svg>
+            </div>
+            <div>
+              <div class="fee-ch-name">Own webshop</div>
+              <div class="fee-ch-summary" id="web-summary">Payment processing only</div>
+            </div>
+            <div class="fee-ch-total" id="web-total">2.5%</div>
+          </div>
+          <div class="fee-ch-body">
+            <div class="fee-row">
+              <span class="fee-row__label">Listing fee</span>
+              <span style="font-size:13px;color:var(--text-3)">None</span>
+            </div>
+            <div class="fee-row">
+              <span class="fee-row__label">Payment processing</span>
+              <div class="fee-row__input-wrap">
+                <input type="number" class="fee-row__input" id="w-pay" value="2.5" min="0" step="0.1" oninput="saveFees();updateFeeSummaries()">
+                <span class="fee-row__unit">%</span>
+              </div>
+            </div>
+            <div class="fee-ch-hint">Stripe ~2.9% · PayPal ~3.4% · Klarna ~2.29%</div>
+          </div>
+        </div>
+
+      </div><!-- /fee-channels -->
     </div>
   </div>
 
   <!-- ABOUT -->
-  <div class="card page-in page-in-d2" style="margin-top:12px">
-    <div class="card-header">
-      <span class="card-title">About</span>
-    </div>
+  <div class="card page-in page-in-d2" style="margin-bottom:12px">
+    <div class="card-header"><span class="card-title">About</span></div>
     <div class="card-body">
       <p style="font-size:13px;color:var(--text-2);line-height:1.7">
         <strong style="font-weight:500">nini's Studio</strong> — Laser pricing &amp; product manager.<br>
-        Data is stored in Supabase and synced across all your devices.<br>
-        Password-protected with SHA-256.
+        Products and materials are stored in Supabase and synced across all devices.<br>
+        Password-protected with SHA-256 hashing.
       </p>
     </div>
   </div>
@@ -154,54 +420,194 @@ function showToast(state,text){
   if(state==='saved')toastT=setTimeout(()=>el.classList.remove('show'),2500);
 }
 
-// ── Materials ──
+// ── Optional fields toggle ──────────────────────────────────────────────────
+function toggleOptional(){
+  const f=document.getElementById('optional-fields');
+  const a=document.getElementById('opt-arrow');
+  const show=!f.classList.contains('show');
+  f.classList.toggle('show',show);
+  a.style.transform=show?'rotate(180deg)':'rotate(0deg)';
+}
+
+// ── Materials ───────────────────────────────────────────────────────────────
 async function loadMats(){
   const{data,error}=await db.from('materials').select('*').order('created_at');
   if(error){showToast('err','Could not load materials');return;}
-  mats=data.map(r=>({id:r.id,name:r.name,sheet:parseFloat(r.sheet_price),pcs:r.pieces_per_sheet}));
+  mats=data.map(r=>({
+    id:r.id, name:r.name, sheet:parseFloat(r.sheet_price),
+    meta:r.meta||{}
+  }));
   if(mats.length)nextId=Math.max(nextId,...mats.map(m=>Number(m.id)))+1;
   renderMats();
 }
+
 function renderMats(){
-  const tbl=document.getElementById('mat-table');
-  tbl.innerHTML=`<div class="mat-row head"><span>Name</span><span>Sheet</span><span>Pieces</span><span>Cost / pc</span><span></span></div>`;
-  if(!mats.length){tbl.innerHTML+='<div class="mat-empty">No materials yet — add your first one below.</div>';return;}
-  mats.forEach(m=>{
-    tbl.innerHTML+=`<div class="mat-row">
-      <span>${esc(m.name)}</span>
-      <span>€${m.sheet.toFixed(2)}</span>
-      <span>${m.pcs}</span>
-      <span class="mat-cpp">€${(m.sheet/m.pcs).toFixed(3)}</span>
-      <button class="btn btn--ghost" onclick="removeMat(${m.id})" title="Remove">✕</button>
-    </div>`;
-  });
+  const container=document.getElementById('mat-cards');
+  const empty=document.getElementById('mat-empty');
+  container.querySelectorAll('.mat-card').forEach(c=>c.remove());
   document.getElementById('mat-badge').textContent=mats.length;
+  if(!mats.length){empty.style.display='block';return;}
+  empty.style.display='none';
+
+  mats.forEach(m=>{
+    const meta=m.meta||{};
+    const card=document.createElement('div');
+    card.className='mat-card';
+    card.id='mat-card-'+m.id;
+
+    // Build badge chips for meta
+    let chips='';
+    if(meta.size) chips+=`<span style="font-size:10px;background:var(--surface);border:1px solid var(--border);padding:1px 7px;border-radius:10px;color:var(--text-2)">${esc(meta.size)}</span>`;
+    if(meta.thickness) chips+=`<span style="font-size:10px;background:var(--surface);border:1px solid var(--border);padding:1px 7px;border-radius:10px;color:var(--text-2)">${esc(meta.thickness)}</span>`;
+    if(meta.supplier) chips+=`<span style="font-size:10px;background:var(--surface);border:1px solid var(--border);padding:1px 7px;border-radius:10px;color:var(--text-2)">${esc(meta.supplier)}</span>`;
+
+    card.innerHTML=`
+      <div class="mat-card-header" onclick="toggleMatCard(${m.id})">
+        <div>
+          <div class="mat-card-name">${esc(m.name)}</div>
+          ${chips?`<div style="display:flex;gap:4px;flex-wrap:wrap;margin-top:4px">${chips}</div>`:''}
+        </div>
+        <div class="mat-card-price">€${m.sheet.toFixed(2)} / sheet</div>
+        <svg class="mat-card-chevron" viewBox="0 0 24 24"><polyline points="6 9 12 15 18 9"/></svg>
+      </div>
+      <div class="mat-card-detail">
+        <div class="mat-detail-grid">
+          <div class="mat-detail-field">
+            <label>Sheet price (€)</label>
+            <input type="number" id="ed-sheet-${m.id}" value="${m.sheet}" min="0.01" step="0.01">
+          </div>
+          <div class="mat-detail-field">
+            <label>Size / dimensions</label>
+            <input type="text" id="ed-size-${m.id}" value="${esc(meta.size||'')}" placeholder="600×300 mm">
+          </div>
+          <div class="mat-detail-field">
+            <label>Thickness</label>
+            <input type="text" id="ed-thick-${m.id}" value="${esc(meta.thickness||'')}" placeholder="3 mm">
+          </div>
+          <div class="mat-detail-field">
+            <label>Supplier / store</label>
+            <input type="text" id="ed-supplier-${m.id}" value="${esc(meta.supplier||'')}" placeholder="e.g. Modulor, Amazon">
+          </div>
+          <div class="mat-detail-field full">
+            <label>Link to product</label>
+            <input type="url" id="ed-link-${m.id}" value="${esc(meta.link||'')}" placeholder="https://…">
+            ${meta.link?`<div class="mat-link-preview show"><a href="${esc(meta.link)}" target="_blank" style="color:var(--accent)">${esc(meta.link)}</a></div>`:'<div class="mat-link-preview"></div>'}
+          </div>
+        </div>
+        <div class="mat-detail-actions">
+          <button class="btn btn--sm btn--primary" onclick="saveMat(${m.id})">Save changes</button>
+          <button class="btn btn--sm" onclick="removeMat(${m.id})" style="color:var(--danger);border-color:var(--danger-border)">Delete</button>
+        </div>
+      </div>`;
+    container.appendChild(card);
+
+    // Live link preview
+    const linkInput=card.querySelector('#ed-link-'+m.id);
+    const linkPrev=card.querySelector('.mat-link-preview');
+    if(linkInput&&linkPrev){
+      linkInput.addEventListener('input',()=>{
+        if(linkInput.value){linkPrev.innerHTML=`<a href="${linkInput.value}" target="_blank" style="color:var(--accent)">${linkInput.value}</a>`;linkPrev.classList.add('show');}
+        else{linkPrev.classList.remove('show');}
+      });
+    }
+  });
 }
+
+function toggleMatCard(id){
+  const card=document.getElementById('mat-card-'+id);
+  if(!card)return;
+  // Close all others
+  document.querySelectorAll('.mat-card.open').forEach(c=>{if(c!==card)c.classList.remove('open');});
+  card.classList.toggle('open');
+}
+
 async function addMat(){
   const name=document.getElementById('n-name').value.trim();
   const sheet=parseFloat(document.getElementById('n-sheet').value);
-  const pcs=parseInt(document.getElementById('n-pcs').value);
-  if(!name){fl('n-name');return;}if(!sheet||sheet<=0){fl('n-sheet');return;}if(!pcs||pcs<1){fl('n-pcs');return;}
+  if(!name){fl('n-name');return;}
+  if(!sheet||sheet<=0){fl('n-sheet');return;}
+  const meta={};
+  const size=document.getElementById('n-size').value.trim();
+  const thick=document.getElementById('n-thick').value.trim();
+  const supplier=document.getElementById('n-supplier').value.trim();
+  const link=document.getElementById('n-link').value.trim();
+  if(size)meta.size=size;if(thick)meta.thickness=thick;if(supplier)meta.supplier=supplier;if(link)meta.link=link;
   const id=nextId++;
   showToast('saving','Saving…');
-  const{error}=await db.from('materials').insert({id,name,sheet_price:sheet,pieces_per_sheet:pcs});
+  const{error}=await db.from('materials').insert({id,name,sheet_price:sheet,pieces_per_sheet:1,meta});
   if(error){showToast('err','Could not save');return;}
   showToast('saved','Saved ✓');
-  mats.push({id,name,sheet,pcs});
-  ['n-name','n-sheet','n-pcs'].forEach(i=>document.getElementById(i).value='');
+  mats.push({id,name,sheet,meta});
+  ['n-name','n-sheet','n-size','n-thick','n-supplier','n-link'].forEach(i=>document.getElementById(i).value='');
+  // Collapse optional fields
+  document.getElementById('optional-fields').classList.remove('show');
+  document.getElementById('opt-arrow').style.transform='rotate(0deg)';
   renderMats();
 }
+
+async function saveMat(id){
+  const mat=mats.find(m=>m.id===id);if(!mat)return;
+  const sheet=parseFloat(document.getElementById('ed-sheet-'+id).value)||mat.sheet;
+  const meta={
+    size:document.getElementById('ed-size-'+id).value.trim()||undefined,
+    thickness:document.getElementById('ed-thick-'+id).value.trim()||undefined,
+    supplier:document.getElementById('ed-supplier-'+id).value.trim()||undefined,
+    link:document.getElementById('ed-link-'+id).value.trim()||undefined,
+  };
+  // Remove undefined keys
+  Object.keys(meta).forEach(k=>{if(!meta[k])delete meta[k];});
+  showToast('saving','Saving…');
+  const{error}=await db.from('materials').update({sheet_price:sheet,meta}).eq('id',id);
+  if(error){showToast('err','Could not save');return;}
+  mat.sheet=sheet;mat.meta=meta;
+  showToast('saved','Saved ✓');
+  renderMats();
+  // Re-open card
+  setTimeout(()=>{const c=document.getElementById('mat-card-'+id);if(c)c.classList.add('open');},50);
+}
+
 async function removeMat(id){
+  if(!confirm('Remove this material?'))return;
   showToast('saving','Removing…');
   const{error}=await db.from('materials').delete().eq('id',id);
   if(error){showToast('err','Could not delete');return;}
   showToast('saved','Removed ✓');
   mats=mats.filter(m=>m.id!==id);renderMats();
 }
+
 function fl(id){const e=document.getElementById(id);e.classList.add('err');e.focus();setTimeout(()=>e.classList.remove('err'),1400);}
 function esc(s){return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');}
 
-// ── Fees ──
+// ── Fee summaries ────────────────────────────────────────────────────────────
+function feeClass(pct){if(pct===0)return'zero';if(pct<5)return'low';if(pct<12)return'mid';return'high';}
+
+function updateFeeSummaries(){
+  const fc=fv('fair-card');
+  const et=fv('e-tx'),ep=fv('e-pay'),el=fv('e-list');
+  const wp=fv('w-pay');
+
+  // Fair
+  const fairEl=document.getElementById('fair-total');
+  const fairSum=document.getElementById('fair-summary');
+  if(fc===0){fairEl.textContent='0%';fairEl.className='fee-ch-total zero';fairSum.textContent='Cash — no fees';}
+  else{fairEl.textContent=fc.toFixed(1)+'%';fairEl.className='fee-ch-total '+feeClass(fc);fairSum.textContent='Card processing: '+fc+'%';}
+
+  // Etsy
+  const etsyPct=et+ep;
+  const etsyEl=document.getElementById('etsy-total');
+  etsyEl.textContent=etsyPct.toFixed(1)+'%';
+  etsyEl.className='fee-ch-total '+feeClass(etsyPct);
+  document.getElementById('etsy-summary').textContent='Transaction '+et+'% + Payment '+ep+'%';
+  document.getElementById('etsy-hint').textContent=el>0?'Plus €'+el.toFixed(2)+' listing fee per item':'No listing fee';
+
+  // Web
+  const webEl=document.getElementById('web-total');
+  webEl.textContent=wp.toFixed(1)+'%';
+  webEl.className='fee-ch-total '+feeClass(wp);
+  document.getElementById('web-summary').textContent=wp>0?'Payment processing: '+wp+'%':'No payment fees set';
+}
+
+// ── Fees ─────────────────────────────────────────────────────────────────────
 let saveT;
 function saveFees(){
   clearTimeout(saveT);
@@ -209,12 +615,8 @@ function saveFees(){
     try{localStorage.setItem('lps_fees3',JSON.stringify({
       fc:fv('fair-card'),el:fv('e-list'),et:fv('e-tx'),ep:fv('e-pay'),wp:fv('w-pay'),vat:vatOn
     }));}catch(e){}
-    ['dot-etsy','dot-web'].forEach(id=>{
-      const d=document.getElementById(id);d.classList.add('show');
-      clearTimeout(d._t);d._t=setTimeout(()=>d.classList.remove('show'),2500);
-    });
     showToast('saved','Fees saved ✓');
-  },600);
+  },800);
 }
 function loadFees(){
   try{
@@ -230,11 +632,11 @@ function fv(id){return parseFloat(document.getElementById(id).value)||0;}
 function goNew(e){e.preventDefault();try{localStorage.setItem('lps_edit_id','new');}catch(e){}window.location.href='new.html';}
 function logout(){sessionStorage.removeItem('ninis_studio_auth');window.location.replace('login.html');}
 
-document.getElementById('add-row').addEventListener('keydown',e=>{if(e.key==='Enter')addMat();});
+document.getElementById('n-name') .addEventListener('keydown',e=>{if(e.key==='Enter')addMat();});
 
 async function init(){
   const overlay=document.getElementById('overlay');
-  try{loadFees();await loadMats();}
+  try{loadFees();await loadMats();updateFeeSummaries();}
   catch(e){showToast('err','Error loading');}
   finally{overlay.classList.add('hidden');setTimeout(()=>overlay.style.display='none',400);}
 }

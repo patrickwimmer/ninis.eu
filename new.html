@@ -10,7 +10,7 @@
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.js"></script>
 <style>
 :root { --bar-h: 160px; }
- 
+
 /* ── Improved overlay ── */
 .db-overlay {
   background: rgba(249,246,240,.96);
@@ -18,7 +18,7 @@
   gap: 12px;
 }
 .db-overlay p { font-size: 14px; font-weight: 500; color: var(--text); }
- 
+
 /* ── Quick-add material panel ── */
 .mat-quick-add {
   display: none;
@@ -62,7 +62,7 @@
 .mat-quick-add input::placeholder { color: var(--text-3); }
 .mat-quick-add input.err { border-color: var(--danger); }
 .mat-quick-add__label { font-size: 11px; color: var(--accent-dark); margin-bottom: 3px; font-weight: 500; }
- 
+
 /* ── Pieces per sheet override ── */
 .pcs-override {
   display: none;
@@ -78,10 +78,10 @@
 }
 .pcs-override__label { font-size: 13px; color: var(--text-2); flex: 1; min-width: 160px; }
 .pcs-override__default { font-size: 11px; color: var(--text-3); margin-top: 4px; }
- 
+
 /* ── Margin card — mobile friendly ── */
 .margin-card-body { padding-bottom: 20px; }
- 
+
 .margin-big {
   display: flex;
   align-items: center;
@@ -105,7 +105,7 @@
   transition: color .2s;
 }
 .margin-big__risk { flex-shrink: 0; }
- 
+
 .risk-pill-large {
   display: inline-flex;
   flex-direction: column;
@@ -123,7 +123,7 @@
 .risk-pill-large.caution { background: var(--warn-light); color: var(--warn); border-color: var(--warn-border); }
 .risk-pill-large.good    { background: var(--ok-light); color: var(--ok); border-color: var(--ok-border); }
 .risk-pill-large.great   { background: var(--info-light); color: var(--info); border-color: var(--info-border); }
- 
+
 /* Slider - bigger touch target */
 .slider-wrap-mobile {
   position: relative;
@@ -144,7 +144,7 @@ input[type=range].risk-slider::-webkit-slider-thumb {
 input[type=range].risk-slider::-moz-range-thumb {
   width: 30px; height: 30px;
 }
- 
+
 .slider-ticks-mobile {
   display: flex;
   position: relative;
@@ -174,7 +174,7 @@ input[type=range].risk-slider::-moz-range-thumb {
 .zone-label-item.caution { color: #7A6610; }
 .zone-label-item.good    { color: #1E6641; }
 .zone-label-item.great   { color: #185FA5; }
- 
+
 /* ── Popover improvements ── */
 .pop-grand-section { margin-top: 8px; }
 .pop-row.price-net {
@@ -199,13 +199,13 @@ input[type=range].risk-slider::-moz-range-thumb {
 </style>
 </head>
 <body class="has-bar">
- 
+
 <div class="db-overlay" id="overlay">
   <div class="spinner"></div>
   <p>Loading…</p>
 </div>
 <div class="toast" id="toast"><span id="toast-txt"></span></div>
- 
+
 <header class="topbar">
   <a href="products.html" class="back-btn">
     <svg viewBox="0 0 24 24"><polyline points="15 18 9 12 15 6"/></svg>
@@ -213,22 +213,22 @@ input[type=range].risk-slider::-moz-range-thumb {
   </a>
   <div class="topbar-title" id="page-heading">New product</div>
 </header>
- 
+
 <main class="page-wrap" style="padding-top:1.25rem;max-width:720px">
- 
+
   <!-- Validation banner -->
   <div class="val-banner" id="val-banner">
     <div class="val-banner__title">Please fill in the following before saving:</div>
     <ul class="val-banner__list" id="val-list"></ul>
   </div>
- 
+
   <!-- PRODUCT NAME -->
   <div class="field page-in" style="margin-bottom:.75rem">
     <label class="field-label" for="product-name">Product name</label>
     <input class="input" type="text" id="product-name" placeholder="e.g. Wooden Keychain" maxlength="60"
       oninput="document.getElementById('page-heading').textContent=this.value||'New product'">
   </div>
- 
+
   <!-- PHOTO -->
   <div class="card page-in page-in-d1" id="card-photo" style="margin-bottom:.75rem">
     <div class="card-header clickable" onclick="toggleCard('photo')">
@@ -266,21 +266,21 @@ input[type=range].risk-slider::-moz-range-thumb {
       </div>
     </div>
   </div>
- 
+
   <!-- COSTS -->
   <div class="card page-in page-in-d2" style="margin-bottom:.75rem">
     <div class="card-header">
       <span class="card-title">Product costs</span>
     </div>
     <div class="card-body">
- 
+
       <!-- ── Material selector ── -->
       <div class="field">
         <label class="field-label" for="sel-mat">Material</label>
         <select class="select" id="sel-mat" onchange="onMatChange()">
           <option value="">— select from your materials library —</option>
         </select>
- 
+
         <!-- Quick-add new material panel -->
         <div class="mat-quick-add" id="mat-quick-add">
           <div class="mat-quick-add__title">
@@ -296,14 +296,10 @@ input[type=range].risk-slider::-moz-range-thumb {
               <div class="mat-quick-add__label">Sheet price €</div>
               <input type="number" id="qa-sheet" placeholder="12.50" min="0.01" step="0.01" style="width:90px">
             </div>
-            <div>
-              <div class="mat-quick-add__label">Pieces / sheet</div>
-              <input type="number" id="qa-pcs" placeholder="20" min="1" step="1" style="width:80px">
-            </div>
             <button class="btn btn--primary btn--sm" onclick="saveQuickMat()" style="align-self:flex-end;height:40px">Save &amp; select</button>
           </div>
         </div>
- 
+
         <!-- Pieces per sheet override (shown after material selected) -->
         <div class="pcs-override" id="pcs-override">
           <div class="pcs-override__row">
@@ -315,12 +311,12 @@ input[type=range].risk-slider::-moz-range-thumb {
           </div>
           <div class="pcs-override__default" id="pcs-lib-default"></div>
         </div>
- 
+
         <div id="mat-no-mats" style="display:none;font-size:12px;color:var(--text-3);margin-top:6px">
           No materials yet — <a href="settings.html" style="color:var(--accent)">add some in Settings</a>
         </div>
       </div>
- 
+
       <!-- ── Machine time (€/h) ── -->
       <div class="form-row">
         <div class="form-row__label">Machine time</div>
@@ -338,7 +334,7 @@ input[type=range].risk-slider::-moz-range-thumb {
           <span class="form-row__hint" id="mach-per-min-hint" style="color:var(--accent);font-weight:500"></span>
         </div>
       </div>
- 
+
       <!-- ── Labor ── -->
       <div class="form-row">
         <div class="form-row__label">Your labor</div>
@@ -356,7 +352,7 @@ input[type=range].risk-slider::-moz-range-thumb {
           <span class="form-row__hint">design, prep, packing</span>
         </div>
       </div>
- 
+
       <!-- ── Packaging ── -->
       <div class="form-row">
         <div class="form-row__label">Packaging</div>
@@ -368,7 +364,7 @@ input[type=range].risk-slider::-moz-range-thumb {
           <span class="form-row__hint">bags, boxes, ribbon</span>
         </div>
       </div>
- 
+
       <!-- ── Overhead ── -->
       <div class="form-row" style="margin-bottom:0">
         <div class="form-row__label">Overhead / other</div>
@@ -380,17 +376,17 @@ input[type=range].risk-slider::-moz-range-thumb {
           <span class="form-row__hint">glue, hardware</span>
         </div>
       </div>
- 
+
     </div>
   </div>
- 
+
   <!-- MARGIN — mobile friendly -->
   <div class="card page-in page-in-d3" style="margin-bottom:.75rem">
     <div class="card-header">
       <span class="card-title">Target margin</span>
     </div>
     <div class="card-body margin-card-body">
- 
+
       <!-- Big display + risk pill side by side -->
       <div class="margin-big">
         <div class="margin-big__left">
@@ -404,14 +400,14 @@ input[type=range].risk-slider::-moz-range-thumb {
           </div>
         </div>
       </div>
- 
+
       <!-- Slider with bigger touch target -->
       <div class="slider-wrap-mobile">
         <div class="risk-track"></div>
         <input type="range" class="risk-slider" id="margin-slider"
                min="20" max="75" step="5" value="50" oninput="onSlider()">
       </div>
- 
+
       <div class="slider-ticks-mobile">
         <span class="slider-tick-m" style="left:0%">20%</span>
         <span class="slider-tick-m" style="left:43.6%">44%</span>
@@ -419,7 +415,7 @@ input[type=range].risk-slider::-moz-range-thumb {
         <span class="slider-tick-m" style="left:85.5%">67%</span>
         <span class="slider-tick-m" style="left:100%">75%</span>
       </div>
- 
+
       <!-- Zone colour labels -->
       <div class="zone-labels">
         <div class="zone-label-item danger">High risk</div>
@@ -427,12 +423,12 @@ input[type=range].risk-slider::-moz-range-thumb {
         <div class="zone-label-item good">Retail</div>
         <div class="zone-label-item great">Premium</div>
       </div>
- 
+
       <!-- Risk description text -->
       <p id="risk-desc" style="font-size:12px;color:var(--text-2);margin-top:10px;line-height:1.5"></p>
- 
+
       <hr class="divider" style="margin:14px 0">
- 
+
       <!-- Recommended prices -->
       <div class="rec-strip">
         <div class="rec-card rec-card--ok">
@@ -454,9 +450,28 @@ input[type=range].risk-slider::-moz-range-thumb {
       <div class="alert alert--danger" id="warn" style="margin-top:.75rem"></div>
     </div>
   </div>
- 
+
+  <!-- NOTES -->
+  <div class="card page-in" style="margin-bottom:.75rem">
+    <div class="card-header clickable" onclick="toggleCard('notes')">
+      <span class="card-title">Notes</span>
+      <span style="font-size:11px;color:var(--text-3);margin-left:auto;margin-right:6px">Optional</span>
+      <svg class="card-chevron" viewBox="0 0 24 24"><polyline points="6 9 12 15 18 9"/></svg>
+    </div>
+    <div class="card-body" id="card-notes">
+      <textarea id="product-notes"
+        placeholder="e.g. Works best with 3mm birch. Sand edges lightly before assembly. Popular at Christmas markets."
+        style="width:100%;min-height:100px;border:1.5px solid var(--border);border-radius:var(--r-md);padding:12px;font-size:14px;font-family:var(--font-sans);color:var(--text);background:var(--bg);outline:none;resize:vertical;line-height:1.6;transition:border-color .15s"
+        oninput="this.style.borderColor=''"
+        onfocus="this.style.borderColor='var(--accent-mid)';this.style.background='white'"
+        onblur="this.style.borderColor='';this.style.background=''"
+      ></textarea>
+      <div style="font-size:11px;color:var(--text-3);margin-top:6px">Your private notes about this product — not shown anywhere else.</div>
+    </div>
+  </div>
+
 </main>
- 
+
 <!-- STICKY PRICE BAR -->
 <div class="price-bar">
   <div class="price-bar__top">
@@ -518,7 +533,7 @@ input[type=range].risk-slider::-moz-range-thumb {
     </div>
   </div>
 </div>
- 
+
 <!-- Bottom nav -->
 <nav class="bottom-nav">
   <a href="products.html" class="nav-item">
@@ -536,20 +551,20 @@ input[type=range].risk-slider::-moz-range-thumb {
     Settings
   </a>
 </nav>
- 
+
 <script>
 // ─── Auth ─────────────────────────────────────────────────────────────────────
 (function(){const SK='ninis_studio_auth',HP='7cf65358';if(sessionStorage.getItem(SK)!=='granted_'+HP)window.location.replace('login.html');})();
- 
+
 // ─── Supabase ─────────────────────────────────────────────────────────────────
 const SUPA_URL='https://dxvzjgzqxltphakyrzmn.supabase.co';
 const SUPA_KEY='sb_publishable_MqkXWynuaIialGbCFD7_hw_cEgsenMz';
 const db=supabase.createClient(SUPA_URL,SUPA_KEY);
- 
+
 // ─── State ───────────────────────────────────────────────────────────────────
 let mats=[],vatOn=true,marginPct=50,editingProductId=null,currentImageB64=null,nextMatId=Date.now();
 let fees={fc:0,el:0.20,et:6.5,ep:3.0,wp:2.5};
- 
+
 // ─── Zones ───────────────────────────────────────────────────────────────────
 const M_MIN=20,M_MAX=75;
 const ZONES=[
@@ -564,10 +579,10 @@ const ZONES=[
 ];
 const ZONE_COLORS={danger:'#9B2335',caution:'#7A6610',good:'#1E6641',great:'#185FA5'};
 const THUMB_COLORS={danger:'#9B2335',caution:'#B8860B',good:'#1E6641',great:'#185FA5'};
- 
+
 function getZone(p){for(const z of ZONES)if(p>=z.from&&p<z.to)return z;return ZONES[ZONES.length-1];}
 function multOf(p){return p<100?(1/(1-p/100)).toFixed(2):'∞';}
- 
+
 // ─── Toast ────────────────────────────────────────────────────────────────────
 let toastT;
 function showToast(state,text){
@@ -575,7 +590,7 @@ function showToast(state,text){
   clearTimeout(toastT);el.className='toast show '+state;tx.textContent=text;
   if(state==='saved')toastT=setTimeout(()=>el.classList.remove('show'),2500);
 }
- 
+
 // ─── Collapsible cards ────────────────────────────────────────────────────────
 function toggleCard(id){
   const c=document.getElementById('card-'+id);if(!c)return;
@@ -585,7 +600,7 @@ function toggleCard(id){
 function restoreCards(){
   try{const s=JSON.parse(localStorage.getItem('lps_cards')||'{}');Object.keys(s).forEach(id=>{const c=document.getElementById('card-'+id);if(c)c.classList.toggle('collapsed',!!s[id]);});}catch(e){}
 }
- 
+
 // ─── Image ────────────────────────────────────────────────────────────────────
 function onFileSelect(e){const f=e.target.files[0];if(f)loadImg(f);}
 function onDrop(e){e.preventDefault();document.getElementById('upload-area').classList.remove('drag');const f=e.dataTransfer.files[0];if(f&&f.type.startsWith('image/'))loadImg(f);}
@@ -609,12 +624,12 @@ function removeImage(e){
   document.getElementById('img-success').classList.remove('show');
   document.querySelectorAll('input[type=file]').forEach(i=>i.value='');
 }
- 
+
 // ─── Material selector + quick-add ───────────────────────────────────────────
 function onMatChange(){
   const sel=document.getElementById('sel-mat');
   sel.classList.remove('err');
- 
+
   if(sel.value==='__new__'){
     // Show quick-add panel, reset select visually
     document.getElementById('mat-quick-add').classList.add('show');
@@ -623,9 +638,9 @@ function onMatChange(){
     document.getElementById('qa-name').focus();
     return;
   }
- 
+
   document.getElementById('mat-quick-add').classList.remove('show');
- 
+
   const mat=mats.find(m=>String(m.id)===sel.value);
   if(mat){
     // Show pieces-per-sheet override, pre-fill with library default
@@ -641,22 +656,20 @@ function onMatChange(){
   }
   calc();
 }
- 
+
 async function saveQuickMat(){
   const name=document.getElementById('qa-name').value.trim();
   const sheet=parseFloat(document.getElementById('qa-sheet').value);
-  const pcs=parseInt(document.getElementById('qa-pcs').value);
   if(!name){flQa('qa-name');return;}
   if(!sheet||sheet<=0){flQa('qa-sheet');return;}
-  if(!pcs||pcs<1){flQa('qa-pcs');return;}
   const id=nextMatId++;
   showToast('saving','Saving material…');
-  const{error}=await db.from('materials').insert({id,name,sheet_price:sheet,pieces_per_sheet:pcs});
+  const{error}=await db.from('materials').insert({id,name,sheet_price:sheet,pieces_per_sheet:1,meta:{}});
   if(error){showToast('err','Could not save');return;}
   showToast('saved','Saved ✓');
-  mats.push({id,name,sheet,pcs});
+  mats.push({id,name,sheet,pcs:1});
   // Clear quick-add fields
-  ['qa-name','qa-sheet','qa-pcs'].forEach(i=>document.getElementById(i).value='');
+  ['qa-name','qa-sheet'].forEach(i=>document.getElementById(i).value='');
   // Rebuild select and select the new material
   rebuildMatSelect(String(id));
   document.getElementById('mat-quick-add').classList.remove('show');
@@ -666,15 +679,15 @@ async function saveQuickMat(){
   document.getElementById('pcs-lib-default').textContent='Library default: '+pcs+' pcs/sheet · Sheet price: €'+sheet.toFixed(2)+' → €'+(sheet/pcs).toFixed(3)+' per piece';
   calc();
 }
- 
+
 function cancelQuickAdd(){
   document.getElementById('mat-quick-add').classList.remove('show');
   document.getElementById('sel-mat').value='';
   document.getElementById('pcs-override').classList.remove('show');
 }
- 
+
 function flQa(id){const e=document.getElementById(id);e.classList.add('err');e.focus();setTimeout(()=>e.classList.remove('err'),1400);}
- 
+
 function rebuildMatSelect(selectId){
   const sel=document.getElementById('sel-mat'),prev=selectId||sel.value;
   sel.innerHTML='<option value="">— select from your materials library —</option>';
@@ -693,7 +706,7 @@ function rebuildMatSelect(selectId){
   sel.appendChild(addOpt);
   document.getElementById('mat-no-mats').style.display=mats.length?'none':'';
 }
- 
+
 // ─── Materials — load from Supabase ──────────────────────────────────────────
 async function loadMats(){
   const{data,error}=await db.from('materials').select('*').order('created_at');
@@ -702,7 +715,7 @@ async function loadMats(){
   if(mats.length)nextMatId=Math.max(nextMatId,...mats.map(m=>Number(m.id)))+1;
   rebuildMatSelect();
 }
- 
+
 // ─── Fees from localStorage ───────────────────────────────────────────────────
 function loadFees(){
   try{
@@ -712,14 +725,14 @@ function loadFees(){
     if(f.vat!=null)vatOn=f.vat;
   }catch(e){}
 }
- 
+
 // ─── Slider ───────────────────────────────────────────────────────────────────
 function onSlider(){
   marginPct=parseInt(document.getElementById('margin-slider').value);
   updateMarginDisplay();
   calc();
 }
- 
+
 function updateMarginDisplay(){
   const z=getZone(marginPct),col=ZONE_COLORS[z.key];
   // Main card display
@@ -740,7 +753,7 @@ function updateMarginDisplay(){
   const bpEl=document.getElementById('bar-pct');bpEl.textContent=marginPct+'%';bpEl.style.color=col;
   const brEl=document.getElementById('bar-risk');brEl.textContent=z.label;brEl.className='price-bar__risk risk-pill '+z.key;
 }
- 
+
 // ─── Hint ─────────────────────────────────────────────────────────────────────
 function updateHint(ch,sugGross,total){
   const vat=vatOn?0.20:0;
@@ -753,61 +766,61 @@ function updateHint(ch,sugGross,total){
   if(profit<0){h.className='price-bar__hint bad';h.textContent='⚠ Below cost';}
   else{const z=getZone(Math.max(M_MIN,Math.min(M_MAX,im)));h.className='price-bar__hint ok';h.innerHTML=`<span style="color:${ZONE_COLORS[z.key]};font-weight:500">${im}%</span> · ${multOf(im)}× · ${ds}`;}
 }
- 
+
 // ─── Calculation ──────────────────────────────────────────────────────────────
 function fv(id){return parseFloat(document.getElementById(id).value)||0;}
 function fmt(n){return '€\u202f'+Number(n).toFixed(2);}
 function set(id,val){const e=document.getElementById(id);if(e)e.textContent=val;}
- 
+
 function calc(){
   const vat=vatOn?0.20:0;
   const sel=document.getElementById('sel-mat');
   const mat=mats.find(m=>String(m.id)===sel.value);
- 
+
   // Pieces per sheet: use product-level override if shown, else library default
   const pcsOverride=fv('pcs-product');
   const pcs=pcsOverride>0?pcsOverride:(mat?mat.pcs:1);
   const matC=mat?mat.sheet/pcs:0;
- 
+
   // Machine cost: rate is now in €/h, convert to €/min internally
   const machRateHr=fv('mach-rate-hr');
   const machRateMin=machRateHr/60;
   const machC=fv('mach-min')*machRateMin;
- 
+
   // Show hint: cost per minute
   const hintEl=document.getElementById('mach-per-min-hint');
   hintEl.textContent=machRateHr>0?'(€'+machRateMin.toFixed(3)+'/min)':'';
- 
+
   const labC=(fv('lab-min')/60)*fv('lab-rate');
   const total=matC+machC+labC+fv('pack')+fv('other');
   const m=marginPct/100,net=m<1?total/(1-m):total*5,profit=net-total;
- 
+
   // Recommendations (gross = incl VAT)
   set('rec-2x',fmt(total*2*(1+vat)));set('rec-3x',fmt(total*3*(1+vat)));set('rec-4x',fmt(total*4*(1+vat)));
- 
+
   // Fair
   const fcPct=fees.fc/100,fcDiv=(1/(1+vat))-fcPct;
   const fG=fcDiv>0.01?net/fcDiv:net*(1+vat);
   const fNet=fG/(1+vat),fVAT=fG-fNet,fFee=fG*fcPct,fProfit=fNet-total-fFee,hasFair=fcPct>0;
- 
+
   // Etsy
   const eTot=(fees.et+fees.ep)/100,eDiv=(1/(1+vat))-eTot;
   const eG=eDiv>0.01?(net+fees.el)/eDiv:0;
   const eNet=eG/(1+vat),eVAT=eG-eNet,eF=fees.el+eG*eTot,eProfit=eNet-total-eF;
- 
+
   // Web
   const wPct=fees.wp/100,wDiv=(1/(1+vat))-wPct;
   const wG=wDiv>0.01?net/wDiv:0;
   const wNet=wG/(1+vat),wVAT=wG-wNet,wF=wG*wPct,wProfit=wNet-total-wF;
- 
+
   // Bar prices
   set('bar-cost',fmt(total));
   set('bp-fair',fmt(fG));document.getElementById('bv-fair').textContent=vatOn?'incl. VAT':'';
   set('bp-etsy',fmt(eG));document.getElementById('bv-etsy').textContent=vatOn?'incl. VAT':'';
   set('bp-web',fmt(wG));document.getElementById('bv-web').textContent=vatOn?'incl. VAT':'';
- 
+
   updateHint('fair',fG,total);updateHint('etsy',eG,total);updateHint('web',wG,total);
- 
+
   // ── Popovers — new structure: costs → profit → net → gross ──
   const costRows=[
     ['Material',fmt(matC)],
@@ -816,22 +829,22 @@ function calc(){
     ['Packaging',fmt(fv('pack'))],
     ['Overhead',fmt(fv('other'))],
   ];
- 
+
   function buildNewPop(id,channelLabel,grossPrice,netPrice,vatAmt,channelFees,profitAmt){
     const el=document.getElementById(id);
     let h='<div class="pop-section">TOTAL COSTS</div>';
     costRows.forEach(r=>{h+=`<div class="pop-row"><span>${r[0]}</span><span>${r[1]}</span></div>`;});
     h+=`<div class="pop-divider"></div>`;
     h+=`<div class="pop-row bold"><span>Total cost</span><span>${fmt(total)}</span></div>`;
- 
+
     h+=`<div class="pop-space"></div><div class="pop-section">YOUR PROFIT</div>`;
     h+=`<div class="pop-row profit-row"><span>Margin (${marginPct}%)</span><span>${fmt(profitAmt)}</span></div>`;
- 
+
     if(channelFees.length){
       h+=`<div class="pop-space"></div><div class="pop-section">PLATFORM FEES</div>`;
       channelFees.forEach(r=>{if(!r)return;h+=`<div class="pop-row"><span>${r[0]}</span><span>${r[1]}</span></div>`;});
     }
- 
+
     h+=`<div class="pop-space"></div><div class="pop-section">${channelLabel} PRICE</div>`;
     if(vatOn){
       h+=`<div class="pop-row price-net"><span>Price excl. VAT</span><span>${fmt(netPrice)}</span></div>`;
@@ -840,7 +853,7 @@ function calc(){
     h+=`<div class="pop-row price-gross"><span>Customer pays</span><span>${fmt(grossPrice)}</span></div>`;
     el.innerHTML=h;
   }
- 
+
   buildNewPop('pop-fair','CRAFT FAIR',fG,fNet,fVAT,
     hasFair?[['Card processing '+fees.fc+'%','− '+fmt(fFee)]]:[]
     ,fProfit);
@@ -852,16 +865,16 @@ function calc(){
   buildNewPop('pop-web','WEBSHOP',wG,wNet,wVAT,[
     ['Payment '+fees.wp+'%','− '+fmt(wF)],
   ],wProfit);
- 
+
   // Warning
   const warn=document.getElementById('warn');
   if(marginPct<44&&total>0){warn.classList.add('show');warn.textContent='⚠ Below the 2× wholesale floor. Aim for at least 50% margin.';}
   else warn.classList.remove('show');
- 
+
   window._lastCalc={total,net,profit,fairSugg:fG,etsySugg:eG,webSugg:wG,marginPct,vatOn,mat,
     matPcs:pcs,fVAT,eVAT,wVAT,eF,wF,fFee,fProfit,eProfit,wProfit};
 }
- 
+
 // ─── Popovers ─────────────────────────────────────────────────────────────────
 function togglePop(name){
   const p=document.getElementById('pop-'+name),b=document.getElementById('btn-'+name);
@@ -876,11 +889,11 @@ document.addEventListener('click',e=>{
     document.querySelectorAll('.info-btn').forEach(x=>x.classList.remove('open'));
   }
 });
- 
+
 function clearErrEl(el){el.classList.remove('err');}
 function clearIg(id){document.getElementById(id).classList.remove('err');}
 function esc(s){return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');}
- 
+
 // ─── Validation & Save ────────────────────────────────────────────────────────
 function validateAndCollect(){
   const errs=[];
@@ -896,7 +909,7 @@ function validateAndCollect(){
   if(fv('mach-rate-hr')<=0)errs.push('Machine hourly rate must be > 0');
   return errs;
 }
- 
+
 async function saveProduct(){
   const errs=validateAndCollect();
   const banner=document.getElementById('val-banner');
@@ -924,6 +937,7 @@ async function saveProduct(){
     packCost:fv('pack'),otherCost:fv('other'),
     selMatId:document.getElementById('sel-mat').value,
     pcsProduct:fv('pcs-product')||null,
+    notes:document.getElementById('product-notes').value.trim()||null,
     image:currentImageB64||null,savedAt:Date.now(),
   };
   const btn=document.getElementById('save-btn');
@@ -937,7 +951,7 @@ async function saveProduct(){
   try{localStorage.removeItem('lps_edit_id');}catch(e){}
   window.location.href='products.html';
 }
- 
+
 // ─── Load for edit ────────────────────────────────────────────────────────────
 async function loadForEdit(){
   let editId;try{editId=localStorage.getItem('lps_edit_id');}catch(e){}
@@ -955,6 +969,7 @@ async function loadForEdit(){
   if(p.marginPct){marginPct=p.marginPct;document.getElementById('margin-slider').value=marginPct;}
   [['fp-fair',p.fairFinalOverride],['fp-etsy',p.etsyFinalOverride],['fp-web',p.webFinalOverride]].forEach(([id,v])=>{if(v)document.getElementById(id).value=v;});
   if(p.image){currentImageB64=p.image;showImg(p.image,'Saved photo');}
+  if(p.notes)document.getElementById('product-notes').value=p.notes;
   if(p.selMatId){
     setTimeout(()=>{
       document.getElementById('sel-mat').value=p.selMatId;
@@ -964,7 +979,7 @@ async function loadForEdit(){
     },80);
   }
 }
- 
+
 // ─── Init ─────────────────────────────────────────────────────────────────────
 async function init(){
   const overlay=document.getElementById('overlay');
