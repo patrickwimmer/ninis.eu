@@ -1,0 +1,244 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Settings — nini's Studio</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700&family=DM+Sans:wght@400;500&family=Caveat:wght@600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="style.css">
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.js"></script>
+<style>
+/* Logout button styling */
+.logout-btn {
+  display: inline-flex; align-items: center; gap: 6px;
+  height: 32px; padding: 0 12px;
+  border-radius: var(--r-sm);
+  font-size: 12px; font-weight: 500;
+  border: 1px solid var(--border);
+  background: none; color: var(--text-3);
+  transition: background .12s, color .12s;
+}
+.logout-btn:hover { background: var(--danger-light); color: var(--danger); border-color: var(--danger-border); }
+.logout-btn svg { width: 13px; height: 13px; stroke: currentColor; fill: none; stroke-width: 2; stroke-linecap: round; }
+</style>
+</head>
+<body>
+
+<div class="db-overlay" id="overlay"><div class="spinner"></div><p>Loading…</p></div>
+<div class="toast" id="toast"><span id="toast-txt"></span></div>
+
+<header class="topbar">
+  <div class="topbar-brand">
+    <span class="brand-nini">nini's&nbsp;</span>
+    <span class="brand-word">Settings</span>
+  </div>
+  <div class="topbar-action">
+    <button class="logout-btn" onclick="logout()">
+      <svg viewBox="0 0 24 24"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/><polyline points="16 17 21 12 16 7"/><line x1="21" y1="12" x2="9" y2="12"/></svg>
+      Log out
+    </button>
+  </div>
+</header>
+
+<main class="page-wrap" style="padding-top:1.25rem;max-width:720px">
+
+  <!-- MATERIALS LIBRARY -->
+  <div class="card page-in">
+    <div class="card-header">
+      <span class="card-title">Materials library</span>
+      <span class="card-badge" id="mat-badge">0</span>
+    </div>
+    <div class="card-body">
+      <div class="mat-table" id="mat-table"></div>
+      <div class="add-mat-row" id="add-row">
+        <input type="text" id="n-name" placeholder="Material name" maxlength="50">
+        <input type="number" id="n-sheet" placeholder="Sheet € " min="0.01" step="0.01" style="width:90px">
+        <input type="number" id="n-pcs" placeholder="Pcs/sheet" min="1" step="1" style="width:80px">
+        <button class="btn btn--primary btn--sm" onclick="addMat()">+ Add</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- TAXES & PLATFORM FEES -->
+  <div class="card page-in page-in-d1" style="margin-top:12px">
+    <div class="card-header">
+      <span class="card-title">Taxes &amp; platform fees</span>
+    </div>
+    <div class="card-body">
+
+      <div class="toggle-row" style="margin-bottom:1.25rem">
+        <div class="toggle-switch on" id="vat-toggle" onclick="toggleVAT()"></div>
+        <div class="toggle-label">
+          Include 20% Austrian VAT in all prices
+          <small>Prices shown to customers include VAT. Your profit is always calculated on the net amount.</small>
+        </div>
+      </div>
+
+      <div class="pf-grid">
+        <div class="pf-card">
+          <div class="pf-card-name">Craft fair / market</div>
+          <div class="pf-row" style="color:var(--text-3);font-size:12px">No listing fee</div>
+          <div class="pf-row">Card proc. <input type="number" class="fee-input" id="fair-card" value="0" min="0" step="0.1" oninput="saveFees()"> %</div>
+          <div class="pf-note">0 for cash · SumUp ~1.69%</div>
+        </div>
+        <div class="pf-card">
+          <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:.75rem">
+            <span class="pf-card-name" style="margin-bottom:0">Etsy</span>
+            <span class="saved-dot" id="dot-etsy"></span>
+          </div>
+          <div class="pf-row">Listing €<input type="number" class="fee-input" id="e-list" value="0.20" min="0" step="0.01" oninput="saveFees()"> / item</div>
+          <div class="pf-row">Transaction <input type="number" class="fee-input" id="e-tx" value="6.5" min="0" step="0.1" oninput="saveFees()"> %</div>
+          <div class="pf-row">Payment <input type="number" class="fee-input" id="e-pay" value="3.0" min="0" step="0.1" oninput="saveFees()"> %</div>
+        </div>
+        <div class="pf-card">
+          <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:.75rem">
+            <span class="pf-card-name" style="margin-bottom:0">Own webshop</span>
+            <span class="saved-dot" id="dot-web"></span>
+          </div>
+          <div class="pf-row" style="color:var(--text-3)">No listing fee</div>
+          <div class="pf-row">Payment <input type="number" class="fee-input" id="w-pay" value="2.5" min="0" step="0.1" oninput="saveFees()"> %</div>
+          <div class="pf-note">Stripe, PayPal, Klarna</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ABOUT -->
+  <div class="card page-in page-in-d2" style="margin-top:12px">
+    <div class="card-header">
+      <span class="card-title">About</span>
+    </div>
+    <div class="card-body">
+      <p style="font-size:13px;color:var(--text-2);line-height:1.7">
+        <strong style="font-weight:500">nini's Studio</strong> — Laser pricing &amp; product manager.<br>
+        Data is stored in Supabase and synced across all your devices.<br>
+        Password-protected with SHA-256.
+      </p>
+    </div>
+  </div>
+
+</main>
+
+<!-- Bottom nav -->
+<nav class="bottom-nav">
+  <a href="products.html" class="nav-item">
+    <svg viewBox="0 0 24 24"><rect x="3" y="3" width="7" height="7" rx="1"/><rect x="14" y="3" width="7" height="7" rx="1"/><rect x="3" y="14" width="7" height="7" rx="1"/><rect x="14" y="14" width="7" height="7" rx="1"/></svg>
+    Products
+  </a>
+  <a href="new.html" class="nav-item fab" onclick="goNew(event)">
+    <div class="fab-circle">
+      <svg viewBox="0 0 24 24"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+    </div>
+    <span>New</span>
+  </a>
+  <a href="settings.html" class="nav-item active">
+    <svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83-2.83l.06-.06A1.65 1.65 0 0 0 4.68 15a1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 2.83-2.83l.06.06A1.65 1.65 0 0 0 9 4.68a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 2.83l-.06.06A1.65 1.65 0 0 0 19.4 9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z"/></svg>
+    Settings
+  </a>
+</nav>
+
+<script>
+(function(){const SK='ninis_studio_auth',HP='7cf65358';if(sessionStorage.getItem(SK)!=='granted_'+HP)window.location.replace('login.html');})();
+
+const SUPA_URL='https://dxvzjgzqxltphakyrzmn.supabase.co';
+const SUPA_KEY='sb_publishable_MqkXWynuaIialGbCFD7_hw_cEgsenMz';
+const db=supabase.createClient(SUPA_URL,SUPA_KEY);
+
+let mats=[],vatOn=true,nextId=Date.now();
+
+let toastT;
+function showToast(state,text){
+  const el=document.getElementById('toast'),tx=document.getElementById('toast-txt');
+  clearTimeout(toastT);el.className='toast show '+state;tx.textContent=text;
+  if(state==='saved')toastT=setTimeout(()=>el.classList.remove('show'),2500);
+}
+
+// ── Materials ──
+async function loadMats(){
+  const{data,error}=await db.from('materials').select('*').order('created_at');
+  if(error){showToast('err','Could not load materials');return;}
+  mats=data.map(r=>({id:r.id,name:r.name,sheet:parseFloat(r.sheet_price),pcs:r.pieces_per_sheet}));
+  if(mats.length)nextId=Math.max(nextId,...mats.map(m=>Number(m.id)))+1;
+  renderMats();
+}
+function renderMats(){
+  const tbl=document.getElementById('mat-table');
+  tbl.innerHTML=`<div class="mat-row head"><span>Name</span><span>Sheet</span><span>Pieces</span><span>Cost / pc</span><span></span></div>`;
+  if(!mats.length){tbl.innerHTML+='<div class="mat-empty">No materials yet — add your first one below.</div>';return;}
+  mats.forEach(m=>{
+    tbl.innerHTML+=`<div class="mat-row">
+      <span>${esc(m.name)}</span>
+      <span>€${m.sheet.toFixed(2)}</span>
+      <span>${m.pcs}</span>
+      <span class="mat-cpp">€${(m.sheet/m.pcs).toFixed(3)}</span>
+      <button class="btn btn--ghost" onclick="removeMat(${m.id})" title="Remove">✕</button>
+    </div>`;
+  });
+  document.getElementById('mat-badge').textContent=mats.length;
+}
+async function addMat(){
+  const name=document.getElementById('n-name').value.trim();
+  const sheet=parseFloat(document.getElementById('n-sheet').value);
+  const pcs=parseInt(document.getElementById('n-pcs').value);
+  if(!name){fl('n-name');return;}if(!sheet||sheet<=0){fl('n-sheet');return;}if(!pcs||pcs<1){fl('n-pcs');return;}
+  const id=nextId++;
+  showToast('saving','Saving…');
+  const{error}=await db.from('materials').insert({id,name,sheet_price:sheet,pieces_per_sheet:pcs});
+  if(error){showToast('err','Could not save');return;}
+  showToast('saved','Saved ✓');
+  mats.push({id,name,sheet,pcs});
+  ['n-name','n-sheet','n-pcs'].forEach(i=>document.getElementById(i).value='');
+  renderMats();
+}
+async function removeMat(id){
+  showToast('saving','Removing…');
+  const{error}=await db.from('materials').delete().eq('id',id);
+  if(error){showToast('err','Could not delete');return;}
+  showToast('saved','Removed ✓');
+  mats=mats.filter(m=>m.id!==id);renderMats();
+}
+function fl(id){const e=document.getElementById(id);e.classList.add('err');e.focus();setTimeout(()=>e.classList.remove('err'),1400);}
+function esc(s){return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');}
+
+// ── Fees ──
+let saveT;
+function saveFees(){
+  clearTimeout(saveT);
+  saveT=setTimeout(()=>{
+    try{localStorage.setItem('lps_fees3',JSON.stringify({
+      fc:fv('fair-card'),el:fv('e-list'),et:fv('e-tx'),ep:fv('e-pay'),wp:fv('w-pay'),vat:vatOn
+    }));}catch(e){}
+    ['dot-etsy','dot-web'].forEach(id=>{
+      const d=document.getElementById(id);d.classList.add('show');
+      clearTimeout(d._t);d._t=setTimeout(()=>d.classList.remove('show'),2500);
+    });
+    showToast('saved','Fees saved ✓');
+  },600);
+}
+function loadFees(){
+  try{
+    const f=JSON.parse(localStorage.getItem('lps_fees3')||'null');
+    if(!f)return;
+    [['fc','fair-card'],['el','e-list'],['et','e-tx'],['ep','e-pay'],['wp','w-pay']].forEach(([k,id])=>{if(f[k]!=null)document.getElementById(id).value=f[k];});
+    if(f.vat!=null){vatOn=f.vat;document.getElementById('vat-toggle').classList.toggle('on',vatOn);}
+  }catch(e){}
+}
+function toggleVAT(){vatOn=!vatOn;document.getElementById('vat-toggle').classList.toggle('on',vatOn);saveFees();}
+function fv(id){return parseFloat(document.getElementById(id).value)||0;}
+
+function goNew(e){e.preventDefault();try{localStorage.setItem('lps_edit_id','new');}catch(e){}window.location.href='new.html';}
+function logout(){sessionStorage.removeItem('ninis_studio_auth');window.location.replace('login.html');}
+
+document.getElementById('add-row').addEventListener('keydown',e=>{if(e.key==='Enter')addMat();});
+
+async function init(){
+  const overlay=document.getElementById('overlay');
+  try{loadFees();await loadMats();}
+  catch(e){showToast('err','Error loading');}
+  finally{overlay.classList.add('hidden');setTimeout(()=>overlay.style.display='none',400);}
+}
+init();
+</script>
+</body>
+</html>

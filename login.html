@@ -3,283 +3,104 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
-<title>nini's Studio — Login</title>
+<title>nini's Studio</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700&family=DM+Sans:wght@400;500&family=Caveat:wght@600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="style.css">
 <style>
-*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
-:root{
-  --bg:#F9F6F0;--surface:#fff;--surface2:#F4F1EB;
-  --border:#E3DDD2;--border2:#C8C1B4;
-  --text:#252018;--muted:#6E6759;--faint:#A8A19A;
-  --accent:#A0722A;--accent-light:#F5EAD6;--accent-mid:#C08B3A;
-  --danger:#9B2335;--danger-light:#FBECEE;--danger-border:#E8A0A8;
-  --r:10px;--r-sm:6px;
+body {
+  padding-bottom: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 100vh;
+  padding: 1.5rem;
 }
-
-body{
-  font-family:'DM Sans',sans-serif;
-  background:var(--bg);
-  color:var(--text);
-  min-height:100vh;
-  display:flex;
-  align-items:center;
-  justify-content:center;
-  padding:1.5rem;
-}
-
-/* Subtle grain texture overlay */
-body::before{
-  content:'';
-  position:fixed;inset:0;
-  background-image:url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)' opacity='0.04'/%3E%3C/svg%3E");
-  pointer-events:none;z-index:0;
-}
-
-.login-wrap{
-  position:relative;z-index:1;
-  width:100%;max-width:400px;
-}
-
-/* ── Logo mark ── */
-.logo-mark{
-  display:flex;flex-direction:column;align-items:center;
-  margin-bottom:2.5rem;
-  animation:fadeDown .5s ease both;
-}
-.hex-wrap{
-  width:72px;height:72px;
-  background:var(--accent-light);
-  border:1.5px solid var(--border);
-  border-radius:16px;
-  display:flex;align-items:center;justify-content:center;
-  margin-bottom:1rem;
-  position:relative;
-  overflow:hidden;
-}
-.hex-wrap::after{
-  content:'';position:absolute;inset:0;
-  background:linear-gradient(135deg,rgba(255,255,255,.5) 0%,transparent 60%);
-  pointer-events:none;
-}
-.hex-wrap svg{width:38px;height:38px;stroke:var(--accent);fill:none;stroke-width:1.6;stroke-linecap:round;stroke-linejoin:round}
-.brand-line{display:flex;align-items:baseline;gap:4px}
-.brand-nini{font-family:'Caveat',cursive;font-size:2rem;font-weight:600;color:var(--accent);line-height:1}
-.brand-studio{font-family:'Playfair Display',serif;font-size:1.5rem;font-weight:700;color:var(--text);line-height:1}
-.brand-sub{font-size:12px;color:var(--faint);margin-top:.3rem;letter-spacing:.03em}
-
-/* ── Card ── */
-.login-card{
-  background:var(--surface);
-  border:1px solid var(--border);
-  border-radius:var(--r);
-  padding:2rem;
-  animation:fadeUp .45s ease .1s both;
-  box-shadow:0 4px 24px rgba(37,32,24,.06);
-}
-
-.field-label{
-  font-size:11px;font-weight:500;
-  text-transform:uppercase;letter-spacing:.09em;
-  color:var(--muted);margin-bottom:.5rem;display:block;
-}
-
-.pw-wrap{
-  display:flex;align-items:center;
-  border:1.5px solid var(--border);
-  border-radius:var(--r-sm);
-  background:var(--bg);
-  overflow:hidden;
-  transition:border-color .15s,box-shadow .15s;
-  margin-bottom:1.25rem;
-}
-.pw-wrap:focus-within{border-color:var(--accent-mid);box-shadow:0 0 0 3px var(--accent-light);background:white}
-.pw-wrap.err{border-color:var(--danger);box-shadow:0 0 0 3px var(--danger-light)}
-.pw-wrap input{
-  flex:1;border:none;outline:none;
-  padding:0 14px;height:46px;
-  font-size:15px;font-family:inherit;
-  background:transparent;color:var(--text);
-  letter-spacing:.08em;
-}
-.pw-wrap input::placeholder{color:var(--faint);letter-spacing:0}
-.pw-toggle{
-  width:44px;height:46px;
-  display:flex;align-items:center;justify-content:center;
-  cursor:pointer;color:var(--faint);
-  background:none;border:none;flex-shrink:0;
-  transition:color .15s;
-}
-.pw-toggle:hover{color:var(--accent)}
-.pw-toggle svg{width:17px;height:17px;stroke:currentColor;fill:none;stroke-width:1.8;stroke-linecap:round}
-
-.login-btn{
-  width:100%;height:48px;
-  background:var(--accent);border:none;border-radius:var(--r-sm);
-  color:white;font-size:14px;font-family:inherit;font-weight:500;
-  cursor:pointer;
-  display:flex;align-items:center;justify-content:center;gap:8px;
-  transition:background .15s,transform .1s;
-  letter-spacing:.02em;
-}
-.login-btn:hover{background:var(--accent-mid)}
-.login-btn:active{transform:scale(.99)}
-.login-btn svg{width:16px;height:16px;stroke:white;fill:none;stroke-width:2;stroke-linecap:round}
-.login-btn.loading{pointer-events:none;opacity:.8}
-
-/* Spinner */
-.spinner{width:16px;height:16px;border:2px solid rgba(255,255,255,.4);border-top-color:white;border-radius:50%;animation:spin .6s linear infinite;display:none}
-.loading .spinner{display:block}.loading .btn-icon{display:none}
-
-/* Error message */
-.err-msg{
-  display:none;margin-top:.85rem;
-  padding:.65rem .9rem;
-  background:var(--danger-light);
-  border:1px solid var(--danger-border);
-  border-radius:var(--r-sm);
-  font-size:12px;color:var(--danger);
-  display:flex;align-items:center;gap:7px;
-}
-.err-msg.show{display:flex}
-.err-msg svg{width:14px;height:14px;stroke:var(--danger);fill:none;stroke-width:2;stroke-linecap:round;flex-shrink:0}
-
-/* Shake animation */
-@keyframes shake{0%,100%{transform:translateX(0)}20%{transform:translateX(-6px)}40%{transform:translateX(6px)}60%{transform:translateX(-4px)}80%{transform:translateX(4px)}}
-.shake{animation:shake .35s ease}
-
-@keyframes fadeDown{from{opacity:0;transform:translateY(-12px)}to{opacity:1;transform:none}}
-@keyframes fadeUp{from{opacity:0;transform:translateY(10px)}to{opacity:1;transform:none}}
-@keyframes spin{to{transform:rotate(360deg)}}
-
-.footer-note{
-  text-align:center;margin-top:1.25rem;
-  font-size:11px;color:var(--faint);
-  animation:fadeUp .5s ease .25s both;
-}
-.lock-icon{display:inline-block;margin-right:4px}
 </style>
 </head>
 <body>
+<div class="login-wrap page-in">
 
-<div class="login-wrap">
-
-  <div class="logo-mark">
-    <div class="hex-wrap">
-      <svg viewBox="0 0 24 24">
-        <polygon points="12,2 22,8.5 22,15.5 12,22 2,15.5 2,8.5"/>
-        <line x1="12" y1="2" x2="12" y2="22"/>
-        <line x1="2" y1="8.5" x2="22" y2="8.5"/>
-        <line x1="2" y1="15.5" x2="22" y2="15.5"/>
-      </svg>
+  <div class="login-logo">
+    <div class="login-logo-icon">
+      <svg viewBox="0 0 24 24"><polygon points="12,2 22,8.5 22,15.5 12,22 2,15.5 2,8.5"/><line x1="12" y1="2" x2="12" y2="22"/><line x1="2" y1="8.5" x2="22" y2="8.5"/><line x1="2" y1="15.5" x2="22" y2="15.5"/></svg>
     </div>
-    <div class="brand-line">
+    <div style="display:flex;align-items:baseline;gap:4px">
       <span class="brand-nini">nini's&nbsp;</span>
-      <span class="brand-studio">Studio</span>
+      <span class="brand-word" style="font-size:1.5rem">Studio</span>
     </div>
-    <div class="brand-sub">Laser Pricing &amp; Product Manager</div>
+    <p class="text-faint" style="font-size:13px;margin-top:4px">Laser Pricing &amp; Product Manager</p>
   </div>
 
   <div class="login-card">
-    <label class="field-label" for="pw-input">Password</label>
-    <div class="pw-wrap" id="pw-wrap">
+    <label class="field-label" for="pw-input" style="font-size:13px;margin-bottom:8px;display:block">Password</label>
+    <div class="pw-field" id="pw-field">
       <input type="password" id="pw-input" placeholder="Enter password" autocomplete="current-password" onkeydown="onKey(event)">
-      <button class="pw-toggle" onclick="toggleVis()" tabindex="-1" title="Show/hide password">
+      <button class="pw-toggle-btn" onclick="toggleVis()" tabindex="-1" aria-label="Show/hide password">
         <svg id="eye-icon" viewBox="0 0 24 24"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>
       </button>
     </div>
-
-    <button class="login-btn" id="login-btn" onclick="doLogin()">
+    <button class="login-submit" id="login-btn" onclick="doLogin()">
       <svg class="btn-icon" viewBox="0 0 24 24"><path d="M15 3h4a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2h-4"/><polyline points="10 17 15 12 10 7"/><line x1="15" y1="12" x2="3" y2="12"/></svg>
-      <div class="spinner"></div>
+      <div class="spinner spinner--sm" style="display:none;border-top-color:white;border-color:rgba(255,255,255,.3)" id="login-spin"></div>
       Enter Studio
     </button>
-
-    <div class="err-msg" id="err-msg">
-      <svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
-      <span>Incorrect password. Please try again.</span>
-    </div>
+    <div class="login-err" id="login-err">Incorrect password — please try again.</div>
   </div>
 
-  <div class="footer-note">
-    <span class="lock-icon">🔒</span>SHA-256 protected · Internal use only
-  </div>
-
+  <div class="login-footer">🔒 SHA-256 protected · Internal use only</div>
 </div>
 
 <script>
-// ── SHA-256 hash of the password (change by running: echo -n "YourPassword" | sha256sum) ──
-// Current password: Nini2025!
 const PASSWORD_HASH = '7cf65358a08ef65f79098bd16bd212119c387ae6db1232af2400e3d0588f94a0';
+const SESSION_KEY   = 'ninis_studio_auth';
+const SESSION_VALUE = 'granted_' + PASSWORD_HASH.slice(0,8);
 
-// Session key stored in sessionStorage (cleared when browser tab closes)
-const SESSION_KEY = 'ninis_studio_auth';
-const SESSION_VALUE = 'granted_' + PASSWORD_HASH.slice(0, 8);
+if(sessionStorage.getItem(SESSION_KEY) === SESSION_VALUE) window.location.replace('products.html');
 
-// If already authenticated this session, go straight in
-if(sessionStorage.getItem(SESSION_KEY) === SESSION_VALUE){
-  window.location.replace('products.html');
+async function sha256(msg){
+  const buf = await crypto.subtle.digest('SHA-256', new TextEncoder().encode(msg));
+  return Array.from(new Uint8Array(buf)).map(b=>b.toString(16).padStart(2,'0')).join('');
 }
-
-async function sha256(message){
-  const msgBuffer = new TextEncoder().encode(message);
-  const hashBuffer = await crypto.subtle.digest('SHA-256', msgBuffer);
-  const hashArray = Array.from(new Uint8Array(hashBuffer));
-  return hashArray.map(b => b.toString(16).padStart(2,'0')).join('');
-}
-
 async function doLogin(){
-  const input = document.getElementById('pw-input');
-  const btn   = document.getElementById('login-btn');
-  const wrap  = document.getElementById('pw-wrap');
-  const err   = document.getElementById('err-msg');
-  const pw    = input.value;
-
+  const pw = document.getElementById('pw-input').value;
   if(!pw){ shake(); return; }
-
+  const btn  = document.getElementById('login-btn');
+  const spin = document.getElementById('login-spin');
+  const icon = btn.querySelector('.btn-icon');
   btn.classList.add('loading');
-  err.classList.remove('show');
-
-  // Small deliberate delay so the spinner is visible (also slows brute-force)
-  await new Promise(r => setTimeout(r, 400));
-
+  icon.style.display = 'none';
+  spin.style.display = 'block';
+  document.getElementById('login-err').classList.remove('show');
+  await new Promise(r=>setTimeout(r,350));
   const hash = await sha256(pw);
-
   if(hash === PASSWORD_HASH){
     sessionStorage.setItem(SESSION_KEY, SESSION_VALUE);
     window.location.replace('products.html');
   } else {
     btn.classList.remove('loading');
-    wrap.classList.add('err');
-    err.classList.add('show');
+    icon.style.display = ''; spin.style.display = 'none';
+    document.getElementById('pw-field').classList.add('err');
+    document.getElementById('login-err').classList.add('show');
     shake();
-    input.value = '';
-    input.focus();
-    setTimeout(() => wrap.classList.remove('err'), 1500);
+    document.getElementById('pw-input').value = '';
+    document.getElementById('pw-input').focus();
+    setTimeout(()=>document.getElementById('pw-field').classList.remove('err'),1500);
   }
 }
-
-function onKey(e){ if(e.key === 'Enter') doLogin(); }
-
+function onKey(e){ if(e.key==='Enter') doLogin(); }
 function shake(){
-  const card = document.querySelector('.login-card');
-  card.classList.remove('shake');
-  void card.offsetWidth;
-  card.classList.add('shake');
+  const c = document.querySelector('.login-card');
+  c.classList.remove('shake'); void c.offsetWidth; c.classList.add('shake');
 }
-
-let visible = false;
+let vis = false;
 function toggleVis(){
-  visible = !visible;
-  const input = document.getElementById('pw-input');
-  const icon  = document.getElementById('eye-icon');
-  input.type = visible ? 'text' : 'password';
-  icon.innerHTML = visible
+  vis = !vis;
+  document.getElementById('pw-input').type = vis ? 'text' : 'password';
+  document.getElementById('eye-icon').innerHTML = vis
     ? '<path d="M17.94 17.94A10.07 10.07 0 0 1 12 20c-7 0-11-8-11-8a18.45 18.45 0 0 1 5.06-5.94"/><path d="M9.9 4.24A9.12 9.12 0 0 1 12 4c7 0 11 8 11 8a18.5 18.5 0 0 1-2.16 3.19"/><line x1="1" y1="1" x2="23" y2="23"/>'
     : '<path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/>';
 }
-
-// Auto-focus
 document.getElementById('pw-input').focus();
 </script>
 </body>
