@@ -9,8 +9,6 @@
 <link rel="stylesheet" href="style.css">
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.js"></script>
 <style>
-:root { --bar-h: 160px; }
-
 /* ── Improved overlay ── */
 .db-overlay {
   background: rgba(249,246,240,.96);
@@ -304,7 +302,7 @@ input[type=range].risk-slider::-moz-range-thumb {
         </div>
       </div>
 
-      <!-- ── Machine time (€/h) ── -->
+      <!-- ── Machine time ── -->
       <div class="form-row">
         <div class="form-row__label" id="lbl-mach">Machine time</div>
         <div class="form-row__controls">
@@ -312,13 +310,10 @@ input[type=range].risk-slider::-moz-range-thumb {
             <input type="number" id="mach-min" value="8" min="0" step="1" oninput="clearIg('ig-mach');calc()">
             <span class="input-group__affix suf">min</span>
           </div>
-          <span class="text-faint" style="font-size:13px">@</span>
-          <div class="input-group compact">
-            <span class="input-group__affix">€</span>
-            <input type="number" id="mach-rate-hr" value="18" min="0" step="1" oninput="calc()" style="width:55px" title="Rate per hour (e.g. 18 €/h = 0.30 €/min)">
-            <span class="input-group__affix suf">/hr</span>
-          </div>
-          <span class="form-row__hint" id="mach-per-min-hint" style="color:var(--accent);font-weight:500"></span>
+          <span class="form-row__hint" id="mach-cost-hint" style="color:var(--accent);font-weight:500"></span>
+        </div>
+        <div style="font-size:11px;color:var(--text-3);margin-top:3px">
+          Rate: <span id="mach-rate-display">—</span> — <a href="settings.html" style="color:var(--accent)">change in Settings</a>
         </div>
       </div>
 
@@ -330,13 +325,10 @@ input[type=range].risk-slider::-moz-range-thumb {
             <input type="number" id="lab-min" value="10" min="0" step="1" oninput="clearIg('ig-lab');calc()">
             <span class="input-group__affix suf">min</span>
           </div>
-          <span class="text-faint" style="font-size:13px">@</span>
-          <div class="input-group compact">
-            <span class="input-group__affix">€</span>
-            <input type="number" id="lab-rate" value="15" min="0" step="0.5" oninput="calc()" style="width:55px">
-            <span class="input-group__affix suf">/hr</span>
-          </div>
-          <span class="form-row__hint">design, prep, packing</span>
+          <span class="form-row__hint" id="lab-cost-hint" style="color:var(--accent);font-weight:500"></span>
+        </div>
+        <div style="font-size:11px;color:var(--text-3);margin-top:3px">
+          Rate: <span id="lab-rate-display">—</span> — <a href="settings.html" style="color:var(--accent)">change in Settings</a>
         </div>
       </div>
 
@@ -377,8 +369,8 @@ input[type=range].risk-slider::-moz-range-thumb {
       <!-- Big display + risk pill side by side -->
       <div class="margin-big">
         <div class="margin-big__left">
-          <div class="margin-pct-large" id="margin-pct">50%</div>
-          <div class="margin-mult-line" id="margin-mult">= 2.0× cost</div>
+          <div class="margin-pct-large" id="margin-pct">60%</div>
+          <div class="margin-mult-line" id="margin-mult">= 2,5× cost</div>
         </div>
         <div class="margin-big__risk">
           <div class="risk-pill-large good" id="risk-pill-badge">
@@ -392,26 +384,24 @@ input[type=range].risk-slider::-moz-range-thumb {
       <div class="slider-wrap-mobile">
         <div class="risk-track"></div>
         <input type="range" class="risk-slider" id="margin-slider"
-               min="20" max="75" step="5" value="50" oninput="onSlider()"
+               min="50" max="85" step="5" value="60" oninput="onSlider()"
                aria-label="Target margin percentage"
-               aria-valuemin="20" aria-valuemax="75" aria-valuenow="50"
+               aria-valuemin="50" aria-valuemax="85" aria-valuenow="60"
                aria-describedby="risk-desc">
       </div>
 
       <div class="slider-ticks-mobile">
-        <span class="slider-tick-m" style="left:0%">20%</span>
-        <span class="slider-tick-m" style="left:43.6%">44%</span>
-        <span class="slider-tick-m" style="left:54.5%">50%</span>
-        <span class="slider-tick-m" style="left:85.5%">67%</span>
-        <span class="slider-tick-m" style="left:100%">75%</span>
+        <span class="slider-tick-m" style="left:0%">50%</span>
+        <span class="slider-tick-m" style="left:28.6%">60%</span>
+        <span class="slider-tick-m" style="left:48.6%">67%</span>
+        <span class="slider-tick-m" style="left:71.4%">75%</span>
+        <span class="slider-tick-m" style="left:100%">85%</span>
       </div>
 
       <!-- Zone colour labels -->
       <div class="zone-labels">
-        <div class="zone-label-item danger">High risk</div>
-        <div class="zone-label-item caution">Caution</div>
-        <div class="zone-label-item good">Retail</div>
-        <div class="zone-label-item great">Premium</div>
+        <div class="zone-label-item good" style="flex:2.5">Retail (2–3×)</div>
+        <div class="zone-label-item great" style="flex:2.5">Premium (3×+)</div>
       </div>
 
       <!-- Risk description text -->
@@ -467,7 +457,7 @@ input[type=range].risk-slider::-moz-range-thumb {
   <div class="price-bar__top">
     <div class="price-bar__cost">Cost: <strong id="bar-cost">€ —</strong></div>
     <div class="price-bar__margin">
-      <span class="price-bar__pct" id="bar-pct">50%</span>
+      <span class="price-bar__pct" id="bar-pct">60%</span>
       <span class="price-bar__risk risk-pill good" id="bar-risk">Good</span>
     </div>
     <button class="price-bar__save" id="save-btn" onclick="saveProduct()" type="button">
@@ -552,23 +542,19 @@ const SUPA_KEY='sb_publishable_MqkXWynuaIialGbCFD7_hw_cEgsenMz';
 const db=supabase.createClient(SUPA_URL,SUPA_KEY);
 
 // ─── State ───────────────────────────────────────────────────────────────────
-let mats=[],vatOn=true,marginPct=50,editingProductId=null,currentImageB64=null,nextMatId=Date.now();
-let fees={fc:0,el:0.20,et:6.5,ep:4.0,epf:0.30,wp:2.5};
+let mats=[],vatOn=true,marginPct=60,editingProductId=null,currentImageB64=null,nextMatId=Date.now();
+let fees={fc:0,el:0.20,et:6.5,ep:4.0,epf:0.30,wp:2.5,mr:18,lr:15};
 
 // ─── Zones ───────────────────────────────────────────────────────────────────
-const M_MIN=20,M_MAX=75;
+const M_MIN=50,M_MAX=85;
 const ZONES=[
-  {from:20,to:44,key:'danger',label:'High risk',zoneName:'Danger zone',
-   desc:'Below the wholesale floor (2× cost). A few unsold pieces or returns will put you in the red.'},
-  {from:44,to:50,key:'caution',label:'Caution',zoneName:'Near wholesale',
-   desc:'Close to 2× cost. Fine for wholesale to shops, but tight for direct retail sales.'},
   {from:50,to:67,key:'good',label:'Good',zoneName:'Retail range',
    desc:'Between 2× and 3× cost. Healthy margin for craft fairs and your webshop.'},
-  {from:67,to:76,key:'great',label:'Premium',zoneName:'Premium retail',
+  {from:67,to:86,key:'great',label:'Premium',zoneName:'Premium retail',
    desc:'3× cost or above. Strong positioning with plenty of room for discounts and growth.'},
 ];
-const ZONE_COLORS={danger:'#9B2335',caution:'#7A6610',good:'#1E6641',great:'#185FA5'};
-const THUMB_COLORS={danger:'#9B2335',caution:'#B8860B',good:'#1E6641',great:'#185FA5'};
+const ZONE_COLORS={good:'#1E6641',great:'#185FA5'};
+const THUMB_COLORS={good:'#1E6641',great:'#185FA5'};
 
 function getZone(p){for(const z of ZONES)if(p>=z.from&&p<z.to)return z;return ZONES[ZONES.length-1];}
 function multOf(p){return p<100?(1/(1-p/100)).toFixed(2):'∞';}
@@ -641,8 +627,8 @@ function onMatChange(){
     po.classList.add('show');
     document.getElementById('pcs-product').value=mat.pcs;
     document.getElementById('pcs-lib-default').textContent=
-      'Library default: '+mat.pcs+' pcs/sheet · Sheet price: €'+mat.sheet.toFixed(2)+
-      ' → €'+(mat.sheet/mat.pcs).toFixed(3)+' per piece';
+      'Library default: '+mat.pcs+' pcs/sheet · Sheet price: € '+fmtEU(mat.sheet,2)+
+      ' → € '+fmtEU(mat.sheet/mat.pcs,3)+' per piece';
     document.getElementById('mat-no-mats').style.display='none';
   } else {
     document.getElementById('pcs-override').classList.remove('show');
@@ -684,7 +670,7 @@ async function saveQuickMat(){
   // Show pieces override
   const po=document.getElementById('pcs-override');po.classList.add('show');
   document.getElementById('pcs-product').value=pcs;
-  document.getElementById('pcs-lib-default').textContent='Library default: '+pcs+' pcs/sheet · Sheet price: €'+sheet.toFixed(2)+' → €'+(sheet/pcs).toFixed(3)+' per piece';
+  document.getElementById('pcs-lib-default').textContent='Library default: '+pcs+' pcs/sheet · Sheet price: € '+fmtEU(sheet,2)+' → € '+fmtEU(sheet/pcs,3)+' per piece';
   calc();
 }
 
@@ -736,7 +722,7 @@ function loadFees(){
   try{
     const f=JSON.parse(localStorage.getItem('lps_fees3')||'null');
     if(!f)return;
-    fees={fc:f.fc??0,el:f.el??0.20,et:f.et??6.5,ep:f.ep??4.0,epf:f.epf??0.30,wp:f.wp??2.5};
+    fees={fc:f.fc??0,el:f.el??0.20,et:f.et??6.5,ep:f.ep??4.0,epf:f.epf??0.30,wp:f.wp??2.5,mr:f.mr??18,lr:f.lr??15};
     if(f.vat!=null)vatOn=f.vat;
   }catch(e){}
 }
@@ -779,14 +765,24 @@ function updateHint(ch,sugGross,total){
   if(!inp.value||isNaN(val)||val<=0){h.textContent='';h.className='price-bar__hint';return;}
   const net=val/(1+vat),profit=net-total;
   const im=net>0?Math.round((profit/net)*100):0;
-  const diff=val-sugGross,ds=(diff>=0?'+':'')+diff.toFixed(2);
+  const diff=val-sugGross,ds=(diff>=0?'+ € ':' − € ')+fmtEU(Math.abs(diff),2);
   if(profit<0){h.className='price-bar__hint bad';h.textContent='⚠ Below cost';}
   else{const z=getZone(Math.max(M_MIN,Math.min(M_MAX,im)));h.className='price-bar__hint ok';h.innerHTML=`<span style="color:${ZONE_COLORS[z.key]};font-weight:500">${im}%</span> · ${multOf(im)}× · ${ds}`;}
 }
 
 // ─── Calculation ──────────────────────────────────────────────────────────────
 function fv(id){return parseFloat(document.getElementById(id).value)||0;}
-function fmt(n){return '€\u202f'+Number(n).toFixed(2);}
+
+// ─── European number format ───────────────────────────────────────────────────
+function fmtEU(n, dec=2){
+  if(n==null||isNaN(n)) return '—';
+  return Number(n).toFixed(dec)
+    .replace('.', ',')
+    .replace(/\B(?=(\d{3})+(?!,))/g, '\u202f');
+}
+// Currency with € narrow-no-break-space prefix
+function fmtCur(n){ return n==null?'—':'€ '+fmtEU(n,2); }
+function fmt(n){ return fmtCur(n); }
 function set(id,val){const e=document.getElementById(id);if(e)e.textContent=val;}
 
 function calc(){
@@ -800,15 +796,24 @@ function calc(){
   const matC=mat?mat.sheet/pcs:0;
 
   // Machine cost: rate is now in €/h, convert to €/min internally
-  const machRateHr=fv('mach-rate-hr');
+  const machRateHr=fees.mr||18;
   const machRateMin=machRateHr/60;
   const machC=fv('mach-min')*machRateMin;
 
-  // Show hint: cost per minute
-  const hintEl=document.getElementById('mach-per-min-hint');
-  hintEl.textContent=machRateHr>0?'(€'+machRateMin.toFixed(3)+'/min)':'';
+  // Show rate display chips and cost hints
+  const mRateEl=document.getElementById('mach-rate-display');
+  if(mRateEl)mRateEl.textContent='€ '+fmtEU(machRateHr,2)+'/h (€ '+fmtEU(machRateMin,3)+'/min)';
+  const mCostEl=document.getElementById('mach-cost-hint');
+  if(mCostEl&&fv('mach-min')>0)mCostEl.textContent='= € '+fmtEU(machC,3);
+  else if(mCostEl)mCostEl.textContent=''
 
-  const labC=(fv('lab-min')/60)*fv('lab-rate');
+  const laborRateHr=fees.lr||15;
+  const labC=(fv('lab-min')/60)*laborRateHr;
+  const lRateEl=document.getElementById('lab-rate-display');
+  if(lRateEl)lRateEl.textContent='€ '+fmtEU(laborRateHr,2)+'/h';
+  const lCostEl=document.getElementById('lab-cost-hint');
+  if(lCostEl&&fv('lab-min')>0)lCostEl.textContent='= € '+fmtEU(labC,3);
+  else if(lCostEl)lCostEl.textContent=''
   const total=matC+machC+labC+fv('pack')+fv('other');
   const m=marginPct/100,net=m<1?total/(1-m):total*5,profit=net-total;
 
@@ -845,8 +850,8 @@ function calc(){
   // ── Popovers — new structure: costs → profit → net → gross ──
   const costRows=[
     ['Material',fmt(matC)],
-    ['Machine ('+fv('mach-min')+'min @ €'+machRateHr+'/h)',fmt(machC)],
-    ['Labor ('+fv('lab-min')+'min @ €'+fv('lab-rate')+'/h)',fmt(labC)],
+    ['Machine ('+fv('mach-min')+' min @ € '+fmtEU(machRateHr,2)+'/h)',fmtCur(machC)],
+    ['Labor ('+fv('lab-min')+' min @ € '+fmtEU(laborRateHr,2)+'/h)',fmtCur(labC)],
     ['Packaging',fmt(fv('pack'))],
     ['Overhead',fmt(fv('other'))],
   ];
@@ -891,7 +896,7 @@ function calc(){
 
   // Warning
   const warn=document.getElementById('warn');
-  if(marginPct<44&&total>0){warn.classList.add('show');warn.textContent='⚠ Below the 2× wholesale floor. Aim for at least 50% margin.';}
+  if(marginPct<60&&total>0){warn.classList.add('show');warn.textContent='⚠ Margin below 60% — aim higher for sustainable retail pricing.';}
   else warn.classList.remove('show');
 
   window._lastCalc={total,net,profit,fairSugg:fG,etsySugg:eG,webSugg:wG,marginPct,vatOn,mat,
@@ -935,8 +940,6 @@ function validateAndCollect(){
   if(fv('mach-min')<=0){errs.push('Machine time must be > 0');igm.classList.add('err');}else igm.classList.remove('err');
   const igl=document.getElementById('ig-lab');
   if(fv('lab-min')<=0){errs.push('Labor time must be > 0');igl.classList.add('err');}else igl.classList.remove('err');
-  if(fv('lab-rate')<=0)errs.push('Labor hourly rate must be > 0');
-  if(fv('mach-rate-hr')<=0)errs.push('Machine hourly rate must be > 0');
   return errs;
 }
 
@@ -962,8 +965,8 @@ async function saveProduct(){
     etsyFinalOverride:parseFloat(document.getElementById('fp-etsy').value)||null,
     webFinalOverride:parseFloat(document.getElementById('fp-web').value)||null,
     displayMargin:im(fairFinal,c.total||0),vatOn,marginPct,
-    machMin:fv('mach-min'),machRateHr:fv('mach-rate-hr'),
-    labMin:fv('lab-min'),labRate:fv('lab-rate'),
+    machMin:fv('mach-min'),machRateHr:fees.mr,
+    labMin:fv('lab-min'),labRate:fees.lr,
     packCost:fv('pack'),otherCost:fv('other'),
     selMatId:document.getElementById('sel-mat').value,
     pcsProduct:fv('pcs-product')||null,
@@ -992,8 +995,8 @@ async function loadForEdit(){
   document.getElementById('page-heading').textContent='Edit product';
   const p=data.data;
   document.getElementById('product-name').value=p.name||'';
-  [['mach-min',p.machMin],['mach-rate-hr',p.machRateHr||((p.machRate||0.30)*60)],
-   ['lab-min',p.labMin],['lab-rate',p.labRate],
+  [['mach-min',p.machMin],
+   ['lab-min',p.labMin],
    ['pack',p.packCost],['other',p.otherCost]].forEach(([id,v])=>{if(v!=null)document.getElementById(id).value=v;});
   vatOn=p.vatOn!==false;
   if(p.marginPct){marginPct=p.marginPct;document.getElementById('margin-slider').value=marginPct;}

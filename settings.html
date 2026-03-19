@@ -384,6 +384,67 @@
     </div>
   </div>
 
+  <!-- OPERATING COSTS -->
+  <div class="card page-in page-in-d2" style="margin-bottom:12px">
+    <div class="card-header">
+      <span class="card-title">Operating costs</span>
+    </div>
+    <div class="card-body">
+      <p style="font-size:12px;color:var(--text-2);margin-bottom:14px;line-height:1.5">
+        These are your constant hourly rates — used in every product calculation. Set them once here.
+      </p>
+      <div class="fee-channels" style="gap:8px">
+
+        <div class="fee-channel">
+          <div class="fee-ch-header" style="padding:10px 14px">
+            <div class="fee-ch-icon" style="background:#F4F1EB;color:var(--text-2)">
+              <svg viewBox="0 0 24 24"><rect x="2" y="3" width="20" height="14" rx="2"/><path d="M8 21h8"/><path d="M12 17v4"/></svg>
+            </div>
+            <div style="flex:1">
+              <div class="fee-ch-name">Machine / laser</div>
+              <div class="fee-ch-summary" id="mach-rate-summary">Electricity, tube wear, maintenance</div>
+            </div>
+          </div>
+          <div class="fee-ch-body">
+            <div class="fee-row">
+              <span class="fee-row__label">Hourly rate</span>
+              <div class="fee-row__input-wrap">
+                <span style="font-size:12px;color:var(--text-3)">€</span>
+                <input type="number" class="fee-row__input" id="mach-rate-hr" aria-label="Machine hourly rate in euros" value="18" min="0" step="1" oninput="saveFees();updateRateSummaries()">
+                <span class="fee-row__unit" style="width:auto;font-size:11px;color:var(--text-3)">/h</span>
+              </div>
+            </div>
+            <div class="fee-ch-hint" id="mach-rate-hint">≈ € 0,30 / min</div>
+          </div>
+        </div>
+
+        <div class="fee-channel">
+          <div class="fee-ch-header" style="padding:10px 14px">
+            <div class="fee-ch-icon" style="background:#F4F1EB;color:var(--text-2)">
+              <svg viewBox="0 0 24 24"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
+            </div>
+            <div style="flex:1">
+              <div class="fee-ch-name">Your labor</div>
+              <div class="fee-ch-summary" id="labor-rate-summary">Design, preparation, finishing, packing</div>
+            </div>
+          </div>
+          <div class="fee-ch-body">
+            <div class="fee-row">
+              <span class="fee-row__label">Hourly rate</span>
+              <div class="fee-row__input-wrap">
+                <span style="font-size:12px;color:var(--text-3)">€</span>
+                <input type="number" class="fee-row__input" id="labor-rate-hr" aria-label="Labor hourly rate in euros" value="15" min="0" step="0.5" oninput="saveFees();updateRateSummaries()">
+                <span class="fee-row__unit" style="width:auto;font-size:11px;color:var(--text-3)">/h</span>
+              </div>
+            </div>
+            <div class="fee-ch-hint" id="labor-rate-hint">≈ € 0,25 / min</div>
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </div>
+
   <!-- ABOUT -->
   <div class="card page-in page-in-d2" style="margin-bottom:12px">
     <div class="card-header"><span class="card-title">About</span></div>
@@ -426,6 +487,14 @@ const db=supabase.createClient(SUPA_URL,SUPA_KEY);
 let mats=[],vatOn=true,nextId=Date.now();
 
 let toastT;
+
+function fmtEU(n, dec=2){
+  if(n==null||isNaN(n)) return '—';
+  return Number(n).toFixed(dec)
+    .replace('.',',')
+    .replace(/\B(?=(\d{3})+(?!,))/g, '\u202f');
+}
+
 function showToast(state,text){
   const el=document.getElementById('toast'),tx=document.getElementById('toast-txt');
   clearTimeout(toastT);el.className='toast show '+state;tx.textContent=text;
@@ -479,7 +548,7 @@ function renderMats(){
           <div class="mat-card-name">${esc(m.name)}</div>
           ${chips?`<div style="display:flex;gap:4px;flex-wrap:wrap;margin-top:4px">${chips}</div>`:''}
         </div>
-        <div class="mat-card-price">€${m.sheet.toFixed(2)} / sheet</div>
+        <div class="mat-card-price">${fmtCur(m.sheet)} / Blatt</div>
         <svg class="mat-card-chevron" viewBox="0 0 24 24"><polyline points="6 9 12 15 18 9"/></svg>
       </div>
       <div class="mat-card-detail" id="mat-detail-${m.id}">
@@ -627,11 +696,18 @@ function updateFeeSummaries(){
 
 // ── Fees ─────────────────────────────────────────────────────────────────────
 let saveT;
+
+function updateRateSummaries(){
+  const mr=fv('mach-rate-hr'), lr=fv('labor-rate-hr');
+  document.getElementById('mach-rate-hint').textContent = mr>0 ? '≈ '+fmtEU(mr/60,3)+' / min' : '';
+  document.getElementById('labor-rate-hint').textContent = lr>0 ? '≈ '+fmtEU(lr/60,3)+' / min' : '';
+}
+
 function saveFees(){
   clearTimeout(saveT);
   saveT=setTimeout(()=>{
     try{localStorage.setItem('lps_fees3',JSON.stringify({
-      fc:fv('fair-card'),el:fv('e-list'),et:fv('e-tx'),ep:fv('e-pay'),epf:fv('e-pay-fix'),wp:fv('w-pay'),vat:vatOn
+      fc:fv('fair-card'),el:fv('e-list'),et:fv('e-tx'),ep:fv('e-pay'),epf:fv('e-pay-fix'),wp:fv('w-pay'),mr:fv('mach-rate-hr'),lr:fv('labor-rate-hr'),vat:vatOn
     }));}catch(e){}
     showToast('saved','Fees saved ✓');
   },800);
@@ -640,7 +716,7 @@ function loadFees(){
   try{
     const f=JSON.parse(localStorage.getItem('lps_fees3')||'null');
     if(!f)return;
-    [['fc','fair-card'],['el','e-list'],['et','e-tx'],['ep','e-pay'],['epf','e-pay-fix'],['wp','w-pay']].forEach(([k,id])=>{if(f[k]!=null)document.getElementById(id).value=f[k];});
+    [['fc','fair-card'],['el','e-list'],['et','e-tx'],['ep','e-pay'],['epf','e-pay-fix'],['wp','w-pay'],['mr','mach-rate-hr'],['lr','labor-rate-hr']].forEach(([k,id])=>{if(f[k]!=null)document.getElementById(id).value=f[k];});
     if(f.vat!=null){vatOn=f.vat;const t=document.getElementById('vat-toggle');t.classList.toggle('on',vatOn);t.setAttribute('aria-checked',vatOn?'true':'false');}
   }catch(e){}
 }
@@ -662,7 +738,7 @@ document.getElementById('mat-cards').addEventListener('keydown',e=>{
 
 async function init(){
   const overlay=document.getElementById('overlay');
-  try{loadFees();await loadMats();updateFeeSummaries();}
+  try{loadFees();await loadMats();updateFeeSummaries();updateRateSummaries();}
   catch(e){showToast('err','Error loading');}
   finally{overlay.classList.add('hidden');setTimeout(()=>overlay.style.display='none',400);}
 }

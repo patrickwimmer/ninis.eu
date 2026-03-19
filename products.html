@@ -5,7 +5,7 @@
 <meta name="viewport" content="width=device-width,initial-scale=1">
 <title>nini's Products</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
-<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700&family=DM+Sans:wght@400;500&family=Caveat:wght@600&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Lora:wght@500;600;700&family=DM+Sans:wght@400;500&family=Caveat:wght@600&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="style.css">
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.js"></script>
 </head>
@@ -70,7 +70,15 @@ function marginMeta(m){
   if(m<67)return{cls:'badge--ok',label:'Good'};
   return{cls:'badge--info',label:'Premium'};
 }
-function fmt(n){return n!=null?'€\u202f'+Number(n).toFixed(2):'—';}
+// ─── European number format ───────────────────────────────────────────────────
+function fmtEU(n, dec=2){
+  if(n==null||isNaN(n)) return '—';
+  return Number(n).toFixed(dec)
+    .replace('.', ',')
+    .replace(/\B(?=(\d{3})+(?!,))/g, '\u202f');
+}
+function fmtCur(n){ return n==null?'—':'€\u202f'+fmtEU(n,2); }
+function fmt(n){ return fmtCur(n); }
 function esc(s){return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');}
 
 let toastT;
