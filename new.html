@@ -454,64 +454,92 @@ input[type=range].risk-slider::-moz-range-thumb {
 
 <!-- STICKY PRICE BAR -->
 <div class="price-bar">
+
+  <!-- top strip: cost left, margin right -->
   <div class="price-bar__top">
     <div class="price-bar__cost">Cost: <strong id="bar-cost">€ —</strong></div>
     <div class="price-bar__margin">
       <span class="price-bar__pct" id="bar-pct">60%</span>
       <span class="price-bar__risk risk-pill good" id="bar-risk">Good</span>
     </div>
+  </div>
+
+  <!-- channel rows: each = left (label+price+vat+info) / right (override input) -->
+  <div class="price-bar__channels">
+
+    <div class="price-bar__channel">
+      <div class="price-bar__ch-left">
+        <div class="price-bar__ch-label">Craft fair</div>
+        <div class="price-bar__ch-price-row">
+          <span class="price-bar__ch-price" id="bp-fair">—</span>
+          <span class="price-bar__ch-vat" id="bv-fair"></span>
+          <div class="info-wrap">
+            <button class="info-btn" id="btn-fair" onclick="togglePop('fair')" type="button" aria-expanded="false" aria-haspopup="true" aria-label="Craft fair price breakdown">i</button>
+            <div class="popover" id="pop-fair" role="dialog" aria-label="Price breakdown" aria-modal="false"></div>
+          </div>
+        </div>
+        <div class="price-bar__hint" id="fh-fair"></div>
+      </div>
+      <div class="price-bar__ch-right">
+        <div class="price-bar__ch-input">
+          <span aria-hidden="true">€</span>
+          <input type="number" id="fp-fair" min="0" step="0.10" placeholder="Override…" oninput="calc()" aria-label="Craft fair final price override">
+        </div>
+      </div>
+    </div>
+
+    <div class="price-bar__channel">
+      <div class="price-bar__ch-left">
+        <div class="price-bar__ch-label">Etsy</div>
+        <div class="price-bar__ch-price-row">
+          <span class="price-bar__ch-price" id="bp-etsy">—</span>
+          <span class="price-bar__ch-vat" id="bv-etsy"></span>
+          <div class="info-wrap">
+            <button class="info-btn" id="btn-etsy" onclick="togglePop('etsy')" type="button" aria-expanded="false" aria-haspopup="true" aria-label="Etsy price breakdown">i</button>
+            <div class="popover" id="pop-etsy" role="dialog" aria-label="Price breakdown" aria-modal="false"></div>
+          </div>
+        </div>
+        <div class="price-bar__hint" id="fh-etsy"></div>
+      </div>
+      <div class="price-bar__ch-right">
+        <div class="price-bar__ch-input">
+          <span aria-hidden="true">€</span>
+          <input type="number" id="fp-etsy" min="0" step="0.10" placeholder="Override…" oninput="calc()" aria-label="Etsy final price override">
+        </div>
+      </div>
+    </div>
+
+    <div class="price-bar__channel">
+      <div class="price-bar__ch-left">
+        <div class="price-bar__ch-label">Webshop</div>
+        <div class="price-bar__ch-price-row">
+          <span class="price-bar__ch-price" id="bp-web">—</span>
+          <span class="price-bar__ch-vat" id="bv-web"></span>
+          <div class="info-wrap">
+            <button class="info-btn" id="btn-web" onclick="togglePop('web')" type="button" aria-expanded="false" aria-haspopup="true" aria-label="Webshop price breakdown">i</button>
+            <div class="popover" id="pop-web" role="dialog" aria-label="Price breakdown" aria-modal="false"></div>
+          </div>
+        </div>
+        <div class="price-bar__hint" id="fh-web"></div>
+      </div>
+      <div class="price-bar__ch-right">
+        <div class="price-bar__ch-input">
+          <span aria-hidden="true">€</span>
+          <input type="number" id="fp-web" min="0" step="0.10" placeholder="Override…" oninput="calc()" aria-label="Webshop final price override">
+        </div>
+      </div>
+    </div>
+
+  </div><!-- /channels -->
+
+  <!-- full-width save -->
+  <div class="price-bar__save-row">
     <button class="price-bar__save" id="save-btn" onclick="saveProduct()" type="button">
-      <svg viewBox="0 0 24 24"><path d="M19 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11l5 5v11a2 2 0 0 1-2 2z"/><polyline points="17 21 17 13 7 13 7 21"/><polyline points="7 3 7 8 15 8"/></svg>
-      Save
+      <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M19 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11l5 5v11a2 2 0 0 1-2 2z"/><polyline points="17 21 17 13 7 13 7 21"/><polyline points="7 3 7 8 15 8"/></svg>
+      Save product
     </button>
   </div>
-  <div class="price-bar__channels">
-    <div class="price-bar__channel">
-      <div class="price-bar__ch-label">Craft fair</div>
-      <div class="price-bar__ch-top">
-        <span class="price-bar__ch-price" id="bp-fair">—</span>
-        <span class="price-bar__ch-vat" id="bv-fair"></span>
-        <div class="price-bar__ch-info info-wrap">
-          <button class="info-btn" id="btn-fair" onclick="togglePop('fair')" type="button" aria-expanded="false" aria-haspopup="true" aria-label="Craft fair price breakdown">i</button>
-          <div class="popover" id="pop-fair" role="dialog" aria-label="Price breakdown" aria-modal="false"></div>
-        </div>
-      </div>
-      <div class="price-bar__ch-input">
-        <span>€</span><input type="number" id="fp-fair" min="0" step="0.10" placeholder="Override…" oninput="calc()">
-      </div>
-      <div class="price-bar__hint" id="fh-fair"></div>
-    </div>
-    <div class="price-bar__channel">
-      <div class="price-bar__ch-label">Etsy</div>
-      <div class="price-bar__ch-top">
-        <span class="price-bar__ch-price" id="bp-etsy">—</span>
-        <span class="price-bar__ch-vat" id="bv-etsy"></span>
-        <div class="price-bar__ch-info info-wrap">
-          <button class="info-btn" id="btn-etsy" onclick="togglePop('etsy')" type="button" aria-expanded="false" aria-haspopup="true" aria-label="Etsy price breakdown">i</button>
-          <div class="popover" id="pop-etsy" role="dialog" aria-label="Price breakdown" aria-modal="false"></div>
-        </div>
-      </div>
-      <div class="price-bar__ch-input">
-        <span>€</span><input type="number" id="fp-etsy" min="0" step="0.10" placeholder="Override…" oninput="calc()">
-      </div>
-      <div class="price-bar__hint" id="fh-etsy"></div>
-    </div>
-    <div class="price-bar__channel">
-      <div class="price-bar__ch-label">Webshop</div>
-      <div class="price-bar__ch-top">
-        <span class="price-bar__ch-price" id="bp-web">—</span>
-        <span class="price-bar__ch-vat" id="bv-web"></span>
-        <div class="price-bar__ch-info info-wrap">
-          <button class="info-btn" id="btn-web" onclick="togglePop('web')" type="button" aria-expanded="false" aria-haspopup="true" aria-label="Webshop price breakdown">i</button>
-          <div class="popover" id="pop-web" role="dialog" aria-label="Price breakdown" aria-modal="false"></div>
-        </div>
-      </div>
-      <div class="price-bar__ch-input">
-        <span>€</span><input type="number" id="fp-web" min="0" step="0.10" placeholder="Override…" oninput="calc()">
-      </div>
-      <div class="price-bar__hint" id="fh-web"></div>
-    </div>
-  </div>
+
 </div>
 
 <!-- Bottom nav -->
