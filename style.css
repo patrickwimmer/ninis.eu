@@ -116,7 +116,7 @@ h3 { font-size:1rem; font-weight:500; }
 }
 @media (min-width: 480px) { .page-wrap { padding: var(--s4); } }
 @media (min-width: 640px) { .page-wrap { padding: var(--s5) var(--s5) var(--s6); } }
-@media (min-width: 960px) { .page-wrap { max-width: 960px; padding: var(--s7) var(--s5); } }
+@media (min-width: 960px) { .page-wrap { max-width: 1280px; padding: var(--s7) var(--s5); } }
 
 /* ── Top header ── */
 .topbar {
