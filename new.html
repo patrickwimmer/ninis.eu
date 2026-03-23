@@ -73,8 +73,6 @@
   min-width: 90px;
 }
 .risk-pill-large small { font-size: 10px; font-weight: 400; margin-top: 2px; opacity: .8; }
-.risk-pill-large.danger  { background: var(--danger-light); color: var(--danger); border-color: var(--danger-border); }
-.risk-pill-large.caution { background: var(--warn-light); color: var(--warn); border-color: var(--warn-border); }
 .risk-pill-large.good    { background: var(--ok-light); color: var(--ok); border-color: var(--ok-border); }
 .risk-pill-large.great   { background: var(--info-light); color: var(--info); border-color: var(--info-border); }
 
@@ -464,12 +462,16 @@ input[type=range].risk-slider::-moz-range-thumb {
     </div>
   </div>
 
-  <!-- channel rows: each = left (label+price+vat+info) / right (override input) -->
+  <!-- channel rows: left = label+suggested price+info / right = set-price input+profit+rounding -->
   <div class="price-bar__channels">
 
-    <div class="price-bar__channel">
+    <!-- CRAFT FAIR -->
+    <div class="price-bar__channel ch--fair">
       <div class="price-bar__ch-left">
-        <div class="price-bar__ch-label">Craft fair</div>
+        <div class="price-bar__ch-label">
+          <svg class="ch-icon" viewBox="0 0 24 24" aria-hidden="true"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg>
+          Craft fair
+        </div>
         <div class="price-bar__ch-price-row">
           <span class="price-bar__ch-price" id="bp-fair">—</span>
           <span class="price-bar__ch-vat" id="bv-fair"></span>
@@ -478,19 +480,24 @@ input[type=range].risk-slider::-moz-range-thumb {
             <div class="popover" id="pop-fair" role="dialog" aria-label="Price breakdown" aria-modal="false"></div>
           </div>
         </div>
-        <div class="price-bar__hint" id="fh-fair"></div>
       </div>
       <div class="price-bar__ch-right">
         <div class="price-bar__ch-input">
           <span aria-hidden="true">€</span>
-          <input type="number" id="fp-fair" min="0" step="0.10" placeholder="Override…" oninput="calc()" aria-label="Craft fair final price override">
+          <input type="number" id="fp-fair" min="0" step="0.10" placeholder="Set your price" oninput="onPriceInput('fair')" aria-label="Your craft fair selling price">
         </div>
+        <div class="ch-rounds" id="rounds-fair"></div>
+        <div class="ch-profit" id="fh-fair"></div>
       </div>
     </div>
 
-    <div class="price-bar__channel">
+    <!-- ETSY -->
+    <div class="price-bar__channel ch--etsy">
       <div class="price-bar__ch-left">
-        <div class="price-bar__ch-label">Etsy</div>
+        <div class="price-bar__ch-label">
+          <svg class="ch-icon" viewBox="0 0 24 24" aria-hidden="true"><circle cx="9" cy="21" r="1"/><circle cx="20" cy="21" r="1"/><path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6"/></svg>
+          Etsy
+        </div>
         <div class="price-bar__ch-price-row">
           <span class="price-bar__ch-price" id="bp-etsy">—</span>
           <span class="price-bar__ch-vat" id="bv-etsy"></span>
@@ -499,19 +506,24 @@ input[type=range].risk-slider::-moz-range-thumb {
             <div class="popover" id="pop-etsy" role="dialog" aria-label="Price breakdown" aria-modal="false"></div>
           </div>
         </div>
-        <div class="price-bar__hint" id="fh-etsy"></div>
       </div>
       <div class="price-bar__ch-right">
         <div class="price-bar__ch-input">
           <span aria-hidden="true">€</span>
-          <input type="number" id="fp-etsy" min="0" step="0.10" placeholder="Override…" oninput="calc()" aria-label="Etsy final price override">
+          <input type="number" id="fp-etsy" min="0" step="0.10" placeholder="Set your price" oninput="onPriceInput('etsy')" aria-label="Your Etsy selling price">
         </div>
+        <div class="ch-rounds" id="rounds-etsy"></div>
+        <div class="ch-profit" id="fh-etsy"></div>
       </div>
     </div>
 
-    <div class="price-bar__channel">
+    <!-- WEBSHOP -->
+    <div class="price-bar__channel ch--web">
       <div class="price-bar__ch-left">
-        <div class="price-bar__ch-label">Webshop</div>
+        <div class="price-bar__ch-label">
+          <svg class="ch-icon" viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="10"/><line x1="2" y1="12" x2="22" y2="12"/><path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"/></svg>
+          Webshop
+        </div>
         <div class="price-bar__ch-price-row">
           <span class="price-bar__ch-price" id="bp-web">—</span>
           <span class="price-bar__ch-vat" id="bv-web"></span>
@@ -520,17 +532,21 @@ input[type=range].risk-slider::-moz-range-thumb {
             <div class="popover" id="pop-web" role="dialog" aria-label="Price breakdown" aria-modal="false"></div>
           </div>
         </div>
-        <div class="price-bar__hint" id="fh-web"></div>
       </div>
       <div class="price-bar__ch-right">
         <div class="price-bar__ch-input">
           <span aria-hidden="true">€</span>
-          <input type="number" id="fp-web" min="0" step="0.10" placeholder="Override…" oninput="calc()" aria-label="Webshop final price override">
+          <input type="number" id="fp-web" min="0" step="0.10" placeholder="Set your price" oninput="onPriceInput('web')" aria-label="Your webshop selling price">
         </div>
+        <div class="ch-rounds" id="rounds-web"></div>
+        <div class="ch-profit" id="fh-web"></div>
       </div>
     </div>
 
   </div><!-- /channels -->
+
+  <!-- VAT footer -->
+  <div class="price-bar__vat-note" id="bar-vat-note">Prices include 20% VAT — calculated for Austria</div>
 
   <!-- full-width save -->
   <div class="price-bar__save-row">
@@ -585,7 +601,7 @@ const ZONE_COLORS={good:'#1E6641',great:'#185FA5'};
 const THUMB_COLORS={good:'#1E6641',great:'#185FA5'};
 
 function getZone(p){for(const z of ZONES)if(p>=z.from&&p<z.to)return z;return ZONES[ZONES.length-1];}
-function multOf(p){return p<100?(1/(1-p/100)).toFixed(2):'∞';}
+function multOf(p){if(p>=100)return'∞';return(1/(1-p/100)).toFixed(2).replace('.',',');}
 
 // ─── Toast ────────────────────────────────────────────────────────────────────
 let toastT;
@@ -785,17 +801,72 @@ function updateMarginDisplay(){
   const brEl=document.getElementById('bar-risk');brEl.textContent=z.label;brEl.className='price-bar__risk risk-pill '+z.key;
 }
 
-// ─── Hint ─────────────────────────────────────────────────────────────────────
-function updateHint(ch,sugGross,total){
+// ─── Smart rounding ───────────────────────────────────────────────────────────
+function smartRounds(price){
+  if(!price||price<=0) return [];
+  const floor=Math.floor(price);
+  const candidates=[floor+0.50,floor+0.95,floor+0.99,(floor+1)+0.49,(floor+1)+0.99]
+    .filter(v=>v>=price&&v<=price*1.08);
+  // Remove duplicates and values too close together
+  const unique=[];
+  for(const v of candidates){
+    if(!unique.length||v-unique[unique.length-1]>0.03) unique.push(v);
+  }
+  return unique.slice(0,3);
+}
+
+// ─── Price input handler ───────────────────────────────────────────────────────
+// Called on each keystroke in a channel override input
+function onPriceInput(ch){ calc(); }
+
+// ─── Update channel profit display ────────────────────────────────────────────
+function updateChannelDisplay(ch,sugGross,total){
   const vat=vatOn?0.20:0;
-  const inp=document.getElementById('fp-'+ch),h=document.getElementById('fh-'+ch);
+  const inp=document.getElementById('fp-'+ch);
+  const profitEl=document.getElementById('fh-'+ch);
+  const roundsEl=document.getElementById('rounds-'+ch);
   const val=parseFloat(inp.value);
-  if(!inp.value||isNaN(val)||val<=0){h.textContent='';h.className='price-bar__hint';return;}
+  const activePrice=(!inp.value||isNaN(val)||val<=0)?sugGross:val;
+
+  // ── Rounding chips (only shown when no custom price set) ──
+  if(!inp.value||isNaN(val)||val<=0){
+    const rounds=smartRounds(sugGross);
+    if(rounds.length&&sugGross>0){
+      roundsEl.innerHTML=rounds.map(r=>
+        `<button class="round-chip" onclick="applyRound('${ch}',${r})" type="button" aria-label="Set price to € ${fmtEU(r,2)}">€ ${fmtEU(r,2)}</button>`
+      ).join('');
+    } else {
+      roundsEl.innerHTML='';
+    }
+    profitEl.innerHTML='';
+    profitEl.className='ch-profit';
+    return;
+  }
+
+  roundsEl.innerHTML=''; // hide chips when user is typing
+
+  if(val<=0){profitEl.innerHTML='';return;}
   const net=val/(1+vat),profit=net-total;
   const im=net>0?Math.round((profit/net)*100):0;
-  const diff=val-sugGross,ds=(diff>=0?'+ € ':' − € ')+fmtEU(Math.abs(diff),2);
-  if(profit<0){h.className='price-bar__hint bad';h.textContent='⚠ Below cost';}
-  else{const z=getZone(Math.max(M_MIN,Math.min(M_MAX,im)));h.className='price-bar__hint ok';h.innerHTML=`<span style="color:${ZONE_COLORS[z.key]};font-weight:500">${im}%</span> · ${multOf(im)}× · ${ds}`;}
+
+  if(profit<0){
+    profitEl.className='ch-profit ch-profit--bad';
+    profitEl.innerHTML='⚠ Below cost';
+  } else {
+    const z=getZone(Math.max(M_MIN,Math.min(M_MAX,im)));
+    const col=ZONE_COLORS[z.key];
+    profitEl.className='ch-profit ch-profit--ok';
+    profitEl.innerHTML=
+      `<span class="ch-profit__keep">You keep: <strong>€ ${fmtEU(profit,2)}</strong></span>`+
+      `<span class="ch-profit__margin" style="color:${col}">${im}%&thinsp;·&thinsp;${multOf(im)}×</span>`;
+  }
+}
+
+function applyRound(ch, price){
+  const inp=document.getElementById('fp-'+ch);
+  inp.value=price.toFixed(2);
+  calc();
+  inp.focus();
 }
 
 // ─── Calculation ──────────────────────────────────────────────────────────────
@@ -873,7 +944,7 @@ function calc(){
   set('bp-etsy',fmt(eG));document.getElementById('bv-etsy').textContent=vatOn?'incl. VAT':'';
   set('bp-web',fmt(wG));document.getElementById('bv-web').textContent=vatOn?'incl. VAT':'';
 
-  updateHint('fair',fG,total);updateHint('etsy',eG,total);updateHint('web',wG,total);
+  updateChannelDisplay('fair',fG,total);updateChannelDisplay('etsy',eG,total);updateChannelDisplay('web',wG,total);
 
   // ── Popovers — new structure: costs → profit → net → gross ──
   const costRows=[
@@ -927,6 +998,11 @@ function calc(){
   if(marginPct<60&&total>0){warn.classList.add('show');warn.textContent='⚠ Margin below 60% — aim higher for sustainable retail pricing.';}
   else warn.classList.remove('show');
 
+  // VAT note
+  const vatNote=document.getElementById('bar-vat-note');
+  if(vatNote)vatNote.textContent=vatOn?'Prices include 20% VAT — calculated for Austria':'Prices shown excl. VAT';
+  const vatNote=document.getElementById('bar-vat-note');
+  if(vatNote)vatNote.textContent=vatOn?'Prices include 20% VAT — calculated for Austria':'Prices shown excl. VAT';
   window._lastCalc={total,net,profit,fairSugg:fG,etsySugg:eG,webSugg:wG,marginPct,vatOn,mat,
     matPcs:pcs,fVAT,eVAT,wVAT,eF,wF,fFee,fProfit,eProfit,wProfit};
 }
