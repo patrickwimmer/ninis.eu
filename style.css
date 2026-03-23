@@ -530,7 +530,7 @@ input[type=range].risk-slider:focus-visible { outline:2px solid var(--border-inp
 .price-bar {
   position: fixed;
   bottom: var(--nav-h);
-  left: 0; right: 0;
+  left: 0; right: 0; bottom: 0;
   z-index: 65;
   background: var(--surface);
   border-top: 1px solid var(--border);
@@ -816,6 +816,7 @@ input[type=range].risk-slider:focus-visible { outline:2px solid var(--border-inp
 .add-mat-form input:focus { border-color:var(--accent-mid); }
 .add-mat-form input::placeholder { color:var(--text-3); }
 .add-mat-form input.err { border-color:var(--danger); }
+.bottom-nav { display: none; }
 .optional-toggle { font-size:11px; color:var(--accent); cursor:pointer; display:inline-flex; align-items:center; gap:4px; margin-bottom:8px; user-select:none; }
 .optional-fields { display:none; }
 .optional-fields.show { display:block; }
