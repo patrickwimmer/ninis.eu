@@ -164,7 +164,7 @@ input[type=range].risk-slider::-moz-range-thumb {
     <svg viewBox="0 0 24 24"><polyline points="15 18 9 12 15 6"/></svg>
     Back
   </a>
-  <div class="topbar-title" id="page-heading">New product</div>
+  <h1 class="topbar-title" id="page-heading">New product</h1>
 </header>
 
 <main class="page-wrap" id="main-content" style="padding-top:1.25rem;max-width:720px">
@@ -252,10 +252,10 @@ input[type=range].risk-slider::-moz-range-thumb {
             </div>
           </div>
 
-          <div class="optional-toggle" onclick="toggleOptionalQA()" id="opt-toggle-qa">
-            <svg id="opt-arrow-qa" style="width:12px;height:12px;stroke:currentColor;fill:none;stroke-width:2.5;stroke-linecap:round;transition:transform .2s" viewBox="0 0 10 10"><polyline points="2,3 5,7 8,3"/></svg>
+          <button type="button" class="optional-toggle" onclick="toggleOptionalQA()" id="opt-toggle-qa" aria-expanded="false" aria-controls="optional-fields-qa">
+            <svg id="opt-arrow-qa" style="width:12px;height:12px;stroke:currentColor;fill:none;stroke-width:2.5;stroke-linecap:round;transition:transform .2s" viewBox="0 0 10 10" aria-hidden="true"><polyline points="2,3 5,7 8,3"/></svg>
             Optional details
-          </div>
+          </button>
           <div class="optional-fields" id="optional-fields-qa">
             <div class="add-mat-form__optional">
               <div class="add-mat-form__field">
@@ -439,7 +439,7 @@ input[type=range].risk-slider::-moz-range-thumb {
     <div class="card-body" id="card-body-notes">
       <textarea id="product-notes" aria-label="Product notes"
         placeholder="e.g. Works best with 3mm birch. Sand edges lightly before assembly. Popular at Christmas markets."
-        style="width:100%;min-height:100px;border:1.5px solid var(--border);border-radius:var(--r-md);padding:12px;font-size:14px;font-family:var(--font-sans);color:var(--text);background:var(--bg);outline:none;resize:vertical;line-height:1.6;transition:border-color .15s"
+        style="width:100%;min-height:100px;border:1.5px solid var(--border);border-radius:var(--r-md);padding:12px;font-size:16px;font-family:var(--font-sans);color:var(--text);background:var(--bg);outline:none;resize:vertical;line-height:1.6;transition:border-color .15s"
         oninput="this.style.borderColor=''"
         onfocus="this.style.borderColor='var(--accent-mid)';this.style.background='white'"
         onblur="this.style.borderColor='';this.style.background=''"
@@ -721,7 +721,9 @@ async function saveQuickMat(){
 function toggleOptionalQA(){
   const f=document.getElementById('optional-fields-qa');
   const a=document.getElementById('opt-arrow-qa');
+  const btn=document.getElementById('opt-toggle-qa');
   const show=!f.classList.contains('show');
+  if(btn)btn.setAttribute('aria-expanded',show?'true':'false');
   f.classList.toggle('show',show);
   a.style.transform=show?'rotate(180deg)':'rotate(0deg)';
 }
@@ -1019,7 +1021,7 @@ document.addEventListener('click',e=>{
     document.querySelectorAll('.info-btn').forEach(x=>{x.classList.remove('open');x.setAttribute('aria-expanded','false');});
   }
 });
-// Keyboard: close popovers on Escape
+/// Keyboard: close popovers on Escape
 document.addEventListener('keydown',e=>{
   if(e.key==='Escape'){
     document.querySelectorAll('.popover').forEach(x=>x.classList.remove('open'));

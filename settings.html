@@ -171,13 +171,13 @@
   <div class="spinner"></div>
   <p>Loading…</p>
 </div>
-<div class="toast" id="toast" role="status" aria-live="polite" aria-atomic="true"><span id="toast-txt"></span></div>
+<div class="toast" id="toast" role="status" aria-live="polite" aria-atomic="true"><span id="toast-txt"></span><button class="toast__close" onclick="closeToast()" aria-label="Dismiss"><svg viewBox="0 0 24 24"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg></button></div>
 
 <header class="topbar">
-  <div class="topbar-brand">
+  <h1 class="topbar-brand">
     <span class="brand-nini">nini's&nbsp;</span>
     <span class="brand-word">Settings</span>
-  </div>
+  </h1>
   <div class="topbar-action">
     <button class="logout-btn" onclick="logout()">
       <svg viewBox="0 0 24 24"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/><polyline points="16 17 21 12 16 7"/><line x1="21" y1="12" x2="9" y2="12"/></svg>
@@ -210,19 +210,19 @@
         <div class="add-mat-form__row">
           <div>
             <div class="add-mat-form__label">Material name *</div>
-            <input type="text" id="n-name" placeholder="e.g. Birch plywood 3mm" maxlength="60" aria-required="true" aria-label="Material name (required)">
+            <input type="text" id="n-name" name="mat-name" placeholder="e.g. Birch plywood 3mm" maxlength="60" aria-required="true" aria-label="Material name (required)">
           </div>
           <div>
             <div class="add-mat-form__label">Sheet price * (€)</div>
-            <input type="number" id="n-sheet" placeholder="12.50" min="0.01" step="0.01" style="width:100px" aria-required="true" aria-label="Sheet price in euros (required)">
+            <input type="number" id="n-sheet" name="mat-sheet-price" placeholder="12.50" min="0.01" step="0.01" style="width:100px" aria-required="true" aria-label="Sheet price in euros (required)">
           </div>
         </div>
 
         <!-- Optional fields toggle -->
-        <div class="optional-toggle" onclick="toggleOptional()">
-          <svg id="opt-arrow" style="width:12px;height:12px;stroke:currentColor;fill:none;stroke-width:2.5;stroke-linecap:round;transition:transform .2s" viewBox="0 0 10 10"><polyline points="2,3 5,7 8,3"/></svg>
+        <button type="button" class="optional-toggle" onclick="toggleOptional()" aria-expanded="false" id="opt-toggle-btn" aria-controls="optional-fields">
+          <svg id="opt-arrow" style="width:12px;height:12px;stroke:currentColor;fill:none;stroke-width:2.5;stroke-linecap:round;transition:transform .2s" viewBox="0 0 10 10" aria-hidden="true"><polyline points="2,3 5,7 8,3"/></svg>
           Optional details
-        </div>
+        </button>
         <div class="optional-fields" id="optional-fields">
           <div class="add-mat-form__optional">
             <div class="add-mat-form__field">
@@ -340,7 +340,7 @@
             <div class="fee-row">
               <span class="fee-row__label">
                 Payment processing (fixed)
-                <span style="font-size:10px;color:var(--text-3);display:block;margin-top:1px">Zahlungsbearbeitungsgebühr — Austria</span>
+                <span style="font-size:10px;color:var(--text-3);display:block;margin-top:1px">Per-transaction flat fee — Austria</span>
               </span>
               <div class="fee-row__input-wrap">
                 <span style="font-size:12px;color:var(--text-3)">€</span>
@@ -498,16 +498,23 @@ function fmtEU(n, dec=2){
 function showToast(state,text){
   const el=document.getElementById('toast'),tx=document.getElementById('toast-txt');
   clearTimeout(toastT);el.className='toast show '+state;tx.textContent=text;
-  if(state==='saved')toastT=setTimeout(()=>el.classList.remove('show'),2500);
+  const delay=state==='err'?4000:2500;
+  toastT=setTimeout(()=>el.classList.remove('show'),delay);
+}
+function closeToast(){
+  clearTimeout(toastT);
+  document.getElementById('toast').classList.remove('show');
 }
 
 // ── Optional fields toggle ──────────────────────────────────────────────────
 function toggleOptional(){
   const f=document.getElementById('optional-fields');
   const a=document.getElementById('opt-arrow');
+  const btn=document.getElementById('opt-toggle-btn');
   const show=!f.classList.contains('show');
   f.classList.toggle('show',show);
   a.style.transform=show?'rotate(180deg)':'rotate(0deg)';
+  if(btn)btn.setAttribute('aria-expanded',show?'true':'false');
 }
 
 // ── Materials ───────────────────────────────────────────────────────────────
@@ -548,7 +555,7 @@ function renderMats(){
           <div class="mat-card-name">${esc(m.name)}</div>
           ${chips?`<div style="display:flex;gap:4px;flex-wrap:wrap;margin-top:4px">${chips}</div>`:''}
         </div>
-        <div class="mat-card-price">${fmtCur(m.sheet)} / Blatt</div>
+        <div class="mat-card-price">${fmtCur(m.sheet)} / sheet</div>
         <svg class="mat-card-chevron" viewBox="0 0 24 24"><polyline points="6 9 12 15 18 9"/></svg>
       </div>
       <div class="mat-card-detail" id="mat-detail-${m.id}">
@@ -577,7 +584,14 @@ function renderMats(){
         </div>
         <div class="mat-detail-actions">
           <button class="btn btn--sm btn--primary" onclick="saveMat(${m.id})">Save changes</button>
-          <button class="btn btn--sm" onclick="removeMat(${m.id})" type="button" aria-label="Delete ${esc(m.name)}" style="color:var(--danger);border-color:var(--danger-border)">Delete</button>
+          <button class="btn btn--sm" onclick="promptRemoveMat(${m.id})" type="button" aria-label="Delete ${esc(m.name)}" style="color:var(--danger);border-color:var(--danger-border)">Delete</button>
+        </div>
+        <div class="delete-confirm" id="del-confirm-mat-${m.id}">
+          <span>Remove "${esc(m.name)}"?</span>
+          <div class="delete-confirm__btns">
+            <button class="delete-confirm__btn delete-confirm__btn--no" onclick="cancelRemoveMat(${m.id})" type="button">Cancel</button>
+            <button class="delete-confirm__btn delete-confirm__btn--yes" onclick="removeMat(${m.id})" type="button">Remove</button>
+          </div>
         </div>
       </div>`;
     container.appendChild(card);
@@ -648,12 +662,23 @@ async function saveMat(id){
   setTimeout(()=>{const c=document.getElementById('mat-card-'+id);if(c)c.classList.add('open');},50);
 }
 
+function promptRemoveMat(id){
+  document.querySelectorAll('.delete-confirm.show').forEach(el=>el.classList.remove('show'));
+  const conf=document.getElementById('del-confirm-mat-'+id);
+  if(!conf)return;
+  conf.classList.add('show');
+  const cancel=conf.querySelector('.delete-confirm__btn--no');
+  if(cancel)cancel.focus();
+}
+function cancelRemoveMat(id){
+  const conf=document.getElementById('del-confirm-mat-'+id);
+  if(conf)conf.classList.remove('show');
+}
 async function removeMat(id){
-  if(!confirm('Remove this material?'))return;
   showToast('saving','Removing…');
   const{error}=await db.from('materials').delete().eq('id',id);
   if(error){showToast('err','Could not delete');return;}
-  showToast('saved','Removed ✓');
+  showToast('saved','Removed');
   mats=mats.filter(m=>m.id!==id);renderMats();
 }
 
@@ -733,6 +758,12 @@ document.getElementById('mat-cards').addEventListener('keydown',e=>{
     e.preventDefault();
     const idStr=e.target.id.replace('mat-header-','');
     if(idStr)toggleMatCard(parseInt(idStr));
+  }
+});
+
+document.addEventListener('keydown',e=>{
+  if(e.key==='Escape'){
+    document.querySelectorAll('.delete-confirm.show').forEach(el=>el.classList.remove('show'));
   }
 });
 
