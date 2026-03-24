@@ -713,8 +713,8 @@ async function saveQuickMat(){
   document.getElementById('mat-quick-add').style.display='none';
   // Show pieces override
   const po=document.getElementById('pcs-override');po.classList.add('show');
-  document.getElementById('pcs-product').value=pcs;
-  document.getElementById('pcs-lib-default').textContent='Library default: '+pcs+' pcs/sheet · Sheet price: € '+fmtEU(sheet,2)+' → € '+fmtEU(sheet/pcs,3)+' per piece';
+  document.getElementById('pcs-product').value=1;
+  document.getElementById('pcs-lib-default').textContent='Sheet price: € '+fmtEU(sheet,2)+' → € '+fmtEU(sheet,3)+' per piece (1 pc/sheet default)';
   calc();
 }
 
@@ -999,8 +999,6 @@ function calc(){
   else warn.classList.remove('show');
 
   // VAT note
-  const vatNote=document.getElementById('bar-vat-note');
-  if(vatNote)vatNote.textContent=vatOn?'Prices include 20% VAT — calculated for Austria':'Prices shown excl. VAT';
   const vatNote=document.getElementById('bar-vat-note');
   if(vatNote)vatNote.textContent=vatOn?'Prices include 20% VAT — calculated for Austria':'Prices shown excl. VAT';
   window._lastCalc={total,net,profit,fairSugg:fG,etsySugg:eG,webSugg:wG,marginPct,vatOn,mat,
