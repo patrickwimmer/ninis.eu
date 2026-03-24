@@ -90,7 +90,19 @@ body {
   padding-bottom: var(--nav-h);
 }
 body.has-bar {
-  padding-bottom: calc(var(--nav-h) + var(--bar-h));
+  padding-bottom: var(--bar-h); /* nav is hidden on mobile, so no nav-h offset */
+}
+/* Hide bottom nav while creating/editing a product (mobile only) */
+body.has-bar .bottom-nav {
+  display: none;
+}
+@media (min-width: 600px) {
+  body.has-bar {
+    padding-bottom: calc(var(--nav-h) + var(--bar-h));
+  }
+  body.has-bar .bottom-nav {
+    display: flex;
+  }
 }
 
 /* ── Typography ── */
